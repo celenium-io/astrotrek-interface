@@ -1,0 +1,166 @@
+$grayscale: (
+	03: 0.03,
+	05: 0.05,
+	08: 0.08,
+	10: 0.1,
+	15: 0.15,
+	20: 0.2,
+	30: 0.3,
+	40: 0.4,
+	50: 0.5,
+);
+
+:root {
+	--base-width: 1040px;
+
+	/* Main */
+	--app-background: #050a0d;
+	--card-background: #121619;
+	--tooltip-background: rgba(0, 0, 0, 90%);
+
+	/* Text */
+	--txt-primary: rgba(255, 255, 255, 90%);
+	--txt-body: rgba(255, 255, 255, 75%);
+	--txt-secondary: rgba(255, 255, 255, 65%);
+	--txt-tertiary: rgba(255, 255, 255, 35%);
+	--txt-support: rgba(255, 255, 255, 15%);
+	--txt-black: rgba(0, 0, 0, 95%);
+	--txt-white: rgba(255, 255, 255, 95%);
+
+	/* General */
+	--brand: #dd5022;
+	--blue: #228edd;
+	--light-blue: #22ddbb;
+	--red: #eb5757;
+	--orange: #ff5a17;
+	--yellow: #dd9d22;
+	--green: #27ae60;
+	--light-green: #22dd56;
+
+	/* Grayscale */
+	@each $gray, $value in $grayscale {
+		--op-#{$gray}: rgba(255, 255, 255, #{$value});
+	}
+
+	/** Button */
+	--btn-white-bg: rgba(255, 255, 255, 90%);
+	--btn-white-bg-hover: rgba(255, 255, 255, 75%);
+	--btn-white-bg-active: rgba(255, 255, 255, 90%);
+	--btn-red-bg: rgba(235, 87, 87, 100%);
+	--btn-red-bg-hover: rgba(235, 87, 87, 75%);
+	--btn-red-bg-active: rgba(235, 87, 87, 90%);
+	--btn-secondary-bg: rgba(255, 255, 255, 8%);
+	--btn-secondary-bg-hover: rgba(255, 255, 255, 10%);
+	--btn-secondary-bg-active: rgba(255, 255, 255, 7%);
+
+	/** Other */
+	--network-widget-background: rgba(0, 0, 0, 10%);
+	--network-widget-separator: #2f3133;
+	--network-widget-indicator: #fff;
+	--feed-background: rgba(0, 0, 0, 8%);
+	--notification-background: rgba(0, 0, 0, 95%);
+	--block-progress-background: rgba(0, 0, 0, 20%);
+	--block-progress-fill-background: #33a853;
+	--logo-name: var(--txt-primary);
+	--bar-fill: rgb(243, 147, 45);
+}
+
+@font-face {
+	font-family: "Geist";
+	src: local("Geist"), url(~/assets/GeistVariableVF.TTF) format("truetype");
+	font-weight: 200 700;
+	font-style: normal;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	margin: 0;
+}
+
+:disabled {
+	cursor: default;
+}
+
+a {
+	text-decoration: none;
+	color: inherit;
+
+	&:focus {
+		outline: none;
+	}
+}
+
+button,
+[role="button"] {
+	cursor: pointer;
+}
+
+button {
+	font-family: inherit;
+	padding: 0;
+	border: none;
+	outline: none;
+}
+
+input {
+	font: inherit;
+	border: none;
+	outline: none;
+	background: transparent;
+}
+
+html {
+	overflow-x: hidden;
+	scrollbar-gutter: stable;
+}
+
+body {
+	min-height: 100vh;
+
+	background: var(--app-background);
+
+	font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans",
+		"Helvetica Neue", sans-serif;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+
+	user-select: none;
+}
+
+*::-webkit-scrollbar {
+	width: 4px;
+	height: 4px;
+}
+
+*::-webkit-scrollbar-track {
+}
+
+*::-webkit-scrollbar-thumb {
+	background-color: rgba(255, 255, 255, 0);
+	border-radius: 50px;
+}
+
+*::-webkit-scrollbar-thumb {
+	background-color: rgba(255, 255, 255, 0.15);
+}
+
+*::-webkit-scrollbar-corner {
+	background-color: transparent;
+}
+
+.copyable {
+	cursor: copy;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+	transition: all 0.1s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+	opacity: 0;
+}
