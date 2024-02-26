@@ -1,3 +1,59 @@
+<script setup>
+/** Vendor */
+import { DateTime } from "luxon"
+
+/** UI */
+import Button from "@/components/ui/Button.vue"
+import Tooltip from "@/components/ui/Tooltip.vue"
+
+/** API */
+import { fetchLatestTransactions } from "@/services/api/tx"
+
+/** Services */
+import { capitalize, comma, shortHash, splitAddress } from "@/services/utils"
+
+/** Store */
+import { useAppStore } from "@/store/app"
+const appStore = useAppStore()
+
+const lastHead = computed(() => appStore.lastHead)
+const transactions = ref([])
+
+const getLatestTransactionss = async () => {
+	const { data } = await fetchLatestTransactions()
+	transactions.value = data.value
+	console.log(transactions.value);
+}
+getLatestTransactionss()
+
+const transactionsSnapshot = ref([])
+const isPaused = ref(false)
+const handlePause = () => {
+	if (!lastHead?.value.synced) return
+
+	isPaused.value = !isPaused.value
+}
+
+watch(
+	() => isPaused.value,
+	() => {
+		if (isPaused.value) {
+			transactionsSnapshot.value = [...transactions.value]
+		} else {
+			transactionsSnapshot.value = []
+		}
+	},
+)
+
+watch(
+	() => lastHead,
+	() => {
+		getLatestTransactionss()
+	},
+)
+
+</script>
+
 <template>
 	<Flex direction="column" :class="$style.wrapper">
 		<Flex justify="between" align="start" wide :class="$style.top">
@@ -13,24 +69,22 @@
 		</Flex>
 
 		<Flex direction="column" :class="$style.rows">
-			<Flex v-for="row in 5" justify="between" align="center" :class="$style.row">
+			<Flex v-for="t in !isPaused ? transactions : transactionsSnapshot" justify="between" align="center" :class="$style.row">
 				<Flex direction="column" gap="8">
 					<Flex align="center" gap="8">
-						<Icon name="tx-circle" size="16" color="light-green" />
+						<Icon name="tx-circle" size="16" :color=" t.status === 'success' ? 'light-green' : 'red'" />
 
 						<Flex align="center" gap="8">
 							<Flex align="center" gap="6">
 								<Text size="13" weight="600" color="primary">
-									<Text color="secondary">0x</Text>
-									4d64
+									<!-- <Text color="secondary">0x</Text> -->
+									{{ shortHash(t.hash) }}
 								</Text>
-								<Flex align="center" gap="4">
-									<div v-for="dot in 3" :class="$style.small_dot" />
-								</Flex>
-								<Text size="13" weight="600" color="primary"> 6f97 </Text>
 							</Flex>
 
-							<Text size="13" weight="600" color="tertiary"> Token Minting </Text>
+							<Text v-for="action in t.action_types " size="13" weight="600" color="tertiary">
+								{{ capitalize(action) }} 
+							</Text>
 						</Flex>
 					</Flex>
 
@@ -59,21 +113,35 @@
 						<Text size="13" weight="600" color="primary"> 0.05 <Text color="secondary">RIA</Text> </Text>
 					</Flex>
 
-					<Text size="12" weight="500" color="tertiary">12 mins ago </Text>
+					<Text size="12" weight="500" color="tertiary">
+						{{ DateTime.fromISO(t.time).toRelative({ locale: "en", style: "short" }) }}
+					</Text>
 				</Flex>
 			</Flex>
 		</Flex>
 
 		<Flex align="center" justify="between" :class="$style.bot">
 			<Flex align="center" gap="6">
-				<Icon name="pause" size="12" color="tertiary" />
+				<Tooltip position="start">
+					<Button @click="handlePause" type="tertiary" size="mini" :disabled="!lastHead?.synced">
+						<Icon :name="isPaused ? 'resume' : 'pause'" size="12" color="tertiary" />
+					</Button>
+
+					<template v-if="lastHead?.synced" #content>
+						<Flex align="start" direction="column" gap="6">
+							<Text>Stop receiving new transactions</Text>
+							<Text color="tertiary">Resuming will update the list of recent transactions</Text>
+						</Flex>
+					</template>
+					<template v-else #content> Can't resume yet, wait for a synced head </template>
+				</Tooltip>
 				<Text size="12" weight="500" color="support">Receiving new transactions</Text>
 			</Flex>
 
-			<Flex align="center" gap="4">
+			<!-- <Flex align="center" gap="4">
 				<Text size="12" weight="600" color="tertiary"> Sort by <Text color="secondary">Time</Text> </Text>
 				<Icon name="chevron" size="12" color="secondary" />
-			</Flex>
+			</Flex> -->
 		</Flex>
 	</Flex>
 </template>

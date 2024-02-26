@@ -1,3 +1,42 @@
+<script setup>
+/** Vendor */
+import { DateTime } from "luxon"
+
+/** UI */
+import Button from "@/components/ui/Button.vue"
+import Tooltip from "@/components/ui/Tooltip.vue"
+
+/** Services */
+import { comma, splitAddress } from "@/services/utils"
+
+/** Store */
+import { useAppStore } from "@/store/app"
+const appStore = useAppStore()
+
+const blocks = computed(() => appStore.latestBlocks)
+const lastHead = computed(() => appStore.lastHead)
+
+const blocksSnapshot = ref([])
+const isPaused = ref(false)
+const handlePause = () => {
+	if (!lastHead?.value.synced) return
+
+	isPaused.value = !isPaused.value
+}
+
+watch(
+	() => isPaused.value,
+	() => {
+		if (isPaused.value) {
+			blocksSnapshot.value = [...blocks.value.slice(0, 5)]
+		} else {
+			blocksSnapshot.value = []
+		}
+	},
+)
+
+</script>
+
 <template>
 	<Flex direction="column" :class="$style.wrapper">
 		<Flex justify="between" align="start" wide :class="$style.top">
@@ -13,24 +52,24 @@
 		</Flex>
 
 		<Flex direction="column" :class="$style.rows">
-			<Flex v-for="row in 5" justify="between" align="center" :class="$style.row">
+			<Flex v-for="b in !isPaused ? blocks.slice(0, 5) : blocksSnapshot" justify="between" align="center" :class="$style.row">
 				<Flex direction="column" gap="8">
 					<Flex align="center" gap="8">
 						<Icon name="block" size="16" color="secondary" />
 
-						<Text size="13" weight="600" color="primary"> 923,159 </Text>
+						<Text size="13" weight="600" color="primary"> {{ comma(b.height) }} </Text>
 					</Flex>
 
 					<Flex align="center" gap="8">
 						<Text size="12" weight="500" color="secondary">
-							<Text color="tertiary">Miner</Text>
-							0xf93b...E4D9
+							<Text color="tertiary">Proposer</Text>
+							{{ splitAddress(b.proposer.address) }}
 						</Text>
 
 						<div :class="$style.dot" />
 
 						<Text size="12" weight="500" color="secondary">
-							1,259
+							{{ b.stats.bytes_in_block }}
 							<Text color="tertiary">bytes</Text>
 						</Text>
 					</Flex>
@@ -39,24 +78,31 @@
 				<Flex direction="column" align="end" gap="8">
 					<Flex align="center" gap="4">
 						<Icon name="tx-circle" size="12" color="light-green" />
-						<Text size="13" weight="600" color="primary"> 23 <Text color="secondary">Txs</Text> </Text>
+						<Text size="13" weight="600" color="primary"> {{ b.stats.tx_count }} <Text color="secondary">Txs</Text> </Text>
 					</Flex>
 
-					<Text size="12" weight="500" color="tertiary">2s ago</Text>
+					<Text size="12" weight="500" color="tertiary">
+						{{ DateTime.fromISO(b.time).toRelative({ locale: "en", style: "short" }) }}
+					</Text>
 				</Flex>
 			</Flex>
 		</Flex>
 
-		<Flex align="center" justify="between" :class="$style.bot">
-			<Flex align="center" gap="6">
-				<Icon name="pause" size="12" color="tertiary" />
-				<Text size="12" weight="500" color="support">Receiving new blocks</Text>
-			</Flex>
+		<Flex align="center" gap="6" :class="$style.bot">
+			<Tooltip position="start">
+				<Button @click="handlePause" type="tertiary" size="mini" :disabled="!lastHead?.synced">
+					<Icon :name="isPaused ? 'resume' : 'pause'" size="12" color="tertiary" />
+				</Button>
 
-			<Flex align="center" gap="4">
-				<Text size="12" weight="600" color="tertiary"> Sort by <Text color="secondary">Time</Text> </Text>
-				<Icon name="chevron" size="12" color="secondary" />
-			</Flex>
+				<template v-if="lastHead?.synced" #content>
+					<Flex align="start" direction="column" gap="6">
+						<Text>Stop receiving new blocks</Text>
+						<Text color="tertiary">Resuming will update the list of recent blocks</Text>
+					</Flex>
+				</template>
+				<template v-else #content> Can't resume yet, wait for a synced head </template>
+			</Tooltip>
+			<Text size="12" weight="500" color="support">Receiving new blocks</Text>
 		</Flex>
 	</Flex>
 </template>

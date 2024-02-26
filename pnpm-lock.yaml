@@ -8,6 +8,9 @@ dependencies:
   '@pinia/nuxt':
     specifier: ^0.5.1
     version: 0.5.1(vue@3.4.19)
+  luxon:
+    specifier: 3.4.3
+    version: 3.4.3
   nuxt:
     specifier: ^3.10.2
     version: 3.10.2(sass@1.71.1)(vite@5.1.4)
@@ -3714,6 +3717,11 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       yallist: 4.0.0
+    dev: false
+
+  /luxon@3.4.3:
+    resolution: {integrity: sha512-tFWBiv3h7z+T/tDaoxA8rqTxy1CHV6gHS//QdaH4pulbq/JuBSGgQspQQqcgnwdAx6pNI7cmvz5Sv/addzHmUg==}
+    engines: {node: '>=12'}
     dev: false
 
   /magic-string-ast@0.3.0:
