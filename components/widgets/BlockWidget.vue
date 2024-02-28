@@ -6,7 +6,7 @@ import Button from "~/components/ui/Button.vue"
 <template>
 	<Flex direction="column" gap="20" :class="$style.wrapper">
 		<Flex direction="column" gap="16">
-			<Flex direction="column " gap="10">
+			<Flex direction="column" gap="10">
 				<Text size="16" weight="600" color="primary"> Block <Text color="secondary">922,523</Text> </Text>
 
 				<Flex align="center" gap="12">
@@ -20,7 +20,9 @@ import Button from "~/components/ui/Button.vue"
 
 			<Flex direction="column" gap="12">
 				<Flex align="end" gap="4" :class="$style.chart">
-					<Flex v-for="bar in 40" :class="$style.bar" :style="{ height: `${Math.floor(Math.random() * 30)}px` }" />
+					<ClientOnly>
+						<Flex v-for="bar in 40" :class="$style.bar" :style="{ height: `${Math.floor(Math.random() * 30)}px` }" />
+					</ClientOnly>
 				</Flex>
 
 				<Flex align="center" justify="between">

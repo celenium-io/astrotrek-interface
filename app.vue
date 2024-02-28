@@ -12,7 +12,9 @@ import ModalsManager from "@/components/modals/ModalsManager.vue"
 		<div id="modal" />
 		<div id="dropdown" />
 
-		<ModalsManager />
-		<Notifications />
+		<ClientOnly>
+			<ModalsManager />
+			<Notifications />
+		</ClientOnly>
 	</NuxtLayout>
 </template>

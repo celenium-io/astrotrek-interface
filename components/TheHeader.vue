@@ -2,7 +2,11 @@
 /** UI */
 import { Dropdown, DropdownItem } from "@/components/ui/Dropdown"
 
+import NavigationPopup from "./NavigationPopup.vue"
+
 const route = useRoute()
+
+const showPopup = ref(false)
 
 const isActive = (link) => {
 	const splittedPath = route.path.split("/").filter(Boolean)
@@ -55,9 +59,18 @@ const isActive = (link) => {
 				</NuxtLink>
 
 				<Flex align="center" gap="16">
-					<Flex align="center" gap="6">
+					<Flex @pointerenter="showPopup = true" @pointerleave="showPopup = false" align="center" gap="6" :class="$style.link">
 						<Text size="13" weight="600" color="primary">Explore</Text>
-						<Icon name="chevron" size="14" color="tertiary" />
+						<Icon
+							name="chevron"
+							size="14"
+							color="tertiary"
+							:style="{ transform: `rotate(${showPopup ? '180deg' : '0deg'})` }"
+						/>
+
+						<Transition name="popup">
+							<NavigationPopup v-if="showPopup" />
+						</Transition>
 					</Flex>
 					<Text size="13" weight="600" color="primary">Rollups</Text>
 				</Flex>
@@ -104,6 +117,10 @@ const isActive = (link) => {
 
 .logo_name {
 	fill: var(--logo-name);
+}
+
+.link {
+	padding: 16px 0;
 }
 
 .network {

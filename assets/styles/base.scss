@@ -12,6 +12,7 @@ $grayscale: (
 
 :root {
 	--base-width: 1040px;
+	--bezier: cubic-bezier(0.19, 1, 0.22, 1);
 
 	/* Main */
 	--app-background: #050a0d;
@@ -173,5 +174,15 @@ body {
 .dropdown-enter-from,
 .dropdown-leave-to {
 	transform: translateY(-5px) scale(0.98);
+	opacity: 0;
+}
+
+.popup-enter-active,
+.popup-leave-active {
+	transition: all 0.2s var(--bezier);
+}
+
+.popup-enter-from,
+.popup-leave-to {
 	opacity: 0;
 }
