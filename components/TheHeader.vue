@@ -36,7 +36,7 @@ const isActive = (link) => {
 <template>
 	<Flex tag="header" ref="headerEl" justify="center" wide :class="$style.wrapper">
 		<Flex align="center" justify="between" wide :class="$style.container">
-			<Flex align="center" gap="32">
+			<Flex align="center" gap="32" :class="$style.left">
 				<NuxtLink to="/">
 					<Flex align="center" gap="8">
 						<Icon name="logo" size="18" color="black" :class="$style.logo" />
@@ -158,7 +158,11 @@ const isActive = (link) => {
 	}
 }
 
-@media (max-width: 400px) {
+@media (max-width: 550px) {
+	.left {
+		gap: 16px;
+	}
+
 	.logo_name {
 		display: none;
 	}

@@ -98,4 +98,19 @@
 
 	padding: 5px;
 }
+
+@media (max-width: 900px) {
+	.wrapper {
+		width: calc(100% - 48px);
+
+		left: 50%;
+		transform: translateX(-50%);
+	}
+}
+
+@media (max-width: 600px) {
+	.wrapper {
+		flex-direction: column;
+	}
+}
 </style>
