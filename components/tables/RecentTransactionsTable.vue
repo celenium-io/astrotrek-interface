@@ -22,7 +22,6 @@ const transactions = ref([])
 const getLatestTransactionss = async () => {
 	const { data } = await fetchLatestTransactions()
 	transactions.value = data.value
-	console.log(transactions.value);
 }
 getLatestTransactionss()
 
@@ -90,28 +89,28 @@ watch(
 
 					<Flex align="center" gap="8">
 						<Text size="12" weight="500" color="secondary">
-							<Text color="tertiary">Contract</Text>
-							0xf93b...E4D9
+							<Text color="tertiary">Signer</Text>
+							{{ splitAddress(t.signer, 8) }}
 						</Text>
 
-						<div :class="$style.dot" />
+						<!-- <div :class="$style.dot" />
 
 						<Text size="12" weight="500" color="secondary">
 							<Text color="tertiary">Fee</Text>
 							0.04
-						</Text>
+						</Text> -->
 
-						<div :class="$style.dot" />
+						<!-- <div :class="$style.dot" />
 
-						<Text size="12" weight="500" color="tertiary"> 0x38bd...24B3 -> 0x38bd...24B3 </Text>
+						<Text size="12" weight="500" color="tertiary"> 0x38bd...24B3 -> 0x38bd...24B3 </Text> -->
 					</Flex>
 				</Flex>
 
 				<Flex direction="column" align="end" gap="8">
-					<Flex align="center" gap="4">
+					<!-- <Flex align="center" gap="4">
 						<Icon name="check-circle" size="12" color="tertiary" />
 						<Text size="13" weight="600" color="primary"> 0.05 <Text color="secondary">RIA</Text> </Text>
-					</Flex>
+					</Flex> -->
 
 					<Text size="12" weight="500" color="tertiary">
 						{{ DateTime.fromISO(t.time).toRelative({ locale: "en", style: "short" }) }}

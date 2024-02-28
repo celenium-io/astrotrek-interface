@@ -7,13 +7,13 @@ import Button from "@/components/ui/Button.vue"
 import Tooltip from "@/components/ui/Tooltip.vue"
 
 /** Services */
-import { comma, splitAddress } from "@/services/utils"
+import { comma, formatBytes, splitAddress } from "@/services/utils"
 
 /** Store */
 import { useAppStore } from "@/store/app"
 const appStore = useAppStore()
 
-const blocks = computed(() => appStore.latestBlocks)
+const blocks = computed(() => appStore.latestBlocks.slice(0, 5))
 const lastHead = computed(() => appStore.lastHead)
 
 const blocksSnapshot = ref([])
@@ -28,7 +28,7 @@ watch(
 	() => isPaused.value,
 	() => {
 		if (isPaused.value) {
-			blocksSnapshot.value = [...blocks.value.slice(0, 5)]
+			blocksSnapshot.value = [...blocks.value]
 		} else {
 			blocksSnapshot.value = []
 		}
@@ -52,7 +52,7 @@ watch(
 		</Flex>
 
 		<Flex direction="column" :class="$style.rows">
-			<Flex v-for="b in !isPaused ? blocks.slice(0, 5) : blocksSnapshot" justify="between" align="center" :class="$style.row">
+			<Flex v-for="b in !isPaused ? blocks : blocksSnapshot" justify="between" align="center" :class="$style.row">
 				<Flex direction="column" gap="8">
 					<Flex align="center" gap="8">
 						<Icon name="block" size="16" color="secondary" />
@@ -69,8 +69,8 @@ watch(
 						<div :class="$style.dot" />
 
 						<Text size="12" weight="500" color="secondary">
-							{{ b.stats.bytes_in_block }}
-							<Text color="tertiary">bytes</Text>
+							{{ formatBytes(b.stats.bytes_in_block, 2, 'number') }}
+							<Text color="tertiary">{{ formatBytes(b.stats.bytes_in_block, 2, 'unit') }}</Text>
 						</Text>
 					</Flex>
 				</Flex>

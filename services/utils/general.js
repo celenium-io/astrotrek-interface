@@ -1,4 +1,4 @@
-export const formatBytes = (bytes, decimals = 2) => {
+export const formatBytes = (bytes, decimals = 2, format = 'string') => {
 	if (!+bytes) return "0 Byte"
 
 	const dm = decimals < 0 ? 0 : decimals
@@ -6,7 +6,16 @@ export const formatBytes = (bytes, decimals = 2) => {
 
 	const i = Math.floor(Math.log(bytes) / Math.log(1024))
 
-	return `${parseFloat((bytes / Math.pow(1024, i)).toFixed(dm))} ${sizes[i]}`
+    switch (format) {
+        case 'string':
+            return `${parseFloat((bytes / Math.pow(1024, i)).toFixed(dm))} ${sizes[i]}`
+        case 'number':
+            return parseFloat((bytes / Math.pow(1024, i)).toFixed(dm))
+        case 'unit':
+            return sizes[i]
+        default:
+            return `${parseFloat((bytes / Math.pow(1024, i)).toFixed(dm))} ${sizes[i]}`
+    }
 }
 
 export const numToPercent = (num) => {
@@ -40,8 +49,8 @@ export const shortHash = (hash) => {
 	}
 }
 
-export const splitAddress = (address) => {
-    return `${address.slice(0, 4)}...${address.slice(-4)}`
+export const splitAddress = (address, charCount = 4) => {
+    return `${address.slice(0, charCount)}...${address.slice(-charCount)}`
 }
 
 export const getNetworkName = () => {
