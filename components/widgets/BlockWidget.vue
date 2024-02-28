@@ -11,16 +11,16 @@ import { useAppStore } from "@/store/app"
 const appStore = useAppStore()
 
 const lastHead = computed(() => appStore.lastHead)
-const blocks = computed(() => appStore.latestBlocks.slice(0, 45))
+const blocks = computed(() => appStore.latestBlocks.slice(0, 44))
 const blocksSnapshot = ref([])
 
-const lastBlock = computed(() => !isPaused.value ? blocks?.value[0] : blocksSnapshot?.value[0])
+const lastBlock = computed(() => (!isPaused.value ? blocks?.value[0] : blocksSnapshot?.value[0]))
 const lastBlockSize = computed(() => lastBlock.value?.stats.bytes_in_block)
 const lastBlockTxs = computed(() => lastBlock.value?.stats.tx_count)
-const msxSize = computed(() => Math.max(...blocks.value?.map(b => b.stats.bytes_in_block)))
+const maxSize = computed(() => Math.max(...blocks.value?.map((b) => b.stats.bytes_in_block)))
 
 const calculateHeight = (size) => {
-	return (size / msxSize.value) * 100
+	return (size / maxSize.value) * 100
 }
 
 const isPaused = ref(false)
@@ -40,14 +40,15 @@ watch(
 		}
 	},
 )
-
 </script>
 
 <template>
 	<Flex direction="column" gap="20" :class="$style.wrapper">
 		<Flex direction="column" gap="16">
-			<Flex direction="column " gap="10">
-				<Text size="16" weight="600" color="primary"> Block <Text color="secondary">{{ comma(lastBlock?.height) }}</Text> </Text>
+			<Flex direction="column" gap="10">
+				<Text size="16" weight="600" color="primary">
+					Block <Text color="secondary">{{ comma(lastBlock?.height) }}</Text>
+				</Text>
 
 				<Flex align="center" gap="12">
 					<Text size="14" weight="500" color="tertiary"> {{ lastBlockTxs }} txs </Text>
@@ -60,27 +61,21 @@ watch(
 
 			<Flex direction="column" gap="12">
 				<Flex align="end" gap="4" :class="$style.chart">
-					<Flex v-for="b in !isPaused ? blocks : blocksSnapshot"
-							:class="$style.bar"
-							:style="{
-								height: `${calculateHeight(b.stats.bytes_in_block)}%`
-							}"
-						/>
-					<!-- <Tooltip v-for="b in !isPaused ? blocks : blocksSnapshot" position="start">
+					<Tooltip v-for="b in !isPaused ? blocks : blocksSnapshot" style="height: 100%">
 						<Flex
 							:class="$style.bar"
 							:style="{
-								height: `${calculateHeight(b.stats.bytes_in_block)}%`
+								height: `${calculateHeight(b.stats.bytes_in_block)}%`,
 							}"
 						/>
 
 						<template #content>
-							<Flex align="start" direction="column" gap="6">
+							<Flex align="center" direction="column" gap="6">
 								<Text> {{ comma(b.height) }}</Text>
 								<Text color="tertiary">{{ formatBytes(b.stats.bytes_in_block) }}</Text>
 							</Flex>
 						</template>
-					</Tooltip> -->
+					</Tooltip>
 				</Flex>
 
 				<Flex align="center" justify="between">
@@ -122,12 +117,20 @@ watch(
 
 .chart {
 	height: 32px;
+
+	&:hover {
+		.bar:not(:hover) {
+			background: var(--txt-support);
+		}
+	}
 }
 
 .bar {
 	width: 4px;
 
 	background: var(--brand);
+
+	transition: all 0.2s ease;
 }
 
 .dot {

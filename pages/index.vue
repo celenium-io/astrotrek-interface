@@ -76,7 +76,6 @@ onBeforeMount(async () => {
 	appStore.latestBlocks = data
 	appStore.isLatestBlocksLoaded = true
 })
-
 </script>
 
 <template>
@@ -101,8 +100,6 @@ onBeforeMount(async () => {
 			<RecentTransactionsTable />
 			<RecentBlocksTable />
 		</Flex>
-
-		<Flex gap="24"> Recent Transactions Recent Blocks </Flex>
 	</Flex>
 </template>
 
