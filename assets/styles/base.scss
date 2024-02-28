@@ -164,3 +164,14 @@ body {
 .fade-leave-to {
 	opacity: 0;
 }
+
+.dropdown-enter-active,
+.dropdown-leave-active {
+	transition: all 0.1s ease;
+}
+
+.dropdown-enter-from,
+.dropdown-leave-to {
+	transform: translateY(-5px) scale(0.98);
+	opacity: 0;
+}

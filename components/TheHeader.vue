@@ -1,4 +1,7 @@
 <script setup>
+/** UI */
+import { Dropdown, DropdownItem } from "@/components/ui/Dropdown"
+
 const route = useRoute()
 
 const isActive = (link) => {
@@ -60,11 +63,17 @@ const isActive = (link) => {
 				</Flex>
 			</Flex>
 
-			<Flex align="center" gap="8" :class="$style.network">
-				<div :class="$style.dot" />
-				<Text size="13" weight="600" color="primary">Astria-Dusk-3</Text>
-				<Icon name="chevron" size="14" color="tertiary" />
-			</Flex>
+			<Dropdown>
+				<Flex align="center" gap="8" :class="$style.network">
+					<div :class="$style.dot" />
+					<Text size="13" weight="600" color="primary">Astria-Dusk-3</Text>
+					<Icon name="chevron" size="14" color="tertiary" />
+				</Flex>
+
+				<template #popup>
+					<DropdownItem> Astria-Dusk-3 </DropdownItem>
+				</template>
+			</Dropdown>
 		</Flex>
 	</Flex>
 </template>
