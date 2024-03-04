@@ -1,3 +1,9 @@
+<script setup>
+/** Store */
+import { useSidebarsStore } from "@/store/sidebars"
+const sidebarsStore = useSidebarsStore()
+</script>
+
 <template>
 	<Flex direction="column" :class="$style.wrapper">
 		<Flex justify="between" align="start" wide :class="$style.top">
@@ -13,7 +19,7 @@
 		</Flex>
 
 		<Flex direction="column" :class="$style.rows">
-			<Flex v-for="row in 5" justify="between" align="center" :class="$style.row">
+			<Flex @click="sidebarsStore.open('tx')" v-for="row in 5" justify="between" align="center" :class="$style.row">
 				<Flex direction="column" gap="8">
 					<Flex align="center" gap="8">
 						<Icon name="tx-circle" size="16" color="light-green" />
@@ -137,5 +143,11 @@
 
 .bot {
 	padding: 14px 16px 0 16px;
+}
+
+@media (max-width: 1000px) {
+	.wrapper {
+		width: 100%;
+	}
 }
 </style>

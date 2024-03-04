@@ -186,3 +186,27 @@ body {
 .popup-leave-to {
 	opacity: 0;
 }
+
+.search-enter-active,
+.search-leave-active {
+	transition: all 0.2s var(--bezier);
+	transform-origin: top right;
+}
+
+.search-enter-from,
+.search-leave-to {
+	opacity: 0;
+	transform: translateY(-5px) scale(0.9);
+}
+
+.sidebar-enter-active,
+.sidebar-leave-active {
+	transition: all 0.1s ease;
+}
+
+.sidebar-enter-from,
+.sidebar-leave-to {
+	opacity: 0;
+	transform: translateX(100px);
+	transform-origin: right;
+}

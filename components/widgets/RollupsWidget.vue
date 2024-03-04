@@ -8,7 +8,7 @@
 			</Text>
 		</Flex>
 
-		<Flex align="center" justify="between" :class="$style.chart">
+		<Flex align="center" gap="4" :class="$style.chart">
 			<Flex v-for="bar in 24" :class="$style.bar" />
 		</Flex>
 
@@ -35,5 +35,12 @@
 	height: 16px;
 
 	background: var(--brand);
+}
+
+@media (max-width: 1000px) {
+	.wrapper {
+		max-width: initial;
+		width: 100%;
+	}
 }
 </style>

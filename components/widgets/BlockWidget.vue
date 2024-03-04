@@ -67,4 +67,10 @@ import Button from "~/components/ui/Button.vue"
 	border-radius: 50%;
 	background: var(--op-10);
 }
+
+@media (max-width: 1000px) {
+	.wrapper {
+		width: 100%;
+	}
+}
 </style>

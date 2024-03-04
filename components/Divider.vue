@@ -20,8 +20,8 @@
 }
 
 .dot {
-	width: 5px;
-	height: 5px;
+	min-width: 5px;
+	min-height: 5px;
 
 	border-radius: 50%;
 	background: var(--op-8);

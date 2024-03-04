@@ -7,7 +7,7 @@ definePageMeta({
 })
 
 useHead({
-	title: "Astrotrek - Astria Explorer",
+	title: "Validators - Astria Explorer",
 	link: [
 		{
 			rel: "canonical",
@@ -22,7 +22,7 @@ useHead({
 		},
 		{
 			property: "og:title",
-			content: "Astrotrek - Astria Explorer",
+			content: "Validators - Astria Explorer",
 		},
 		{
 			property: "og:description",
@@ -39,7 +39,7 @@ useHead({
 		},
 		{
 			name: "twitter:title",
-			content: "Astrotrek - Astria Explorer",
+			content: "Validators - Astria Explorer",
 		},
 		{
 			name: "twitter:description",
@@ -63,7 +63,7 @@ useHead({
 		<Flex direction="column" :class="$style.card">
 			<Flex justify="between" align="start" wide :class="$style.top">
 				<Flex direction="column" gap="20">
-					<Text size="16" weight="600" color="primary">Transactions</Text>
+					<Text size="16" weight="600" color="primary">Validators</Text>
 
 					<Flex align="center" gap="12">
 						<Button size="mini" type="secondary">Sort by Time</Button>

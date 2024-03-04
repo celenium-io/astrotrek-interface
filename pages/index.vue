@@ -67,12 +67,12 @@ useHead({
 
 <template>
 	<Flex direction="column" wide :class="$style.wrapper">
-		<HeroSection />
+		<HeroSection :class="$style.hero_section" />
 
 		<Divider :class="$style.divider" />
 
 		<Flex direction="column" gap="24">
-			<Flex align="center" gap="24">
+			<Flex align="center" gap="24" :class="$style.widgets">
 				<BlockWidget />
 				<RollupsWidget />
 				<TxsWidget />
@@ -83,7 +83,7 @@ useHead({
 
 		<Divider :class="$style.divider" />
 
-		<Flex gap="24">
+		<Flex gap="24" :class="$style.tables">
 			<RecentTransactionsTable />
 			<RecentBlocksTable />
 		</Flex>
@@ -103,6 +103,24 @@ useHead({
 
 .divider {
 	margin: 40px 0;
+}
+
+@media (max-width: 1000px) {
+	.wrapper {
+		margin-top: 24px;
+	}
+
+	.hero_section {
+		display: none;
+	}
+
+	.widgets {
+		flex-direction: column;
+	}
+
+	.tables {
+		flex-direction: column;
+	}
 }
 
 @media (max-width: 500px) {

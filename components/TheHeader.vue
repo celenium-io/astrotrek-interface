@@ -4,33 +4,7 @@ import { Dropdown, DropdownItem } from "@/components/ui/Dropdown"
 
 import NavigationPopup from "./NavigationPopup.vue"
 
-const route = useRoute()
-
 const showPopup = ref(false)
-
-const isActive = (link) => {
-	const splittedPath = route.path.split("/").filter(Boolean)
-
-	switch (link) {
-		case "index":
-			return route.path === "/"
-
-		case "txs":
-			return splittedPath.includes("tx") || splittedPath.includes("txs")
-
-		case "blocks":
-			return splittedPath.includes("block") || splittedPath.includes("blocks")
-
-		case "namespaces":
-			return splittedPath.includes("namespace") || splittedPath.includes("namespaces")
-
-		case "rollups":
-			return splittedPath.includes("rollup") || splittedPath.includes("rollups")
-
-		default:
-			break
-	}
-}
 </script>
 
 <template>
@@ -76,17 +50,21 @@ const isActive = (link) => {
 				</Flex>
 			</Flex>
 
-			<Dropdown>
-				<Flex align="center" gap="8" :class="$style.network">
-					<div :class="$style.dot" />
-					<Text size="13" weight="600" color="primary">Astria-Dusk-3</Text>
-					<Icon name="chevron" size="14" color="tertiary" />
-				</Flex>
+			<Flex align="center" gap="16">
+				<Dropdown>
+					<Flex align="center" gap="8" :class="$style.network">
+						<div :class="$style.dot" />
+						<Text size="13" weight="600" color="primary">Astria-Dusk-3</Text>
+						<Icon name="chevron" size="14" color="tertiary" />
+					</Flex>
 
-				<template #popup>
-					<DropdownItem> Astria-Dusk-3 </DropdownItem>
-				</template>
-			</Dropdown>
+					<template #popup>
+						<DropdownItem> Astria-Dusk-3 </DropdownItem>
+					</template>
+				</Dropdown>
+
+				<SearchField />
+			</Flex>
 		</Flex>
 	</Flex>
 </template>
@@ -124,7 +102,7 @@ const isActive = (link) => {
 }
 
 .network {
-	height: 28px;
+	height: 32px;
 
 	border-radius: 6px;
 	background: var(--op-8);

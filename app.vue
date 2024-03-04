@@ -1,6 +1,7 @@
 <script setup>
 /** Components */
 import ModalsManager from "@/components/modals/ModalsManager.vue"
+import SidebarsManager from "@/components/sidebars/SidebarsManager.vue"
 </script>
 
 <template>
@@ -14,6 +15,7 @@ import ModalsManager from "@/components/modals/ModalsManager.vue"
 
 		<ClientOnly>
 			<ModalsManager />
+			<SidebarsManager />
 			<Notifications />
 		</ClientOnly>
 	</NuxtLayout>
