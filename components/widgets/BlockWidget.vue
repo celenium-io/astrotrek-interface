@@ -11,10 +11,10 @@ import { useAppStore } from "@/store/app"
 const appStore = useAppStore()
 
 const lastHead = computed(() => appStore.lastHead)
-const blocks = computed(() => appStore.latestBlocks.slice(0, 44))
+const blocks = computed(() => appStore.latestBlocks.slice(0, 44).sort((a, b) => a.height - b.height))
 const blocksSnapshot = ref([])
 
-const lastBlock = computed(() => (!isPaused.value ? blocks?.value[0] : blocksSnapshot?.value[0]))
+const lastBlock = computed(() => (!isPaused.value ? blocks?.value.slice(-1)[0] : blocksSnapshot?.value.slice(-1)[0]))
 const lastBlockSize = computed(() => lastBlock.value?.stats.bytes_in_block)
 const lastBlockTxs = computed(() => lastBlock.value?.stats.tx_count)
 const maxSize = computed(() => Math.max(...blocks.value?.map((b) => b.stats.bytes_in_block)))
@@ -81,19 +81,19 @@ watch(
 				<Flex align="center" justify="between">
 					<Flex align="center" gap="4">
 						<Tooltip position="start">
-							<Button @click="handlePause" type="tertiary" size="mini" :disabled="!lastHead?.synced">
+							<Button @click="handlePause" type="tertiary" size="mini" :disabled="!lastHead?.synced" :class="$style.receiving_button">
 								<Icon :name="isPaused ? 'resume' : 'pause'" size="12" color="tertiary" />
+								<Text size="12" weight="500" color="tertiary">{{ isPaused ? 'Resume' : 'Pause'}}</Text>
 							</Button>
 
 							<template v-if="lastHead?.synced" #content>
 								<Flex align="start" direction="column" gap="6">
-									<Text>Stop receiving new blocks</Text>
-									<Text color="tertiary">Resuming will update the list of recent blocks</Text>
+									<Text v-if="!isPaused">Stop receiving new blocks</Text>
+									<Text v-else>Resume receiving new blocks</Text>
 								</Flex>
 							</template>
 							<template v-else #content> Can't resume yet, wait for a synced head </template>
 						</Tooltip>
-						<Text size="12" weight="500" color="support">Receiving new blocks</Text>
 					</Flex>
 
 					<Text size="12" weight="500" color="tertiary">~2.8s</Text>
@@ -139,5 +139,13 @@ watch(
 
 	border-radius: 50%;
 	background: var(--op-10);
+}
+
+.receiving_button {
+	box-shadow: none !important;
+}
+
+.receiving_button:hover {
+	box-shadow: inset 0 0 0 1px var(--op-5) !important;
 }
 </style>

@@ -90,19 +90,19 @@ watch(
 
 		<Flex align="center" gap="6" :class="$style.bot">
 			<Tooltip position="start">
-				<Button @click="handlePause" type="tertiary" size="mini" :disabled="!lastHead?.synced">
+				<Button @click="handlePause" type="tertiary" size="mini" :disabled="!lastHead?.synced" :class="$style.receiving_button">
 					<Icon :name="isPaused ? 'resume' : 'pause'" size="12" color="tertiary" />
+					<Text size="12" weight="500" color="tertiary">{{ isPaused ? 'Resume' : 'Pause'}}</Text>
 				</Button>
 
 				<template v-if="lastHead?.synced" #content>
 					<Flex align="start" direction="column" gap="6">
-						<Text>Stop receiving new blocks</Text>
-						<Text color="tertiary">Resuming will update the list of recent blocks</Text>
+						<Text v-if="!isPaused">Stop receiving new blocks</Text>
+						<Text v-else>Resume receiving new blocks</Text>
 					</Flex>
 				</template>
 				<template v-else #content> Can't resume yet, wait for a synced head </template>
 			</Tooltip>
-			<Text size="12" weight="500" color="support">Receiving new blocks</Text>
 		</Flex>
 	</Flex>
 </template>
@@ -166,5 +166,13 @@ watch(
 
 .bot {
 	padding: 14px 16px 0 16px;
+}
+
+.receiving_button {
+	box-shadow: none !important;
+}
+
+.receiving_button:hover {
+	box-shadow: inset 0 0 0 1px var(--op-5) !important;
 }
 </style>
