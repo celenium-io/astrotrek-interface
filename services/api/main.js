@@ -1,0 +1,11 @@
+/** Services */
+import { useServerURL } from "@/services/config"
+
+export const fetchHead = async () => {
+	try {
+		const data = await $fetch(`${useServerURL()}/head`)
+		return data
+	} catch (error) {
+		console.error(error)
+	}
+}

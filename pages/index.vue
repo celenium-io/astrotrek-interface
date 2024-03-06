@@ -9,6 +9,13 @@ import StatsWidget from "~/components/widgets/StatsWidget.vue"
 import RecentTransactionsTable from "~/components/tables/RecentTransactionsTable.vue"
 import RecentBlocksTable from "~/components/tables/RecentBlocksTable.vue"
 
+/** API */
+import { fetchLatestBlocks } from "@/services/api/block"
+
+/** Store */
+import { useAppStore } from "@/store/app"
+const appStore = useAppStore()
+
 definePageMeta({
 	layout: "default",
 })
@@ -63,6 +70,12 @@ useHead({
 		},
 	],
 })
+
+onBeforeMount(async () => {
+	const data = await fetchLatestBlocks()
+	appStore.latestBlocks = data
+	appStore.isLatestBlocksLoaded = true
+})
 </script>
 
 <template>
@@ -87,8 +100,6 @@ useHead({
 			<RecentTransactionsTable />
 			<RecentBlocksTable />
 		</Flex>
-
-		<Flex gap="24"> Recent Transactions Recent Blocks </Flex>
 	</Flex>
 </template>
 
