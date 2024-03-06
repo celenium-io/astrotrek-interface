@@ -68,7 +68,7 @@ $grayscale: (
 
 @font-face {
 	font-family: "Geist";
-	src: local("Geist"), url(~/assets/GeistVariableVF.TTF) format("truetype");
+	src: local("Geist"), url(../GeistVariableVF.ttf) format("truetype");
 	font-weight: 200 700;
 	font-style: normal;
 }
