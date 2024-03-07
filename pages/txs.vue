@@ -1,6 +1,10 @@
 <script setup>
 /** UI */
+import TransactionsTable from "@/components/tables/TransactionsTable.vue"
 import Button from "~/components/ui/Button.vue"
+
+/** API */
+import { fetchTransactions } from "@/services/api/tx"
 
 /** Store */
 import { useSidebarsStore } from "@/store/sidebars"
@@ -60,6 +64,43 @@ useHead({
 		},
 	],
 })
+
+const transactions = ref([])
+const isLoading = ref(false)
+
+const getTransactions = async () => {
+	isLoading.value = true
+
+	const { data } = await fetchTransactions({
+		limit: 15,
+		offset: (page.value - 1) * 15,
+		sort: "desc",
+	})
+	transactions.value = data.value
+
+	isLoading.value = false
+}
+
+/** Pagination */
+const page = ref(1)
+
+const handleNext = () => {
+	page.value += 1
+}
+const handlePrev = () => {
+	if (page.value === 1) return
+	page.value -= 1
+}
+
+getTransactions()
+
+watch(
+	() => page.value,
+	() => {
+		getTransactions()
+	},
+)
+
 </script>
 
 <template>
@@ -76,65 +117,15 @@ useHead({
 				</Flex>
 
 				<Flex align="center" gap="6">
-					<Button size="mini" type="secondary">Left</Button>
-					<Button size="mini" type="secondary">Page 1</Button>
-					<Button size="mini" type="secondary">Right</Button>
+					<Button @click="handlePrev" size="mini" type="secondary" :disabled="page === 1">Left</Button>
+					<Button size="mini" type="secondary">Page {{ page }}</Button>
+					<Button @click="handleNext" size="mini" type="secondary">Right</Button>
 				</Flex>
 			</Flex>
 
-			<Flex direction="column" :class="$style.rows">
-				<Flex @click="sidebarsStore.open('tx')" v-for="row in 10" justify="between" align="center" :class="$style.row">
-					<Flex direction="column" gap="8">
-						<Flex align="center" gap="8">
-							<Icon name="tx-circle" size="16" color="light-green" />
+			<TransactionsTable :txs="transactions" />
 
-							<Flex align="center" gap="8">
-								<Flex align="center" gap="6">
-									<Text size="13" weight="600" color="primary">
-										<Text color="secondary">0x</Text>
-										4d64
-									</Text>
-									<Flex align="center" gap="4">
-										<div v-for="dot in 3" :class="$style.small_dot" />
-									</Flex>
-									<Text size="13" weight="600" color="primary"> 6f97 </Text>
-								</Flex>
-
-								<Text size="13" weight="600" color="tertiary"> Token Minting </Text>
-							</Flex>
-						</Flex>
-
-						<Flex align="center" gap="8">
-							<Text size="12" weight="500" color="secondary">
-								<Text color="tertiary">Contract</Text>
-								0xf93b...E4D9
-							</Text>
-
-							<div :class="$style.dot" />
-
-							<Text size="12" weight="500" color="secondary">
-								<Text color="tertiary">Fee</Text>
-								0.04
-							</Text>
-
-							<div :class="$style.dot" />
-
-							<Text size="12" weight="500" color="tertiary"> 0x38bd...24B3 -> 0x38bd...24B3 </Text>
-						</Flex>
-					</Flex>
-
-					<Flex direction="column" align="end" gap="8">
-						<Flex align="center" gap="4">
-							<Icon name="check-circle" size="12" color="tertiary" />
-							<Text size="13" weight="600" color="primary"> 0.05 <Text color="secondary">RIA</Text> </Text>
-						</Flex>
-
-						<Text size="12" weight="500" color="tertiary">12 mins ago </Text>
-					</Flex>
-				</Flex>
-			</Flex>
-
-			<Flex align="center" justify="between" :class="$style.bot">
+			<!-- <Flex align="center" justify="between" :class="$style.bot">
 				<Flex align="center" gap="6">
 					<Icon name="pause" size="12" color="tertiary" />
 					<Text size="12" weight="500" color="support">Receiving new transactions</Text>
@@ -144,7 +135,7 @@ useHead({
 					<Text size="12" weight="600" color="tertiary"> Sort by <Text color="secondary">Time</Text> </Text>
 					<Icon name="chevron" size="12" color="secondary" />
 				</Flex>
-			</Flex>
+			</Flex> -->
 		</Flex>
 	</Flex>
 </template>

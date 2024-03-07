@@ -1,30 +1,23 @@
 <script setup>
-/** Vendor */
-import { DateTime } from "luxon"
-
 /** UI */
+import TransactionsTable from "@/components/tables/TransactionsTable.vue"
 import Button from "@/components/ui/Button.vue"
 
 /** API */
 import { fetchLatestTransactions } from "@/services/api/tx"
 
-/** Services */
-import { capitalize, comma, shortHash, splitAddress } from "@/services/utils"
-
 /** Store */
 import { useAppStore } from "@/store/app"
-import { useSidebarsStore } from "@/store/sidebars"
 const appStore = useAppStore()
-const sidebarsStore = useSidebarsStore()
 
 const lastHead = computed(() => appStore.lastHead)
 const transactions = ref([])
 
-const getLatestTransactionss = async () => {
+const getLatestTransactions = async () => {
 	const { data } = await fetchLatestTransactions()
 	transactions.value = data.value
 }
-getLatestTransactionss()
+getLatestTransactions()
 
 const transactionsSnapshot = ref([])
 const isPaused = ref(false)
@@ -48,7 +41,7 @@ watch(
 watch(
 	() => lastHead,
 	() => {
-		getLatestTransactionss()
+		getLatestTransactions()
 	},
 )
 </script>
@@ -69,47 +62,7 @@ watch(
 			</NuxtLink>
 		</Flex>
 
-		<Flex direction="column" :class="$style.rows">
-			<Flex
-				@click="sidebarsStore.open('tx')"
-				v-for="t in !isPaused ? transactions : transactionsSnapshot"
-				justify="between"
-				align="center"
-				:class="$style.row"
-			>
-				<Flex direction="column" gap="8">
-					<Flex align="center" gap="8">
-						<Icon name="tx-circle" size="16" :color="t.status === 'success' ? 'light-green' : 'red'" />
-
-						<Flex align="center" gap="8">
-							<Flex align="center" gap="6">
-								<Text size="13" weight="600" color="primary">
-									{{ shortHash(t.hash) }}
-								</Text>
-							</Flex>
-
-							<Text v-for="action in t.action_types" size="13" weight="600" color="tertiary">
-								{{ capitalize(action) }}
-							</Text>
-						</Flex>
-					</Flex>
-
-					<Flex align="center" gap="8">
-						<Text size="12" weight="500" color="secondary">
-							<Text color="tertiary">Signer</Text>
-
-							{{ splitAddress(t.signer, 4) }}
-						</Text>
-					</Flex>
-				</Flex>
-
-				<Flex direction="column" align="end" gap="8">
-					<Text size="12" weight="500" color="tertiary">
-						{{ DateTime.fromISO(t.time).toRelative({ locale: "en", style: "short" }) }}
-					</Text>
-				</Flex>
-			</Flex>
-		</Flex>
+		<TransactionsTable :txs="!isPaused ? transactions : transactionsSnapshot" />
 
 		<Flex align="center" justify="between" :class="$style.bot">
 			<Flex align="center" gap="6">
