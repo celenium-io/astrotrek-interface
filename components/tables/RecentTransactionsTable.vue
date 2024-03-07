@@ -4,7 +4,6 @@ import { DateTime } from "luxon"
 
 /** UI */
 import Button from "@/components/ui/Button.vue"
-import Tooltip from "@/components/ui/Tooltip.vue"
 
 /** API */
 import { fetchLatestTransactions } from "@/services/api/tx"

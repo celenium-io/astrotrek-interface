@@ -1,10 +1,16 @@
 <script setup>
+/** Vendor */
+import { DateTime } from "luxon"
+
 /** UI */
 import Button from "~/components/ui/Button.vue"
 import Tooltip from "@/components/ui/Tooltip.vue"
 
 /** Services */
 import { comma, formatBytes } from "@/services/utils"
+
+/** API */
+import { fetchSeries } from "@/services/api/stats"
 
 /** Store */
 import { useAppStore } from "@/store/app"
@@ -18,6 +24,25 @@ const lastBlock = computed(() => (!isPaused.value ? blocks?.value.slice(-1)[0] :
 const lastBlockSize = computed(() => lastBlock.value?.stats.bytes_in_block)
 const lastBlockTxs = computed(() => lastBlock.value?.stats.tx_count)
 const maxSize = computed(() => Math.max(...blocks.value?.map((b) => b.stats.bytes_in_block)))
+const avgBlockTime = ref(2.4)
+
+const getAvgBlockTime = async () => {
+	const data = await fetchSeries({
+		table: "block_time",
+		period: "hour",
+		from: parseInt(DateTime.now().minus({ hours: 3 }).ts / 1_000),
+	})
+
+	if (data) {
+		avgBlockTime.value = 0
+		data.forEach(item => {
+			avgBlockTime.value += parseFloat(item.value)
+		});
+
+		avgBlockTime.value = ((avgBlockTime.value / data.length) / 1_000).toFixed(1)
+	}
+}
+
 
 const calculateHeight = (size) => {
 	return (size / maxSize.value) * 100
@@ -40,6 +65,9 @@ watch(
 		}
 	},
 )
+
+await getAvgBlockTime()
+
 </script>
 
 <template>
@@ -81,7 +109,7 @@ watch(
 				<Flex align="center" justify="between">
 					<Text size="12" weight="500" color="support">Average block time</Text>
 
-					<Text size="12" weight="500" color="tertiary">~2.8s</Text>
+					<Text size="12" weight="500" color="tertiary">~ {{ avgBlockTime }} s</Text>
 				</Flex>
 			</Flex>
 		</Flex>

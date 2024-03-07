@@ -53,16 +53,3 @@ export const fetchBlockByHeight = async (height) => {
 		console.error(error)
 	}
 }
-
-export const fetchAvgBlockTime = async ({ from }) => {
-	try {
-		const url = new URL(`${useServerURL()}/stats/summary/block_stats/avg?column=block_time`)
-
-		url.searchParams.append("from", from)
-
-		const data = await useFetch(url.href)
-		return data
-	} catch (error) {
-		console.error(error)
-	}
-}
