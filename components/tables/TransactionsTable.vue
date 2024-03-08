@@ -3,7 +3,7 @@
 import { DateTime } from "luxon"
 
 /** Services */
-import { capitalize, shortHash, splitAddress } from "@/services/utils"
+import { capitalize, midHash, splitAddress } from "@/services/utils"
 
 /** Store */
 import { useSidebarsStore } from "@/store/sidebars"
@@ -33,7 +33,7 @@ const props = defineProps({
 					<Flex align="center" gap="8">
 						<Flex align="center" gap="6">
 							<Text size="13" weight="600" color="primary">
-								{{ shortHash(t.hash) }}
+								{{ midHash(t.hash) }}
 							</Text>
 						</Flex>
 

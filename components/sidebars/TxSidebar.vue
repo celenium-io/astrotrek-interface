@@ -9,6 +9,9 @@ import { shortHash, midHash } from "@/services/utils/general"
 import Button from "@/components/ui/Button.vue"
 import Sidebar from "@/components/ui/Sidebar.vue"
 
+/** Shared Components */
+import ActionBadge from "@/components/shared/ActionBadge.vue"
+
 const props = defineProps({
 	tx: {
 		type: Object,
