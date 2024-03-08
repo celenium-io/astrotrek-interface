@@ -9,11 +9,15 @@ export const useSidebarsStore = defineStore("sidebars", () => {
 		tx: false,
 	})
 
-	const open = (target) => {
+	const entity = ref({})
+
+	const open = (target, obj) => {
 		if (!sidebars[target]) {
 			sidebars[target] = true
+			entity.value = obj
 		} else {
 			sidebars[target] = false
+			entity.value = {}
 		}
 	}
 
@@ -21,9 +25,10 @@ export const useSidebarsStore = defineStore("sidebars", () => {
 		if (!sidebars[target]) return
 
 		sidebars[target] = false
+		entity.value = {}
 	}
 
-	return { sidebars, open, close }
+	return { entity, sidebars, open, close }
 })
 
 if (import.meta.hot) {

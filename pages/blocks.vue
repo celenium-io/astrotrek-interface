@@ -6,10 +6,6 @@ import Button from "~/components/ui/Button.vue"
 /** API */
 import { fetchBlocks } from "@/services/api/block";
 
-/** Store */
-import { useSidebarsStore } from "@/store/sidebars"
-const sidebarsStore = useSidebarsStore()
-
 definePageMeta({
 	layout: "default",
 })

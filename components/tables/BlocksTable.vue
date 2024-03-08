@@ -4,7 +4,7 @@ import { DateTime } from "luxon"
 
 
 /** Services */
-import { comma, formatBytes, splitAddress } from "@/services/utils"
+import { formatBytes, spaces, splitAddress } from "@/services/utils"
 
 /** Store */
 import { useSidebarsStore } from "@/store/sidebars"
@@ -23,7 +23,7 @@ const props = defineProps({
 		<Flex
 			v-if="blocks"
 			v-for="b in blocks"
-			@click="sidebarsStore.open('block')"
+			@click="sidebarsStore.open('block', b)"
 			justify="between"
 			align="center"
 			:class="$style.row"
@@ -32,7 +32,7 @@ const props = defineProps({
 				<Flex align="center" gap="8">
 					<Icon name="block" size="16" color="secondary" />
 
-					<Text size="13" weight="600" color="primary"> {{ comma(b.height) }} </Text>
+					<Text size="13" weight="600" color="primary"> {{ spaces(b.height) }} </Text>
 				</Flex>
 
 				<Flex align="center" gap="8">

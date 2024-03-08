@@ -7,7 +7,7 @@ import Button from "~/components/ui/Button.vue"
 import Tooltip from "@/components/ui/Tooltip.vue"
 
 /** Services */
-import { comma, formatBytes } from "@/services/utils"
+import { formatBytes, spaces } from "@/services/utils"
 
 /** API */
 import { fetchSeries } from "@/services/api/stats"
@@ -75,7 +75,7 @@ await getAvgBlockTime()
 		<Flex direction="column" gap="16">
 			<Flex direction="column" gap="10">
 				<Text size="16" weight="600" color="primary">
-					Block <Text color="secondary">{{ comma(lastBlock?.height) }}</Text>
+					Block <Text color="secondary">{{ spaces(lastBlock?.height) }}</Text>
 				</Text>
 
 				<Flex align="center" gap="12">
@@ -99,7 +99,7 @@ await getAvgBlockTime()
 
 						<template #content>
 							<Flex align="center" direction="column" gap="6">
-								<Text> {{ comma(b.height) }}</Text>
+								<Text> {{ spaces(b.height) }}</Text>
 								<Text color="tertiary">{{ formatBytes(b.stats.bytes_in_block) }}</Text>
 							</Flex>
 						</template>

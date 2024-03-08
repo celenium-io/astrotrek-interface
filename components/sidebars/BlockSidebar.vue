@@ -3,13 +3,17 @@
 import { DateTime } from "luxon"
 
 /** Services */
-import { shortHash } from "@/services/utils/general"
+import { shortHash, spaces } from "@/services/utils"
 
 /** UI */
 import Button from "@/components/ui/Button.vue"
 import Sidebar from "@/components/ui/Sidebar.vue"
 
 const props = defineProps({
+	block: {
+		type: Object,
+		requiered: true,
+	},
 	show: {
 		type: Boolean,
 		default: false,
@@ -28,15 +32,15 @@ const emit = defineEmits(["onClose"])
 						<Icon name="block" size="12" color="secondary" />
 						<Text size="13" weight="500" color="secondary"> Block </Text>
 					</Flex>
-					<Text size="16" weight="600" height="120" color="primary"> 523,123 </Text>
+					<Text size="16" weight="600" height="120" color="primary"> {{ spaces(block.height) }} </Text>
 				</Flex>
 
-				<Text size="12" weight="500" color="secondary">{{ DateTime.now().setLocale("en").toFormat("ff") }}</Text>
+				<Text size="12" weight="500" color="secondary">{{ DateTime.fromISO(block.time).setLocale("en").toFormat("LLL d, y, tt") }}</Text>
 
 				<Flex direction="column" gap="8" :class="$style.proposer">
 					<Text size="12" weight="600" color="secondary">Proposer</Text>
-					<Text size="13" weight="600" color="primary">node0</Text>
-					<Text size="12" weight="600" color="tertiary">230592632006DB2733444BB6DE11DB3F4B2F9AE4</Text>
+					<Text size="13" weight="600" color="primary"> {{ block.proposer?.name }}</Text>
+					<Text size="12" weight="600" color="tertiary">{{ block.proposer?.address }}</Text>
 				</Flex>
 
 				<div :class="$style.divider" />
@@ -48,10 +52,11 @@ const emit = defineEmits(["onClose"])
 						<Text size="13" weight="600" color="tertiary">Hash</Text>
 
 						<Flex align="center" gap="6">
-							<CopyButton text="123" />
 							<Text size="13" weight="600" color="primary">
-								{{ shortHash("DC83DFA65818A2DF292728C2E249582DA10619DB2901227A8F8DD1912D4DB105") }}
+								{{ shortHash(block.hash) }}
 							</Text>
+
+							<CopyButton :text=block.hash />
 						</Flex>
 					</Flex>
 
@@ -59,10 +64,11 @@ const emit = defineEmits(["onClose"])
 						<Text size="13" weight="600" color="tertiary">Parent Hash</Text>
 
 						<Flex align="center" gap="6">
-							<CopyButton text="123" />
 							<Text size="13" weight="600" color="primary">
-								{{ shortHash("DC83DFA65818A2DF292728C2E249582DA10619DB2901227A8F8DD1912D4DB105") }}
+								{{ shortHash(block.parent_hash) }}
 							</Text>
+
+							<CopyButton :text=block.parent_hash />
 						</Flex>
 					</Flex>
 
@@ -70,10 +76,11 @@ const emit = defineEmits(["onClose"])
 						<Text size="13" weight="600" color="tertiary">Last Commit Hash</Text>
 
 						<Flex align="center" gap="6">
-							<CopyButton text="123" />
 							<Text size="13" weight="600" color="primary">
-								{{ shortHash("DC83DFA65818A2DF292728C2E249582DA10619DB2901227A8F8DD1912D4DB105") }}
+								{{ shortHash(block.last_commit_hash) }}
 							</Text>
+
+							<CopyButton :text=block.last_commit_hash />
 						</Flex>
 					</Flex>
 
@@ -81,10 +88,11 @@ const emit = defineEmits(["onClose"])
 						<Text size="13" weight="600" color="tertiary">Data Hash</Text>
 
 						<Flex align="center" gap="6">
-							<CopyButton text="123" />
 							<Text size="13" weight="600" color="primary">
-								{{ shortHash("DC83DFA65818A2DF292728C2E249582DA10619DB2901227A8F8DD1912D4DB105") }}
+								{{ shortHash(block.data_hash) }}
 							</Text>
+
+							<CopyButton :text=block.data_hash />
 						</Flex>
 					</Flex>
 
@@ -92,10 +100,11 @@ const emit = defineEmits(["onClose"])
 						<Text size="13" weight="600" color="tertiary">Validators Hash</Text>
 
 						<Flex align="center" gap="6">
-							<CopyButton text="123" />
 							<Text size="13" weight="600" color="primary">
-								{{ shortHash("DC83DFA65818A2DF292728C2E249582DA10619DB2901227A8F8DD1912D4DB105") }}
+								{{ shortHash(block.validators_hash) }}
 							</Text>
+
+							<CopyButton :text=block.validators_hash />
 						</Flex>
 					</Flex>
 
@@ -103,10 +112,11 @@ const emit = defineEmits(["onClose"])
 						<Text size="13" weight="600" color="tertiary">Consensus Hash</Text>
 
 						<Flex align="center" gap="6">
-							<CopyButton text="123" />
 							<Text size="13" weight="600" color="primary">
-								{{ shortHash("DC83DFA65818A2DF292728C2E249582DA10619DB2901227A8F8DD1912D4DB105") }}
+								{{ shortHash(block.consensus_hash) }}
 							</Text>
+
+							<CopyButton :text=block.consensus_hash />
 						</Flex>
 					</Flex>
 
@@ -114,10 +124,11 @@ const emit = defineEmits(["onClose"])
 						<Text size="13" weight="600" color="tertiary">App Hash</Text>
 
 						<Flex align="center" gap="6">
-							<CopyButton text="123" />
 							<Text size="13" weight="600" color="primary">
-								{{ shortHash("DC83DFA65818A2DF292728C2E249582DA10619DB2901227A8F8DD1912D4DB105") }}
+								{{ shortHash(block.app_hash) }}
 							</Text>
+
+							<CopyButton :text=block.app_hash />
 						</Flex>
 					</Flex>
 
@@ -125,10 +136,11 @@ const emit = defineEmits(["onClose"])
 						<Text size="13" weight="600" color="tertiary">Evidence Hash</Text>
 
 						<Flex align="center" gap="6">
-							<CopyButton text="123" />
 							<Text size="13" weight="600" color="primary">
-								{{ shortHash("DC83DFA65818A2DF292728C2E249582DA10619DB2901227A8F8DD1912D4DB105") }}
+								{{ shortHash(block.evidence_hash) }}
 							</Text>
+
+							<CopyButton :text="block.evidence_hash" />
 						</Flex>
 					</Flex>
 				</Flex>
