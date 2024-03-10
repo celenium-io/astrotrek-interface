@@ -8,6 +8,7 @@ import { shortHash, spaces } from "@/services/utils"
 /** UI */
 import Button from "@/components/ui/Button.vue"
 import Sidebar from "@/components/ui/Sidebar.vue"
+import TransactionsList from "@/components/tables/TransactionsList.vue";
 
 const props = defineProps({
 	block: {
@@ -21,6 +22,48 @@ const props = defineProps({
 })
 
 const emit = defineEmits(["onClose"])
+
+const txs = ref([
+	{
+		"id": 8105,
+		"height": 2056715,
+		"position": 2,
+		"gas_wanted": 0,
+		"gas_used": 0,
+		"actions_count": 1,
+		"nonce": 572,
+		"hash": "4df95d25528c0d2eec5081589cbc012b8b8b0ea73b61bbda084bf85784c0d84f",
+		"signature": "9ccb68de0195eb0de1b328adf6e66676d97a5e05b868452b3e3aa4e9e9e2913991e3182a6bdfcfe79f637a9c940a62fdcb1a3386e13a0b0621610fa544d73601",
+		"signer": "36cb0c58e0bef354c443f320811c7b939ed5c0cd",
+		"time": "2024-03-08T22:25:03.197005Z",
+		"status": "success",
+		"action_types": [
+			"sequence",
+			"transfer",
+			"transfer1",
+			"transfer2",
+			"transfer3",
+		]
+	},
+	{
+		"id": 8104,
+		"height": 2056649,
+		"position": 2,
+		"gas_wanted": 0,
+		"gas_used": 0,
+		"actions_count": 1,
+		"nonce": 571,
+		"hash": "fd7c1e46d7fee5df4a10cfc31e34c940fb8b16586c939a80f3ccc322d1182de4",
+		"signature": "d7a1975e45a0ff8490e98aabef079a7b72e8828b83c7b956095b92e99378386320757468ff5522823ad4f1ae97d88a39222a6429a74f81c2c2890239a64ac106",
+		"signer": "36cb0c58e0bef354c443f320811c7b939ed5c0cd",
+		"time": "2024-03-08T22:22:22.494216Z",
+		"status": "success",
+		"action_types": [
+			"sequence"
+		]
+	},
+])
+
 </script>
 
 <template>
@@ -44,6 +87,15 @@ const emit = defineEmits(["onClose"])
 				</Flex>
 
 				<div :class="$style.divider" />
+				<Flex align="center" justify="between">
+					<Text size="13" weight="600" color="primary">Transactions</Text>
+					<Text size="13" weight="600" color="primary">{{ block.stats.tx_count }}</Text>
+				</Flex>
+				<!-- <TransactionsList v-if="block.stats.tx_count > 0" :txs="1" /> -->
+				<TransactionsList :txs="txs" />
+
+				<div :class="$style.divider" />
+
 
 				<Flex direction="column" gap="16">
 					<Text size="12" weight="600" color="primary">Details</Text>

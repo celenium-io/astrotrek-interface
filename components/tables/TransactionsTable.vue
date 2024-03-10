@@ -2,6 +2,9 @@
 /** Vendor */
 import { DateTime } from "luxon"
 
+/** UI */
+import ActionsList from "@/components/shared/ActionsList.vue";
+
 /** Services */
 import { capitalize, midHash, splitAddress } from "@/services/utils"
 
@@ -37,9 +40,10 @@ const props = defineProps({
 							</Text>
 						</Flex>
 
-						<Text v-for="action in t.action_types" size="13" weight="600" color="tertiary">
+						<ActionsList :actions="t.action_types"></ActionsList>
+						<!-- <Text v-for="action in t.action_types" size="13" weight="600" color="tertiary">
 							{{ capitalize(action) }}
-						</Text>
+						</Text> -->
 					</Flex>
 				</Flex>
 

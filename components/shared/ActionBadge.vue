@@ -12,11 +12,11 @@ defineProps({
 		required: true,
 	},
     size: {
-        type: [String, Number],
-        default: 13
+        type: String,
+        default: "13"
     },
     height: {
-        type: [String, Number],
+        type: String,
         default: "20px"
     },
     color: {
