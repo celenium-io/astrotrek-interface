@@ -2,6 +2,9 @@
 /** Vendor */
 import { DateTime } from "luxon"
 
+/** API */
+import { fetchTransactionsByBlock } from "@/services/api/tx"
+
 /** Services */
 import { shortHash, spaces } from "@/services/utils"
 
@@ -22,6 +25,17 @@ const props = defineProps({
 })
 
 const emit = defineEmits(["onClose"])
+
+// const txs = ref([])
+// const getTransactions = async () => {
+// 	if (block.stats.tx_count > 0) {
+// 		const { data } = await fetchTransactionsByBlock({ height: props.block.height })
+// 		if (data.value) {
+// 			txs.value = data.value
+// 		}
+// 	}
+// }
+// getTransactions()
 
 const txs = ref([
 	{
@@ -91,7 +105,8 @@ const txs = ref([
 					<Text size="13" weight="600" color="primary">Transactions</Text>
 					<Text size="13" weight="600" color="primary">{{ block.stats.tx_count }}</Text>
 				</Flex>
-				<!-- <TransactionsList v-if="block.stats.tx_count > 0" :txs="1" /> -->
+				<!-- <TransactionsList v-if="txs.length" :txs="txs" /> -->
+				<!-- To do - add v-else -->
 				<TransactionsList :txs="txs" />
 
 				<div :class="$style.divider" />

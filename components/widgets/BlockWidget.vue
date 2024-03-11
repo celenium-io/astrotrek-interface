@@ -14,7 +14,9 @@ import { fetchSeries } from "@/services/api/stats"
 
 /** Store */
 import { useAppStore } from "@/store/app"
+import { useSidebarsStore } from "@/store/sidebars"
 const appStore = useAppStore()
+const sidebarsStore = useSidebarsStore()
 
 const lastHead = computed(() => appStore.lastHead)
 const blocks = computed(() => appStore.latestBlocks.slice(0, 44).sort((a, b) => a.height - b.height))
@@ -45,6 +47,7 @@ const getAvgBlockTime = async () => {
 
 
 const calculateHeight = (size) => {
+	// return Math.floor(Math.random() * 100)
 	return (size / maxSize.value) * 100
 }
 
@@ -91,6 +94,7 @@ await getAvgBlockTime()
 				<Flex align="end" gap="4" :class="$style.chart">
 					<Tooltip v-for="b in !isPaused ? blocks : blocksSnapshot" style="height: 100%">
 						<Flex
+							@click="sidebarsStore.open('block', b)"
 							:class="$style.bar"
 							:style="{
 								height: `${calculateHeight(b.stats.bytes_in_block)}%`,

@@ -1,13 +1,9 @@
 <script setup>
 /** Services */
-import { capitalize, midHash, shortHash, splitAddress } from "@/services/utils"
+import { shortHash } from "@/services/utils"
 
 /** UI */
 import ActionsList from "@/components/shared/ActionsList.vue";
-
-/** Store */
-import { useSidebarsStore } from "@/store/sidebars"
-const sidebarsStore = useSidebarsStore()
 
 const props = defineProps({
 	txs: {
@@ -18,7 +14,7 @@ const props = defineProps({
 
 <template>
     <Flex direction="column" gap="8">
-        <NuxtLink v-for="t in txs.slice(0, 5)" :to="`/tx/${t.hash}`">
+        <NuxtLink v-for="t in txs.slice(0, Math.min(txs.length, 5))" :to="`/tx/${t.hash}`">
             <Outline wide height="32" padding="8" radius="6">
                 <Flex justify="between" align="center" wide :class="$style.rows">
                     <Flex align="center" gap="8">
@@ -32,20 +28,6 @@ const props = defineProps({
                     </Flex>
 
                     <ActionsList :actions="t.action_types"></ActionsList>
-                    <!-- <Flex v-if="t.actions_count" align="center" gap="6">
-                        <Text size="12" height="160" weight="600" color="tertiary">
-                            {{ capitalize(t.action_types[0]) }}
-                        </Text>
-                        <Text
-                            v-if="t.actions_count > 1"
-                            size="12"
-                            weight="600"
-                            color="primary"
-                            :class="$style.badge"
-                        >
-                            +{{ t.actions_count - 1 }}
-                        </Text>
-                    </Flex> -->
                 </Flex>
             </Outline>
         </NuxtLink>
