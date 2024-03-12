@@ -1,19 +1,11 @@
 <script setup>
-/** Vendor */
-import { DateTime } from "luxon"
-
 /** UI */
+import BlocksTable from "@/components/tables/BlocksTable.vue"
 import Button from "@/components/ui/Button.vue"
-import Tooltip from "@/components/ui/Tooltip.vue"
-
-/** Services */
-import { comma, formatBytes, splitAddress } from "@/services/utils"
 
 /** Store */
 import { useAppStore } from "@/store/app"
-import { useSidebarsStore } from "@/store/sidebars"
 const appStore = useAppStore()
-const sidebarsStore = useSidebarsStore()
 
 const blocks = computed(() => appStore.latestBlocks.slice(0, 5))
 const lastHead = computed(() => appStore.lastHead)
@@ -54,64 +46,13 @@ watch(
 			</NuxtLink>
 		</Flex>
 
-		<Flex direction="column" :class="$style.rows">
-			<Flex
-				@click="sidebarsStore.open('block')"
-				v-for="b in !isPaused ? blocks : blocksSnapshot"
-				justify="between"
-				align="center"
-				:class="$style.row"
-			>
-				<Flex direction="column" gap="8">
-					<Flex align="center" gap="8">
-						<Icon name="block" size="16" color="secondary" />
-
-						<Text size="13" weight="600" color="primary"> {{ comma(b.height) }} </Text>
-					</Flex>
-
-					<Flex align="center" gap="8">
-						<Text size="12" weight="500" color="secondary">
-							<Text color="tertiary">Proposer</Text>
-							{{ splitAddress(b.proposer.address) }}
-						</Text>
-
-						<div :class="$style.dot" />
-
-						<Text size="12" weight="500" color="secondary">
-							{{ formatBytes(b.stats.bytes_in_block, 2, "number") }}
-							<Text color="tertiary">{{ formatBytes(b.stats.bytes_in_block, 2, "unit") }}</Text>
-						</Text>
-					</Flex>
-				</Flex>
-
-				<Flex direction="column" align="end" gap="8">
-					<Flex align="center" gap="4">
-						<Icon name="tx-circle" size="12" color="light-green" />
-						<Text size="13" weight="600" color="primary"> {{ b.stats.tx_count }} <Text color="secondary">Txs</Text> </Text>
-					</Flex>
-
-					<Text size="12" weight="500" color="tertiary">
-						{{ DateTime.fromISO(b.time).toRelative({ locale: "en", style: "short" }) }}
-					</Text>
-				</Flex>
-			</Flex>
-		</Flex>
+		<BlocksTable :blocks="!isPaused ? blocks : blocksSnapshot" />
 
 		<Flex align="center" gap="6" :class="$style.bot">
-			<Tooltip position="start">
-				<Button @click="handlePause" type="tertiary" size="mini" :disabled="!lastHead?.synced" :class="$style.receiving_button">
-					<Icon :name="isPaused ? 'resume' : 'pause'" size="12" color="tertiary" />
-					<Text size="12" weight="500" color="tertiary">{{ isPaused ? "Resume" : "Pause" }}</Text>
-				</Button>
-
-				<template v-if="lastHead?.synced" #content>
-					<Flex align="start" direction="column" gap="6">
-						<Text v-if="!isPaused">Stop receiving new blocks</Text>
-						<Text v-else>Resume receiving new blocks</Text>
-					</Flex>
-				</template>
-				<template v-else #content> Can't resume yet, wait for a synced head </template>
-			</Tooltip>
+			<Button @click="handlePause" type="tertiary" size="mini" :disabled="!lastHead?.synced">
+				<Icon :name="isPaused ? 'resume' : 'pause'" size="12" color="tertiary" />
+				<Text size="12" weight="500" color="tertiary">{{ isPaused ? "Resume receiving new blocks" : "Pause receiving new blocks" }}</Text>
+			</Button>
 		</Flex>
 	</Flex>
 </template>
@@ -174,14 +115,6 @@ watch(
 }
 
 .bot {
-	padding: 14px 16px 0 16px;
-}
-
-.receiving_button {
-	box-shadow: none !important;
-}
-
-.receiving_button:hover {
-	box-shadow: inset 0 0 0 1px var(--op-5) !important;
+	padding: 14px 16px 0 8px;
 }
 </style>

@@ -49,6 +49,14 @@ export const shortHash = (hash) => {
 	}
 }
 
+export const midHash = (hash) => {
+	if (hash.length > 24) {
+		return `${hash.slice(0, 4)} ${hash.slice(4, 8)} ••• ${hash.slice(-8,-4)} ${hash.slice(-4)}`
+	} else {
+		return hash
+	}
+}
+
 export const splitAddress = (address, charCount = 4) => {
 	return `${address.slice(0, charCount)}...${address.slice(-charCount)}`
 }

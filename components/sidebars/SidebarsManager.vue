@@ -9,6 +9,6 @@ const sidebarsStore = useSidebarsStore()
 </script>
 
 <template>
-	<BlockSidebar :show="sidebarsStore.sidebars.block" @onClose="sidebarsStore.close('block')" />
-	<TxSidebar :show="sidebarsStore.sidebars.tx" @onClose="sidebarsStore.close('tx')" />
+	<BlockSidebar :show="sidebarsStore.sidebars.block" :block="sidebarsStore.entity" @onClose="sidebarsStore.close('block')" />
+	<TxSidebar :show="sidebarsStore.sidebars.tx" :tx="sidebarsStore.entity" @onClose="sidebarsStore.close('tx')" />
 </template>

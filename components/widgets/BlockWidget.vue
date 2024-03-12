@@ -1,14 +1,22 @@
 <script setup>
+/** Vendor */
+import { DateTime } from "luxon"
+
 /** UI */
 import Button from "~/components/ui/Button.vue"
 import Tooltip from "@/components/ui/Tooltip.vue"
 
 /** Services */
-import { comma, formatBytes } from "@/services/utils"
+import { formatBytes, spaces } from "@/services/utils"
+
+/** API */
+import { fetchSeries } from "@/services/api/stats"
 
 /** Store */
 import { useAppStore } from "@/store/app"
+import { useSidebarsStore } from "@/store/sidebars"
 const appStore = useAppStore()
+const sidebarsStore = useSidebarsStore()
 
 const lastHead = computed(() => appStore.lastHead)
 const blocks = computed(() => appStore.latestBlocks.slice(0, 44).sort((a, b) => a.height - b.height))
@@ -18,8 +26,28 @@ const lastBlock = computed(() => (!isPaused.value ? blocks?.value.slice(-1)[0] :
 const lastBlockSize = computed(() => lastBlock.value?.stats.bytes_in_block)
 const lastBlockTxs = computed(() => lastBlock.value?.stats.tx_count)
 const maxSize = computed(() => Math.max(...blocks.value?.map((b) => b.stats.bytes_in_block)))
+const avgBlockTime = ref(2.4)
+
+const getAvgBlockTime = async () => {
+	const data = await fetchSeries({
+		table: "block_time",
+		period: "hour",
+		from: parseInt(DateTime.now().minus({ hours: 3 }).ts / 1_000),
+	})
+
+	if (data) {
+		avgBlockTime.value = 0
+		data.forEach(item => {
+			avgBlockTime.value += parseFloat(item.value)
+		});
+
+		avgBlockTime.value = ((avgBlockTime.value / data.length) / 1_000).toFixed(1)
+	}
+}
+
 
 const calculateHeight = (size) => {
+	// return Math.floor(Math.random() * 100)
 	return (size / maxSize.value) * 100
 }
 
@@ -40,6 +68,9 @@ watch(
 		}
 	},
 )
+
+await getAvgBlockTime()
+
 </script>
 
 <template>
@@ -47,7 +78,7 @@ watch(
 		<Flex direction="column" gap="16">
 			<Flex direction="column" gap="10">
 				<Text size="16" weight="600" color="primary">
-					Block <Text color="secondary">{{ comma(lastBlock?.height) }}</Text>
+					Block <Text color="secondary">{{ spaces(lastBlock?.height) }}</Text>
 				</Text>
 
 				<Flex align="center" gap="12">
@@ -63,6 +94,7 @@ watch(
 				<Flex align="end" gap="4" :class="$style.chart">
 					<Tooltip v-for="b in !isPaused ? blocks : blocksSnapshot" style="height: 100%">
 						<Flex
+							@click="sidebarsStore.open('block', b)"
 							:class="$style.bar"
 							:style="{
 								height: `${calculateHeight(b.stats.bytes_in_block)}%`,
@@ -71,7 +103,7 @@ watch(
 
 						<template #content>
 							<Flex align="center" direction="column" gap="6">
-								<Text> {{ comma(b.height) }}</Text>
+								<Text> {{ spaces(b.height) }}</Text>
 								<Text color="tertiary">{{ formatBytes(b.stats.bytes_in_block) }}</Text>
 							</Flex>
 						</template>
@@ -81,7 +113,7 @@ watch(
 				<Flex align="center" justify="between">
 					<Text size="12" weight="500" color="support">Average block time</Text>
 
-					<Text size="12" weight="500" color="tertiary">~2.8s</Text>
+					<Text size="12" weight="500" color="tertiary">~ {{ avgBlockTime }} s</Text>
 				</Flex>
 			</Flex>
 		</Flex>
