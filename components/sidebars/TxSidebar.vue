@@ -3,7 +3,7 @@
 import { DateTime } from "luxon"
 
 /** Services */
-import { shortHash, midHash } from "@/services/utils/general"
+import { midHash, shortHash, spaces } from "@/services/utils"
 
 /** UI */
 import Button from "@/components/ui/Button.vue"
@@ -44,7 +44,16 @@ const emit = defineEmits(["onClose"])
 					</Flex>
 				</Flex>
 
-				<Text size="12" weight="500" color="secondary">{{ DateTime.fromISO(tx.time).setLocale("en").toFormat("LLL d, y, tt") }}</Text>
+				<Flex align="center" justify="between">
+					<Flex align="center" gap="4">
+						<Icon name="block" size="12" color="secondary" />
+						<Text size="12" weight="500" color="secondary"> {{ spaces(tx.height) }} </Text>
+					</Flex>
+					
+					<Text size="12" weight="500" color="secondary">{{ DateTime.fromISO(tx.time).setLocale("en").toFormat("LLL d, y, tt") }}</Text>
+				</Flex>
+
+				
 
 				<Flex direction="column" gap="8" :class="$style.proposer">
 					<Text size="12" weight="600" color="secondary">Signer</Text>

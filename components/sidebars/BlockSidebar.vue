@@ -6,7 +6,7 @@ import { DateTime } from "luxon"
 import { fetchTransactionsByBlock } from "@/services/api/tx"
 
 /** Services */
-import { shortHash, spaces } from "@/services/utils"
+import { formatBytes, shortHash, spaces } from "@/services/utils"
 
 /** UI */
 import Button from "@/components/ui/Button.vue"
@@ -102,7 +102,13 @@ const txs = ref([
 					<Text size="16" weight="600" height="120" color="primary"> {{ spaces(block.height) }} </Text>
 				</Flex>
 
-				<Text size="12" weight="500" color="secondary">{{ DateTime.fromISO(block.time).setLocale("en").toFormat("LLL d, y, tt") }}</Text>
+				<Flex align="center" justify="between">
+					<Text size="12" weight="500" color="secondary">{{ formatBytes(block.stats.bytes_in_block) }}</Text>
+
+					<Text size="12" weight="500" color="secondary">{{ DateTime.fromISO(block.time).setLocale("en").toFormat("LLL d, y, tt") }}</Text>
+				</Flex>
+
+				
 
 				<Flex direction="column" gap="8" :class="$style.proposer">
 					<Text size="12" weight="600" color="secondary">Proposer</Text>
