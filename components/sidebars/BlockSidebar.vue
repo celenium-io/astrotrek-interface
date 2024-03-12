@@ -35,7 +35,17 @@ const emit = defineEmits(["onClose"])
 // 		}
 // 	}
 // }
-// getTransactions()
+
+// watch(
+// 	() => props.show,
+// 	() => {
+// 		if (props.show) {
+// 			getTransactions()
+// 		} else {
+// 			txs.value = []
+// 		}
+// 	},
+// )
 
 const txs = ref([
 	{
