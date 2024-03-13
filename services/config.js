@@ -1,11 +1,11 @@
 export const Server = {
 	API: {
-		mainnet: "https://astria.celenium.io/v1",
-		dev: "https://astria.celenium.io/v1",
+		mainnet: "http://api-dusk-3.astrotrek.io/v1",
+		dev: "https://api-dusk-3.astrotrek.io/v1",
 	},
 	WSS: {
-		mainnet: "wss://astria.celenium.io/v1/ws",
-		dev: "wss://astria.celenium.io/v1/ws",
+		mainnet: "wss://api-dusk-3.astrotrek.io/v1/ws",
+		dev: "wss://api-dusk-3.astrotrek.io/v1/ws",
 	},
 }
 
