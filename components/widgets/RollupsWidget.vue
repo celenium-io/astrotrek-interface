@@ -45,9 +45,14 @@ const calculateHeight = (size) => {
 		<Flex direction="column" gap="8">
 			<Text size="16" weight="600" color="primary"> Rollups Analysis </Text>
 
-			<Text size="14" weight="500" color="tertiary" height="140">
-				In the last <Text color="secondary">24</Text> hours <Text color="secondary">{{ formatBytes(totalDataSize) }}</Text> pushed
-			</Text>
+			<Flex direction="column" gap="2">
+				<Text size="14" weight="500" color="tertiary" height="140">
+					In the last <Text color="secondary">24</Text> hours,
+				</Text>
+				<Text size="14" weight="500" color="secondary">{{ formatBytes(totalDataSize) }}
+					<Text color="tertiary" height="140">have been pushed</Text>
+				</Text>
+			</Flex>
 		</Flex>
 
 		<Flex align="end" gap="4" :class="$style.chart">
