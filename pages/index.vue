@@ -102,7 +102,7 @@ const handleHide = () => {
 				<TxsWidget />
 			</Flex>
 
-			<StatsWidget />
+			<!-- <StatsWidget /> -->
 		</Flex>
 
 		<Divider :class="$style.divider" />
