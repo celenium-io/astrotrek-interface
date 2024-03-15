@@ -3,7 +3,7 @@
 import { DateTime } from "luxon"
 
 /** Services */
-import { midHash, shortHash, spaces, comma } from "@/services/utils"
+import { midHash, shortHash, space, comma } from "@/services/utils"
 
 /** UI */
 import Button from "@/components/ui/Button.vue"
