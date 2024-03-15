@@ -1,13 +1,28 @@
 <script setup>
 /**
+ * Vendor
+ */
+import { useDebounceFn } from "@vueuse/core"
+
+/**
  * Composable
  */
 import { useOutside } from "@/composables/outside"
+
+/** Services */
+import { shortHash } from "~/services/utils"
+
+/** API */
+import { search } from "@/services/api/store"
 
 let removeOutside = null
 
 const searchEl = ref()
 const inputEl = ref()
+
+const searchTerm = ref()
+const results = ref([])
+const history = ref([])
 
 const show = ref(false)
 
@@ -40,18 +55,39 @@ onMounted(() => {
 	})
 })
 
+const debouncedSearch = useDebounceFn(async (e) => {
+	const { data } = await search(searchTerm.value?.trim())
+	results.value = data.value || []
+}, 250)
+watch(
+	() => searchTerm.value,
+	() => {
+		if (searchTerm.value?.length > 1000) return
+		debouncedSearch()
+	},
+)
+
+const handleSaveToHistory = (item) => {
+	if (localStorage.history) {
+		localStorage.history = JSON.stringify([item, ...JSON.parse(localStorage.history).slice(0, 4)])
+	} else {
+		localStorage.history = JSON.stringify([item])
+	}
+}
+
 const onKeydown = (e) => {
 	if (e.code === "Escape") {
 		show.value = false
 		inputEl.value.blur()
 	}
 }
-
 watch(
 	() => show.value,
 	() => {
 		if (show.value) {
 			window.addEventListener("keydown", onKeydown)
+
+			history.value = localStorage.history ? JSON.parse(localStorage.history) : []
 
 			nextTick(() => {
 				removeOutside = useOutside(searchEl.value.wrapper, () => {
@@ -60,6 +96,8 @@ watch(
 			})
 		} else {
 			activeTab.value = tabs.value[0].name
+
+			searchTerm.value = null
 
 			window.removeEventListener("keydown", onKeydown)
 
@@ -74,7 +112,7 @@ watch(
 		<Flex @click="inputEl.focus()" align="center" justify="between" :class="$style.field">
 			<Flex align="center" gap="8">
 				<Icon name="search" size="16" color="secondary" />
-				<input ref="inputEl" placeholder="Search" @focus="show = true" />
+				<input ref="inputEl" v-model="searchTerm" placeholder="Search" @focus="show = true" />
 			</Flex>
 
 			<Flex align="center" justify="center" :class="$style.kbd">
@@ -98,13 +136,60 @@ watch(
 						</Flex>
 					</Flex>
 
-					<Flex direction="column" align="center" justify="center" gap="8" :class="$style.inner">
-						<Text size="13" weight="600" color="primary">Title about search</Text>
-						<Text size="12" weight="500" color="tertiary">Description about search</Text>
+					<Flex
+						v-if="!results.length && !history.length"
+						direction="column"
+						align="center"
+						justify="center"
+						gap="8"
+						:class="$style.inner"
+					>
+						<Text size="13" weight="600" color="primary">Start typing to search</Text>
+						<Text size="12" weight="500" color="tertiary">Here will be the history after the first query</Text>
+					</Flex>
+					<Flex v-else-if="!results.length && history.length" direction="column" gap="2" :class="$style.inner">
+						<NuxtLink v-for="item in history" :to="`/${item.type}/${item.body.hash}`" @click="handleSaveToHistory(item)">
+							<Flex align="center" justify="between" :class="$style.item">
+								<Flex align="center" gap="6">
+									<Icon name="time" size="12" color="secondary" />
+									<Text size="13" weight="600" color="primary">
+										{{ shortHash(item.body.hash) }}
+									</Text>
+								</Flex>
+
+								<Text size="13" weight="500" color="tertiary" style="text-transform: capitalize">
+									{{ item.type }}
+								</Text>
+							</Flex>
+						</NuxtLink>
+					</Flex>
+					<Flex v-else direction="column" gap="2" :class="$style.inner">
+						<NuxtLink
+							v-for="result in results"
+							:to="`/${result.type}/${result.body.hash}`"
+							@click="handleSaveToHistory(result)"
+						>
+							<Flex align="center" justify="between" :class="$style.item">
+								<Flex align="center" gap="6">
+									<Icon :name="result.type" size="12" color="secondary" />
+									<Text size="13" weight="600" color="primary">
+										{{ shortHash(result.body.hash) }}
+									</Text>
+								</Flex>
+
+								<Text size="13" weight="500" color="tertiary" style="text-transform: capitalize">
+									{{ result.type }}
+								</Text>
+							</Flex>
+						</NuxtLink>
 					</Flex>
 
 					<Flex align="center" justify="between" :class="$style.bottom">
-						<Text size="12" weight="600" color="tertiary">234 results</Text>
+						<Text v-if="results.length" size="12" weight="600" color="tertiary">{{ results.length }} results</Text>
+						<Text v-else-if="!results.length && history.length" size="12" weight="600" color="tertiary"
+							>Last searched items shown</Text
+						>
+						<Text v-else size="12" weight="600" color="tertiary">No results</Text>
 
 						<Flex align="center" gap="8">
 							<Text size="11" weight="600" color="support"> <Text color="tertiary">Enter</Text> to open </Text>
@@ -163,6 +248,8 @@ watch(
 	position: absolute;
 	top: 40px;
 	right: 0;
+
+	z-index: 100;
 }
 
 .popup {
@@ -180,7 +267,25 @@ watch(
 }
 
 .inner {
-	height: 120px;
+	min-height: 120px;
+
+	padding: 8px;
+}
+
+.item {
+	height: 28px;
+
+	border-radius: 5px;
+	background: var(--op-8);
+	cursor: pointer;
+
+	padding: 0 8px;
+
+	transition: all 0.2s ease;
+
+	&:hover {
+		background: var(--op-10);
+	}
 }
 
 .bottom {

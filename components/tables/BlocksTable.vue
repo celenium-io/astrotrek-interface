@@ -2,7 +2,6 @@
 /** Vendor */
 import { DateTime } from "luxon"
 
-
 /** Services */
 import { formatBytes, spaces, splitAddress } from "@/services/utils"
 
@@ -14,22 +13,37 @@ const props = defineProps({
 	blocks: {
 		type: Array,
 	},
+	isLoading: {
+		type: Boolean,
+	},
 })
-
 </script>
 
 <template>
-	<Flex direction="column" :class="$style.rows">
+	<Flex direction="column" :class="$style.wrapper">
+		<ClientOnly>
+			<Transition name="fade">
+				<Flex v-if="isLoading" direction="column" align="center" gap="16" :class="$style.loading">
+					<Spinner size="16" />
+
+					<Flex direction="column" align="center" gap="8">
+						<Text size="14" weight="500" color="primary">Fetching blocks...</Text>
+						<Text size="13" weight="500" color="tertiary">It's almost done</Text>
+					</Flex>
+				</Flex>
+			</Transition>
+		</ClientOnly>
+
 		<Flex
 			v-if="blocks"
 			v-for="b in blocks"
 			@click="sidebarsStore.open('block', b)"
 			justify="between"
 			align="center"
-			:class="$style.row"
+			:class="[$style.row, isLoading && $style.disabled]"
 		>
 			<Flex direction="column" gap="8">
-				<Flex align="center" gap="8">
+				<Flex align="center" gap="6">
 					<Icon name="block" size="16" color="secondary" />
 
 					<Text size="13" weight="600" color="primary"> {{ spaces(b.height) }} </Text>
@@ -38,7 +52,7 @@ const props = defineProps({
 				<Flex align="center" gap="8">
 					<Text size="12" weight="500" color="secondary">
 						<Text color="tertiary">Proposer</Text>
-						{{ b.proposer ? splitAddress(b.proposer.address) : 'Genesis'}}
+						{{ b.proposer ? splitAddress(b.proposer.address) : "Genesis" }}
 					</Text>
 
 					<div :class="$style.dot" />
@@ -66,16 +80,16 @@ const props = defineProps({
 
 <style module>
 .wrapper {
-	flex: 1;
+	position: relative;
 
-	border-radius: 12px;
-	background: var(--card-background);
-
-	padding: 0 0 14px 0;
+	margin-top: 20px;
 }
 
-.rows {
-	margin-top: 20px;
+.loading {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translateY(-50%) translateX(-50%);
 }
 
 .row {
@@ -98,6 +112,11 @@ const props = defineProps({
 
 	&:last-child {
 		border-bottom: 1px solid var(--op-5);
+	}
+
+	&.disabled {
+		pointer-events: none;
+		opacity: 0.2;
 	}
 }
 

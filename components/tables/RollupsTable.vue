@@ -1,19 +1,13 @@
 <script setup>
-/** Vendor */
-import { DateTime } from "luxon"
-
-/** UI */
-import ActionsList from "@/components/shared/ActionsList.vue"
-
 /** Services */
-import { midHash, splitAddress } from "@/services/utils"
+import { shortHash, comma } from "@/services/utils"
 
 /** Store */
 import { useSidebarsStore } from "@/store/sidebars"
 const sidebarsStore = useSidebarsStore()
 
 const props = defineProps({
-	txs: {
+	rollups: {
 		type: Array,
 	},
 	isLoading: {
@@ -23,14 +17,14 @@ const props = defineProps({
 </script>
 
 <template>
-	<Flex direction="column" wide :class="$style.wrapper">
+	<Flex direction="column" :class="$style.wrapper">
 		<ClientOnly>
 			<Transition name="fade">
 				<Flex v-if="isLoading" direction="column" align="center" gap="16" :class="$style.loading">
 					<Spinner size="16" />
 
 					<Flex direction="column" align="center" gap="8">
-						<Text size="14" weight="500" color="primary">Fetching transactions...</Text>
+						<Text size="14" weight="500" color="primary">Fetching rollups...</Text>
 						<Text size="13" weight="500" color="tertiary">It's almost done</Text>
 					</Flex>
 				</Flex>
@@ -38,41 +32,42 @@ const props = defineProps({
 		</ClientOnly>
 
 		<Flex
-			v-if="txs"
-			v-for="t in txs"
-			@click="sidebarsStore.open('tx', t)"
+			v-if="rollups"
+			v-for="rollup in rollups"
+			@click="sidebarsStore.open('block', b)"
 			justify="between"
 			align="center"
 			:class="[$style.row, isLoading && $style.disabled]"
 		>
 			<Flex direction="column" gap="8">
 				<Flex align="center" gap="6">
-					<Icon name="tx-circle" size="16" :color="t.status === 'success' ? 'light-green' : 'red'" />
+					<Icon name="rollup" size="16" color="secondary" />
 
-					<Flex align="center" gap="8">
-						<Flex align="center" gap="6">
-							<Text size="13" weight="600" color="primary">
-								{{ midHash(t.hash) }}
-							</Text>
-						</Flex>
-
-						<ActionsList :actions="t.action_types" />
-					</Flex>
+					<Text size="13" weight="600" color="primary"> {{ shortHash(rollup.hash) }} </Text>
 				</Flex>
 
 				<Flex align="center" gap="8">
 					<Text size="12" weight="500" color="secondary">
-						<Text color="tertiary">Signer</Text>
+						<Text color="tertiary">Size</Text>
+						{{ rollup.size }}
+					</Text>
 
-						{{ splitAddress(t.signer, 4) }}
+					<div :class="$style.dot" />
+
+					<Text size="12" weight="500" color="secondary">
+						<Text color="tertiary">First Height</Text>
+						{{ comma(rollup.first_height) }}
 					</Text>
 				</Flex>
 			</Flex>
 
 			<Flex direction="column" align="end" gap="8">
-				<Text size="12" weight="500" color="tertiary">
-					{{ DateTime.fromISO(t.time).toRelative({ locale: "en", style: "short" }) }}
-				</Text>
+				<Flex align="center" gap="4">
+					<Icon name="tx-circle" size="12" color="light-green" />
+					<Text size="13" weight="600" color="primary"> {{ rollup.actions_count }} <Text color="secondary">Txs</Text> </Text>
+				</Flex>
+
+				<Text size="12" weight="500" color="tertiary"> Actions </Text>
 			</Flex>
 		</Flex>
 	</Flex>
@@ -80,7 +75,10 @@ const props = defineProps({
 
 <style module>
 .wrapper {
+	min-height: 900px;
 	position: relative;
+
+	margin-top: 20px;
 }
 
 .loading {
@@ -118,9 +116,11 @@ const props = defineProps({
 	}
 }
 
-@media (max-width: 1000px) {
-	.wrapper {
-		width: 100%;
-	}
+.dot {
+	width: 4px;
+	height: 4px;
+
+	border-radius: 50%;
+	background: var(--op-10);
 }
 </style>

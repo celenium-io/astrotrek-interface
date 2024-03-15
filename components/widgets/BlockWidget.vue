@@ -18,11 +18,9 @@ import { useSidebarsStore } from "@/store/sidebars"
 const appStore = useAppStore()
 const sidebarsStore = useSidebarsStore()
 
-const lastHead = computed(() => appStore.lastHead)
 const blocks = computed(() => appStore.latestBlocks.slice(0, 44).sort((a, b) => a.height - b.height))
-const blocksSnapshot = ref([])
 
-const lastBlock = computed(() => (!isPaused.value ? blocks?.value.slice(-1)[0] : blocksSnapshot?.value.slice(-1)[0]))
+const lastBlock = computed(() => blocks?.value.slice(-1)[0])
 const lastBlockSize = computed(() => lastBlock.value?.stats.bytes_in_block)
 const lastBlockTxs = computed(() => lastBlock.value?.stats.tx_count)
 const maxSize = computed(() => Math.max(...blocks.value?.map((b) => b.stats.bytes_in_block)))
@@ -37,49 +35,29 @@ const getAvgBlockTime = async () => {
 
 	if (data) {
 		avgBlockTime.value = 0
-		data.forEach(item => {
+		data.forEach((item) => {
 			avgBlockTime.value += parseFloat(item.value)
-		});
+		})
 
-		avgBlockTime.value = ((avgBlockTime.value / data.length) / 1_000).toFixed(1)
+		avgBlockTime.value = (avgBlockTime.value / data.length / 1_000).toFixed(1)
 	}
 }
 
-
 const calculateHeight = (size) => {
-	// return Math.floor(Math.random() * 100)
 	return (size / maxSize.value) * 100
 }
 
-const isPaused = ref(false)
-const handlePause = () => {
-	if (!lastHead?.value.synced) return
-
-	isPaused.value = !isPaused.value
-}
-
-watch(
-	() => isPaused.value,
-	() => {
-		if (isPaused.value) {
-			blocksSnapshot.value = [...blocks.value.slice(0, 45)]
-		} else {
-			blocksSnapshot.value = []
-		}
-	},
-)
-
 await getAvgBlockTime()
-
 </script>
 
 <template>
 	<Flex direction="column" gap="20" :class="$style.wrapper">
 		<Flex direction="column" gap="16">
 			<Flex direction="column" gap="10">
-				<Text size="16" weight="600" color="primary">
-					Block <Text color="secondary">{{ spaces(lastBlock?.height) }}</Text>
-				</Text>
+				<Flex align="center" gap="6">
+					<Text size="16" weight="600" color="primary"> Block </Text>
+					<AnimatedNumber v-if="lastBlock?.height" :text="lastBlock.height.toString()" />
+				</Flex>
 
 				<Flex align="center" gap="12">
 					<Text size="14" weight="500" color="tertiary"> {{ lastBlockTxs }} txs </Text>
@@ -92,14 +70,16 @@ await getAvgBlockTime()
 
 			<Flex direction="column" gap="12">
 				<Flex align="end" gap="4" :class="$style.chart">
-					<Tooltip v-for="b in !isPaused ? blocks : blocksSnapshot" style="height: 100%">
-						<Flex
-							@click="sidebarsStore.open('block', b)"
-							:class="$style.bar"
-							:style="{
-								height: `${calculateHeight(b.stats.bytes_in_block)}%`,
-							}"
-						/>
+					<Tooltip v-for="b in blocks">
+						<Flex align="end" :class="$style.bar_wrapper">
+							<Flex
+								@click="sidebarsStore.open('block', b)"
+								:class="$style.bar"
+								:style="{
+									height: `${calculateHeight(b.stats.bytes_in_block)}%`,
+								}"
+							/>
+						</Flex>
 
 						<template #content>
 							<Flex align="center" direction="column" gap="6">
@@ -144,10 +124,17 @@ await getAvgBlockTime()
 	}
 }
 
+.bar_wrapper {
+	height: 32px;
+	background: var(--op-8);
+	border-radius: 50px;
+}
+
 .bar {
 	width: 4px;
 
 	background: var(--brand);
+	border-radius: 50px;
 
 	transition: all 0.2s ease;
 }

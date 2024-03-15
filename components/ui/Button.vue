@@ -204,7 +204,7 @@ const getStyles = () => {
 }
 
 .wrapper.secondary {
-	background: var(--op-5);
+	background: var(--op-8);
 }
 .wrapper.secondary:hover {
 	background: var(--op-10);

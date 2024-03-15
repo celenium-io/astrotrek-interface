@@ -1,7 +1,7 @@
 /** Services */
 import { useServerURL } from "@/services/config"
 
-export const fetchBlocks = async ({ stats = true, limit, offset, sort = "desc"}) => {
+export const fetchBlocks = async ({ stats = true, limit, offset, sort = "desc" }) => {
 	try {
 		const url = new URL(`${useServerURL()}/block`)
 
@@ -49,6 +49,36 @@ export const fetchBlockByHeight = async (height) => {
 	try {
 		const data = await useFetch(`${useServerURL()}/block/${height}?stats=true`)
 
+		return data
+	} catch (error) {
+		console.error(error)
+	}
+}
+
+export const fetchBlockTxs = async ({ limit, offset, height }) => {
+	try {
+		const url = new URL(`${useServerURL()}/tx`)
+
+		url.searchParams.append("height", height)
+		if (limit) url.searchParams.append("limit", limit)
+		if (offset) url.searchParams.append("offset", offset)
+
+		const data = await useFetch(url.href)
+		return data
+	} catch (error) {
+		console.error(error)
+	}
+}
+
+export const fetchBlockActions = async ({ limit, offset, height }) => {
+	try {
+		const url = new URL(`${useServerURL()}/tx`)
+
+		url.searchParams.append("height", height)
+		if (limit) url.searchParams.append("limit", limit)
+		if (offset) url.searchParams.append("offset", offset)
+
+		const data = await useFetch(url.href)
 		return data
 	} catch (error) {
 		console.error(error)

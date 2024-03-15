@@ -65,6 +65,7 @@
 .wrapper {
 	position: absolute;
 	top: 54px;
+	z-index: 100;
 
 	background: var(--card-background);
 	border-radius: 8px;

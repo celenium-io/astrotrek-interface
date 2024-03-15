@@ -32,21 +32,13 @@ const showPopup = ref(false)
 					</Flex>
 				</NuxtLink>
 
-				<Flex align="center" gap="16">
-					<Flex @pointerenter="showPopup = true" @pointerleave="showPopup = false" align="center" gap="6" :class="$style.link">
-						<Text size="13" weight="600" color="primary">Explore</Text>
-						<Icon
-							name="chevron"
-							size="14"
-							color="tertiary"
-							:style="{ transform: `rotate(${showPopup ? '180deg' : '0deg'})` }"
-						/>
+				<Flex @pointerenter="showPopup = true" @pointerleave="showPopup = false" align="center" gap="6" :class="$style.link">
+					<Text size="13" weight="600" color="primary">Explore</Text>
+					<Icon name="chevron" size="14" color="tertiary" :style="{ transform: `rotate(${showPopup ? '180deg' : '0deg'})` }" />
 
-						<Transition name="popup">
-							<NavigationPopup v-if="showPopup" />
-						</Transition>
-					</Flex>
-					<Text size="13" weight="600" color="primary">Rollups</Text>
+					<Transition name="popup">
+						<NavigationPopup v-if="showPopup" />
+					</Transition>
 				</Flex>
 			</Flex>
 

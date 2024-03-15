@@ -3,7 +3,7 @@
 import { DateTime } from "luxon"
 
 /** Services */
-import { shortHash, midHash } from "@/services/utils/general"
+import { shortHash, midHash, space, comma } from "@/services/utils"
 
 /** UI */
 import Button from "@/components/ui/Button.vue"
@@ -44,12 +44,25 @@ const emit = defineEmits(["onClose"])
 					</Flex>
 				</Flex>
 
-				<Text size="12" weight="500" color="secondary">{{ DateTime.fromISO(tx.time).setLocale("en").toFormat("LLL d, y, tt") }}</Text>
+				<Text size="12" weight="500" color="secondary">
+					{{ DateTime.fromISO(tx.time).setLocale("en").toFormat("LLL d, y, tt") }}
+				</Text>
 
-				<Flex direction="column" gap="8" :class="$style.proposer">
+				<Flex direction="column" gap="8" :class="$style.card">
 					<Text size="12" weight="600" color="secondary">Signer</Text>
-					<Text size="12" weight="600" color="tertiary">{{ tx.signer }}</Text>
+					<Text size="12" weight="600" color="tertiary">{{ space(tx.signer) }}</Text>
 				</Flex>
+
+				<NuxtLink @click="emit('onClose')" :to="`/block/${tx.height}`">
+					<Flex justify="between" :class="$style.card">
+						<Flex direction="column" gap="8">
+							<Text size="12" weight="600" color="secondary">Block Height</Text>
+							<Text size="12" weight="600" color="tertiary">{{ comma(tx.height) }}</Text>
+						</Flex>
+
+						<Icon name="arrow-narrow-up-right" size="12" color="secondary" />
+					</Flex>
+				</NuxtLink>
 
 				<div :class="$style.divider" />
 
@@ -78,7 +91,7 @@ const emit = defineEmits(["onClose"])
 						<Text size="13" weight="600" color="tertiary">Signature</Text>
 
 						<Flex align="center" gap="6">
-							<Text size="13" weight="600" color="primary">
+							<Text size="13" weight="600" color="primary" tabular>
 								{{ shortHash(tx.signature) }}
 							</Text>
 
@@ -88,17 +101,24 @@ const emit = defineEmits(["onClose"])
 				</Flex>
 			</Flex>
 
-			<Button type="secondary" size="medium">Open Transaction</Button>
+			<Button @click="emit('onClose')" :link="`/tx/${tx.hash}`" type="secondary" size="medium">Open Transaction</Button>
 		</Flex>
 	</Sidebar>
 </template>
 
 <style module>
-.proposer {
+.card {
 	border-radius: 6px;
 	background: var(--op-8);
+	cursor: pointer;
 
 	padding: 8px;
+
+	transition: all 0.2s ease;
+
+	&:hover {
+		background: var(--op-10);
+	}
 }
 
 .divider {

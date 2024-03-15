@@ -9,6 +9,10 @@ import { fetchSeries } from "@/services/api/stats"
 const prevDaySeries = ref([])
 const series = ref([])
 
+const showTooltip = ref(false)
+const tooltipText = ref("")
+const tooltipDate = ref("")
+
 const txsChartEl = ref()
 const test = ref()
 
@@ -55,7 +59,7 @@ const buildChart = (chart, data, color, onEnter, onLeave) => {
 
 	const lastPoint = series.value[series.value.findLastIndex((s) => s.value !== null)]
 
-	const MAX_VALUE = d3.max(data, (d) => d.value) ? d3.max(data, (d) => d.value) : 1
+	const MAX_VALUE = Math.max(Math.max(...prevDaySeries.value.map((s) => s.value)), Math.max(...series.value.map((s) => s.value)))
 
 	/** Scale */
 	const x = d3.scaleUtc(
@@ -68,6 +72,25 @@ const buildChart = (chart, data, color, onEnter, onLeave) => {
 		.x((d) => x(d.date))
 		.y((d) => y(d.value))
 
+	/** Pointer */
+	const xScaleEfficiency = d3.scaleUtc(
+		d3.extent(data, (d) => d.date),
+		[marginLeft, width - marginRight],
+	)
+
+	const bisect = d3.bisector((d) => d.date).center
+	const onPointermoved = (event) => {
+		showTooltip.value = true
+
+		const idx = bisect(data, xScaleEfficiency.invert(d3.pointer(event)[0]))
+
+		tooltipText.value = series.value[idx].value || 0
+		tooltipDate.value = DateTime.fromJSDate(data[idx].date).toFormat("hh:mm a")
+	}
+	const onPointerleft = () => {
+		showTooltip.value = false
+	}
+
 	/** SVG Container */
 	const svg = d3
 		.create("svg")
@@ -77,6 +100,9 @@ const buildChart = (chart, data, color, onEnter, onLeave) => {
 		.attr("preserveAspectRatio", "none")
 		.attr("style", "max-width: 100%;")
 		.style("-webkit-tap-highlight-color", "transparent")
+		.on("pointerenter pointermove", onPointermoved)
+		.on("pointerleave", onPointerleft)
+		.on("touchstart", (event) => event.preventDefault())
 
 	/** Chart Line */
 	svg.append("path")
@@ -120,7 +146,16 @@ const todayTxs = computed(() => {
 				<Text size="14" weight="500" color="tertiary">Compared to the previous day</Text>
 			</Flex>
 
-			<Text size="16" weight="600" color="secondary">{{ todayTxs }}</Text>
+			<Flex v-if="!showTooltip" direction="column" gap="6" align="end">
+				<Text size="16" weight="600" color="secondary">{{ todayTxs }}</Text>
+				<Text size="13" weight="500" color="tertiary"> Today</Text>
+			</Flex>
+			<Flex v-else direction="column" gap="6" align="end">
+				<Text size="16" weight="600" color="secondary">
+					{{ tooltipText }}
+				</Text>
+				<Text size="13" weight="500" color="tertiary"> {{ tooltipDate }} </Text>
+			</Flex>
 		</Flex>
 
 		<Flex :class="$style.chart_wrapper">
@@ -166,6 +201,8 @@ const todayTxs = computed(() => {
 
 .chart {
 	position: absolute;
+
+	overflow: hidden;
 
 	& svg {
 		overflow: visible;

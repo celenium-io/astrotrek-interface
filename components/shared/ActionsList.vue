@@ -7,50 +7,49 @@ defineProps({
 		type: Array,
 		required: true,
 	},
-    showNumber: {
-        type: Number,
-        default: 2,
-    },
-    size: {
-        type: String,
-        default: "13"
-    },
-    height: {
-        type: String,
-        default: "160"
-    },
-    color: {
-        type: String,
-        default: "tertiary"
-    }
+	showNumber: {
+		type: Number,
+		default: 2,
+	},
+	size: {
+		type: String,
+		default: "12",
+	},
+	height: {
+		type: String,
+		default: "100",
+	},
+	color: {
+		type: String,
+		default: "secondary",
+	},
 })
 </script>
 
 <template>
-    <Flex align="center" direction="row" gap="4" :class="$style.actions_wrapper">
-        <div v-for="a in actions.slice(0, Math.min(actions.length, showNumber))">
-            <Text :size="size" :height="height" weight="600" :color="color">
-                {{ capitalize(a) }}
-            </Text>
-        </div>
-        <Text
-            v-if="actions.length > showNumber"
-            :size="size"
-            weight="600"
-            :color="color"
-        >
-            ... +{{ actions.length - showNumber }}
-        </Text>
-    </Flex>
+	<Flex align="center" direction="row" gap="4" :class="$style.wrapper">
+		<Flex v-for="a in actions.slice(0, Math.min(actions.length, showNumber))">
+			<Text :size="size" :height="height" weight="600" :color="color">
+				{{ capitalize(a) }}
+			</Text>
+		</Flex>
+
+		<Text v-if="actions.length > showNumber" size="11" weight="700" color="tertiary" :class="$style.test">
+			{{ actions.length - showNumber }} more
+		</Text>
+	</Flex>
 </template>
 
 <style module>
 .wrapper {
-	width: fit-content;
-}
-
-.actions_wrapper {
 	text-overflow: ellipsis;
 	overflow: hidden;
+}
+
+.test {
+	box-shadow: inset 0 0 0 1px var(--op-5);
+	border-radius: 4px;
+
+	padding: 3px 5px;
 }
 </style>

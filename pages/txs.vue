@@ -1,14 +1,12 @@
 <script setup>
 /** UI */
-import TransactionsTable from "@/components/tables/TransactionsTable.vue"
 import Button from "~/components/ui/Button.vue"
+
+/** Components */
+import TransactionsTable from "@/components/tables/TransactionsTable.vue"
 
 /** API */
 import { fetchTransactions } from "@/services/api/tx"
-
-/** Store */
-import { useSidebarsStore } from "@/store/sidebars"
-const sidebarsStore = useSidebarsStore()
 
 definePageMeta({
 	layout: "default",
@@ -19,7 +17,7 @@ useHead({
 	link: [
 		{
 			rel: "canonical",
-			href: "https://astrotrek.io/",
+			href: "https://astrotrek.io/txs",
 		},
 	],
 	meta: [
@@ -39,11 +37,11 @@ useHead({
 		},
 		{
 			property: "og:url",
-			content: `https://astrotrek.io/`,
+			content: `https://astrotrek.io/txs`,
 		},
 		{
 			property: "og:image",
-			content: "/img/seo/main.png",
+			content: "/img/seo/txs.png",
 		},
 		{
 			name: "twitter:title",
@@ -60,7 +58,7 @@ useHead({
 		},
 		{
 			name: "twitter:image",
-			content: "https://astrotrek.io/img/seo/main.png",
+			content: "https://astrotrek.io/img/seo/txs.png",
 		},
 	],
 })
@@ -100,42 +98,26 @@ watch(
 		getTransactions()
 	},
 )
-
 </script>
 
 <template>
 	<Flex direction="column" wide :class="$style.wrapper">
 		<Flex direction="column" :class="$style.card">
 			<Flex justify="between" align="start" wide :class="$style.top">
-				<Flex direction="column" gap="20">
-					<Text size="16" weight="600" color="primary">Transactions</Text>
-
-					<Flex align="center" gap="12">
-						<Button size="mini" type="secondary">Sort by Time</Button>
-						<Button size="mini" type="secondary">New Filter</Button>
-					</Flex>
-				</Flex>
+				<Text size="16" weight="600" color="primary">Transactions</Text>
 
 				<Flex align="center" gap="6">
-					<Button @click="handlePrev" size="mini" type="secondary" :disabled="page === 1">Left</Button>
+					<Button @click="handlePrev" size="mini" type="secondary" :disabled="page === 1 || isLoading">
+						<Icon name="chevron" size="14" color="primary" style="transform: rotate(90deg)" />
+					</Button>
 					<Button size="mini" type="secondary">Page {{ page }}</Button>
-					<Button @click="handleNext" size="mini" type="secondary">Right</Button>
+					<Button @click="handleNext" size="mini" type="secondary" :disabled="isLoading">
+						<Icon name="chevron" size="14" color="primary" style="transform: rotate(-90deg)" />
+					</Button>
 				</Flex>
 			</Flex>
 
-			<TransactionsTable :txs="transactions" />
-
-			<!-- <Flex align="center" justify="between" :class="$style.bot">
-				<Flex align="center" gap="6">
-					<Icon name="pause" size="12" color="tertiary" />
-					<Text size="12" weight="500" color="support">Receiving new transactions</Text>
-				</Flex>
-
-				<Flex align="center" gap="4">
-					<Text size="12" weight="600" color="tertiary"> Sort by <Text color="secondary">Time</Text> </Text>
-					<Icon name="chevron" size="12" color="secondary" />
-				</Flex>
-			</Flex> -->
+			<TransactionsTable :txs="transactions" :isLoading="isLoading" />
 		</Flex>
 	</Flex>
 </template>
@@ -157,6 +139,7 @@ watch(
 }
 
 .top {
+	margin-bottom: 20px;
 	padding: 0 16px;
 }
 

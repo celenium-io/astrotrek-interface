@@ -1,10 +1,12 @@
 <script setup>
 /** UI */
-import BlocksTable from "@/components/tables/BlocksTable.vue";
 import Button from "~/components/ui/Button.vue"
 
+/** Components */
+import BlocksTable from "@/components/tables/BlocksTable.vue"
+
 /** API */
-import { fetchBlocks } from "@/services/api/block";
+import { fetchBlocks } from "@/services/api/block"
 
 definePageMeta({
 	layout: "default",
@@ -15,7 +17,7 @@ useHead({
 	link: [
 		{
 			rel: "canonical",
-			href: "https://astrotrek.io/",
+			href: "https://astrotrek.io/blocks",
 		},
 	],
 	meta: [
@@ -35,11 +37,11 @@ useHead({
 		},
 		{
 			property: "og:url",
-			content: `https://astrotrek.io/`,
+			content: `https://astrotrek.io/blocks`,
 		},
 		{
 			property: "og:image",
-			content: "/img/seo/main.png",
+			content: "/img/seo/blocks.png",
 		},
 		{
 			name: "twitter:title",
@@ -56,7 +58,7 @@ useHead({
 		},
 		{
 			name: "twitter:image",
-			content: "https://astrotrek.io/img/seo/main.png",
+			content: "https://astrotrek.io/img/seo/blocks.png",
 		},
 	],
 })
@@ -104,32 +106,24 @@ watch(
 				<Flex direction="column" gap="20">
 					<Text size="16" weight="600" color="primary">Blocks</Text>
 
-					<Flex align="center" gap="12">
+					<!-- <Flex align="center" gap="12">
 						<Button size="mini" type="secondary">Sort by Time</Button>
 						<Button size="mini" type="secondary">New Filter</Button>
-					</Flex>
+					</Flex> -->
 				</Flex>
 
 				<Flex align="center" gap="6">
-					<Button @click="handlePrev" size="mini" type="secondary" :disabled="page === 1">Left</Button>
+					<Button @click="handlePrev" size="mini" type="secondary" :disabled="page === 1 || isLoading">
+						<Icon name="chevron" size="14" color="primary" style="transform: rotate(90deg)" />
+					</Button>
 					<Button size="mini" type="secondary">Page {{ page }}</Button>
-					<Button @click="handleNext" size="mini" type="secondary">Right</Button>
+					<Button @click="handleNext" size="mini" type="secondary" :disabled="isLoading">
+						<Icon name="chevron" size="14" color="primary" style="transform: rotate(-90deg)" />
+					</Button>
 				</Flex>
 			</Flex>
 
-			<BlocksTable :blocks="blocks" />
-
-			<Flex align="center" justify="between" :class="$style.bot">
-				<Flex align="center" gap="6">
-					<Icon name="pause" size="12" color="tertiary" />
-					<Text size="12" weight="500" color="support">Receiving new transactions</Text>
-				</Flex>
-
-				<Flex align="center" gap="4">
-					<Text size="12" weight="600" color="tertiary"> Sort by <Text color="secondary">Time</Text> </Text>
-					<Icon name="chevron" size="12" color="secondary" />
-				</Flex>
-			</Flex>
+			<BlocksTable :blocks="blocks" :isLoading="isLoading" />
 		</Flex>
 	</Flex>
 </template>

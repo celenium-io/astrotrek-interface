@@ -19,6 +19,8 @@ const getLatestTransactions = async () => {
 }
 getLatestTransactions()
 
+const isPauseHovered = ref(false)
+
 const transactionsSnapshot = ref([])
 const isPaused = ref(false)
 const handlePause = () => {
@@ -66,9 +68,27 @@ watch(
 
 		<Flex align="center" justify="between" :class="$style.bot">
 			<Flex align="center" gap="6">
-				<Button @click="handlePause" type="tertiary" size="mini" :disabled="!lastHead?.synced">
-					<Icon :name="isPaused ? 'resume' : 'pause'" size="12" color="tertiary" />
-					<Text size="12" weight="500" color="tertiary">{{ isPaused ? "Resume receiving new transactions" : "Pause receiving new transactions" }}</Text>
+				<Button
+					@click="handlePause"
+					@mouseenter="isPauseHovered = true"
+					@mouseleave="isPauseHovered = false"
+					type="tertiary"
+					size="mini"
+					:disabled="!lastHead?.synced"
+				>
+					<template v-if="!isPauseHovered">
+						<Icon :name="isPaused ? 'pause' : 'modem'" size="12" :color="isPaused ? 'yellow' : 'tertiary'" />
+						<Text size="12" weight="500" :color="isPaused ? 'yellow' : 'tertiary'">
+							{{ isPaused ? "Receiving new transactions is paused" : "Receiving new transactions" }}
+						</Text>
+					</template>
+
+					<template v-else-if="isPauseHovered">
+						<Icon :name="isPaused ? 'resume' : 'pause'" size="12" color="secondary" />
+						<Text size="12" weight="500" color="secondary">
+							{{ isPaused ? "Resume receiving new transactions" : "Pause receiving new transactions" }}
+						</Text>
+					</template>
 				</Button>
 			</Flex>
 		</Flex>
@@ -82,10 +102,11 @@ watch(
 	border-radius: 12px;
 	background: var(--card-background);
 
-	padding: 16px 0 14px 0;
+	padding: 16px 0 8px 0;
 }
 
 .top {
+	margin-bottom: 20px;
 	padding: 0 16px;
 }
 
@@ -133,7 +154,7 @@ watch(
 }
 
 .bot {
-	padding: 14px 16px 0 8px;
+	padding: 8px 16px 0 8px;
 }
 
 @media (max-width: 1000px) {

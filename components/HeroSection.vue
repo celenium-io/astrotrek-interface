@@ -1,5 +1,9 @@
+<script setup>
+const emit = defineEmits(["onHide"])
+</script>
+
 <template>
-	<Flex direction="column" gap="24">
+	<Flex direction="column" gap="24" :class="$style.wrapper">
 		<Flex align="center" gap="16">
 			<Text size="32" weight="400" color="secondary">Explore</Text>
 			<Flex align="center" gap="8">
@@ -39,10 +43,43 @@
 			</Flex>
 			<Text size="32" weight="400" color="secondary">with Astrotrek.</Text>
 		</Flex>
+
+		<Flex @click="emit('onHide')" align="center" gap="4" :class="$style.hide_btn">
+			<Icon name="close-square" size="12" color="secondary" />
+			<Text size="12" weight="600" color="tertiary">Hide this section</Text>
+		</Flex>
 	</Flex>
 </template>
 
 <style module>
+.wrapper {
+	position: relative;
+
+	&:hover {
+		.hide_btn {
+			opacity: 1;
+		}
+	}
+}
+
+.hide_btn {
+	position: absolute;
+	bottom: -36px;
+
+	opacity: 0;
+	cursor: pointer;
+
+	padding: 12px 0;
+
+	transition: all 0.2s ease;
+
+	&:hover {
+		& span {
+			color: var(--txt-secondary);
+		}
+	}
+}
+
 .icon {
 	width: 42px;
 	height: 32px;
