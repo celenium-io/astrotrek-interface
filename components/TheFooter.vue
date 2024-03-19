@@ -5,7 +5,7 @@ const appConfig = useAppConfig()
 <template>
 	<Flex tag="footer" justify="center" :class="$style.wrapper">
 		<Flex justify="between" wide :class="[$style.container]">
-			<Flex direction="column" gap="20">
+			<Flex direction="column" gap="20" :class="$style.left">
 				<Flex align="center" gap="8">
 					<Icon name="logo" size="18" color="black" :class="$style.logo" />
 
@@ -25,7 +25,9 @@ const appConfig = useAppConfig()
 					</svg>
 				</Flex>
 
-				<Text size="14" weight="500" color="secondary">Blockchain explorer for the shared sequencer network</Text>
+				<Text size="14" weight="500" align="center" height="140" color="secondary"
+					>Blockchain explorer for the shared sequencer network</Text
+				>
 
 				<Flex align="center" gap="16">
 					<Flex align="center" justify="center" :class="$style.social">
@@ -40,9 +42,8 @@ const appConfig = useAppConfig()
 				</Flex>
 			</Flex>
 
-			<Flex direction="column" align="end" gap="24">
-				<Flex align="center" gap="16" :class="$style.links">
-					<Text size="13" weight="600" color="support">Blockchain -></Text>
+			<Flex direction="column" align="end" gap="24" :class="$style.right">
+				<Flex align="center" gap="16" wrap="wrap" :class="$style.links">
 					<NuxtLink to="/blocks">
 						<Text size="13" weight="600" color="secondary">Blocks</Text>
 					</NuxtLink>
@@ -60,7 +61,6 @@ const appConfig = useAppConfig()
 					</NuxtLink>
 				</Flex>
 				<Flex align="center" gap="16" :class="$style.links">
-					<Text size="13" weight="600" color="support">Resources -></Text>
 					<a href="https://www.pklab.io/privacy" target="_blank">
 						<Text size="13" weight="600" color="secondary">Privacy Policy</Text>
 					</a>
@@ -115,10 +115,22 @@ const appConfig = useAppConfig()
 	}
 }
 
-@media (max-width: 600px) {
+@media (max-width: 800px) {
 	.container {
 		flex-direction: column;
-		gap: 12px;
+		gap: 40px;
+	}
+
+	.right {
+		align-items: center;
+	}
+
+	.left {
+		align-items: center;
+	}
+
+	.links {
+		justify-content: center;
 	}
 }
 </style>
