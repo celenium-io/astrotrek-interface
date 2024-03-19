@@ -3,7 +3,6 @@
 import { DateTime } from "luxon"
 
 /** UI */
-import Button from "~/components/ui/Button.vue"
 import Tooltip from "@/components/ui/Tooltip.vue"
 
 /** Services */
@@ -23,7 +22,7 @@ const getDataSizeSeries = async () => {
 	const data = await fetchSeries({
 		table: "data_size",
 		period: "hour",
-		from: parseInt(DateTime.now().minus({ days: 1 }).ts / 1_000)
+		from: parseInt(DateTime.now().minus({ days: 1 }).ts / 1_000),
 	})
 	if (data) {
 		dataSizeSeries.value = data.sort((a, b) => new Date(a.time) - new Date(b.time))
@@ -37,7 +36,6 @@ const maxSize = computed(() => Math.max(...dataSizeSeries.value?.map((s) => s.va
 const calculateHeight = (size) => {
 	return 20 + (size / maxSize.value) * 80
 }
-
 </script>
 
 <template>
@@ -46,23 +44,24 @@ const calculateHeight = (size) => {
 			<Text size="16" weight="600" color="primary"> Rollups Analysis </Text>
 
 			<Flex direction="column" gap="2">
-				<Text size="14" weight="500" color="tertiary" height="140">
-					In the last <Text color="secondary">24</Text> hours,
-				</Text>
-				<Text size="14" weight="500" color="secondary">{{ formatBytes(totalDataSize) }}
+				<Text size="14" weight="500" color="tertiary" height="140"> In the last <Text color="secondary">24</Text> hours, </Text>
+				<Text size="14" weight="500" color="secondary"
+					>{{ formatBytes(totalDataSize) }}
 					<Text color="tertiary" height="140">have been pushed</Text>
 				</Text>
 			</Flex>
 		</Flex>
 
-		<Flex align="end" gap="4" :class="$style.chart">
-			<Tooltip v-for="ds in dataSizeSeries" style="height: 100%">
-				<Flex
-					:class="$style.bar"
-					:style="{
-						height: `${calculateHeight(ds.value)}%`,
-					}"
-				/>
+		<Flex gap="4" :class="$style.chart">
+			<Tooltip v-for="ds in dataSizeSeries">
+				<Flex align="end" :class="$style.bar_wrapper">
+					<Flex
+						:class="$style.bar"
+						:style="{
+							height: `${calculateHeight(ds.value)}%`,
+						}"
+					/>
+				</Flex>
 
 				<template #content>
 					<Flex align="center" direction="column" gap="6">
@@ -101,20 +100,20 @@ const calculateHeight = (size) => {
 	}
 }
 
+.bar_wrapper {
+	height: 32px;
+	background: var(--op-8);
+	border-radius: 50px;
+}
+
 .bar {
-	width: 4.5px;
-	
+	width: 4px;
+
+	border-radius: 50px;
 	background: var(--brand);
 
 	transition: all 0.2s ease;
 }
-
-/* .bar {
-	width: 4px;
-	height: 16px;
-
-	background: var(--brand);
-} */
 
 @media (max-width: 1000px) {
 	.wrapper {
