@@ -67,6 +67,11 @@ watch(
 	},
 )
 
+const handleClear = () => {
+	results.value = []
+	searchTerm.value = null
+}
+
 const handleSaveToHistory = (item) => {
 	if (localStorage.history) {
 		localStorage.history = JSON.stringify([item, ...JSON.parse(localStorage.history).slice(0, 4)])
@@ -123,17 +128,9 @@ watch(
 		<Transition name="search">
 			<div v-if="show" :class="$style.popup_controller">
 				<Flex direction="column" :class="$style.popup">
-					<Flex align="center" gap="8" :class="$style.header">
-						<Flex
-							v-for="tab in tabs"
-							@click="activeTab = tab.name"
-							align="center"
-							gap="6"
-							:class="[$style.tab, activeTab === tab.name && $style.active]"
-						>
-							<Icon :name="tab.icon" size="14" :color="activeTab === tab.name ? 'brand' : 'secondary'" />
-							<Text size="13" weight="600" :color="activeTab === tab.name ? 'brand' : 'primary'">{{ tab.name }}</Text>
-						</Flex>
+					<Flex :class="$style.header">
+						<Text v-if="!results.length && history.length" size="12" weight="600" color="secondary">Search History</Text>
+						<Text v-else size="12" weight="600" color="secondary">Results</Text>
 					</Flex>
 
 					<Flex
@@ -186,15 +183,10 @@ watch(
 
 					<Flex align="center" justify="between" :class="$style.bottom">
 						<Text v-if="results.length" size="12" weight="600" color="tertiary">{{ results.length }} results</Text>
-						<Text v-else-if="!results.length && history.length" size="12" weight="600" color="tertiary"
-							>Last searched items shown</Text
-						>
 						<Text v-else size="12" weight="600" color="tertiary">No results</Text>
 
 						<Flex align="center" gap="8">
-							<Text size="11" weight="600" color="support"> <Text color="tertiary">Enter</Text> to open </Text>
-
-							<Text size="11" weight="600" color="support"> <Text color="tertiary">Arrows</Text> to navigate </Text>
+							<Text v-if="results.length" @click="handleClear" size="12" weight="600" color="brand"> Clear results</Text>
 						</Flex>
 					</Flex>
 				</Flex>
@@ -261,9 +253,7 @@ watch(
 }
 
 .header {
-	border-bottom: 1px solid var(--op-5);
-
-	padding: 12px;
+	padding: 12px 12px 4px 12px;
 }
 
 .inner {
