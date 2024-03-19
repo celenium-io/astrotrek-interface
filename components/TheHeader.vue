@@ -46,7 +46,7 @@ const showPopup = ref(false)
 				<Dropdown>
 					<Flex align="center" gap="8" :class="$style.network">
 						<div :class="$style.dot" />
-						<Text size="13" weight="600" color="primary">Astria-Dusk-3</Text>
+						<Text size="13" weight="600" color="primary" :class="$style.network_name">Astria-Dusk-3</Text>
 						<Icon name="chevron" size="14" color="tertiary" />
 					</Flex>
 
@@ -116,12 +116,6 @@ const showPopup = ref(false)
 	background: var(--green);
 }
 
-@media (max-width: 850px) {
-	.links {
-		display: none;
-	}
-}
-
 @media (max-width: 500px) {
 	.container {
 		margin: 0 12px;
@@ -129,6 +123,12 @@ const showPopup = ref(false)
 }
 
 @media (max-width: 550px) {
+	.network_name {
+		display: none;
+	}
+}
+
+@media (max-width: 700px) {
 	.left {
 		gap: 16px;
 	}

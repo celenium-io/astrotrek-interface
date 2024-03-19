@@ -314,4 +314,21 @@ watch(
 		background: rgba(221, 80, 34, 15%);
 	}
 }
+
+@media (max-width: 500px) {
+	.field {
+		width: 150px;
+	}
+
+	.popup_controller {
+		position: fixed;
+		left: 12px;
+		right: 12px;
+		top: 60px;
+	}
+
+	.popup {
+		width: 100%;
+	}
+}
 </style>
