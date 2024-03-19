@@ -117,7 +117,7 @@ watch(
 				</Flex>
 			</Flex>
 
-			<TransactionsTable :txs="transactions" :isLoading="isLoading" />
+			<TransactionsTable :txs="transactions" :isLoading="isLoading" :minHeight="900" />
 		</Flex>
 	</Flex>
 </template>

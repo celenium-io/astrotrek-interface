@@ -103,14 +103,7 @@ watch(
 	<Flex direction="column" wide :class="$style.wrapper">
 		<Flex direction="column" :class="$style.card">
 			<Flex justify="between" align="start" wide :class="$style.top">
-				<Flex direction="column" gap="20">
-					<Text size="16" weight="600" color="primary">Blocks</Text>
-
-					<!-- <Flex align="center" gap="12">
-						<Button size="mini" type="secondary">Sort by Time</Button>
-						<Button size="mini" type="secondary">New Filter</Button>
-					</Flex> -->
-				</Flex>
+				<Text size="16" weight="600" color="primary">Blocks</Text>
 
 				<Flex align="center" gap="6">
 					<Button @click="handlePrev" size="mini" type="secondary" :disabled="page === 1 || isLoading">
@@ -123,7 +116,7 @@ watch(
 				</Flex>
 			</Flex>
 
-			<BlocksTable :blocks="blocks" :isLoading="isLoading" />
+			<BlocksTable :blocks="blocks" :isLoading="isLoading" :minHeight="900" />
 		</Flex>
 	</Flex>
 </template>

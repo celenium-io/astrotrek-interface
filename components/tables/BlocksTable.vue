@@ -16,11 +16,15 @@ const props = defineProps({
 	isLoading: {
 		type: Boolean,
 	},
+	minHeight: {
+		type: Number,
+		required: false,
+	},
 })
 </script>
 
 <template>
-	<Flex direction="column" :class="$style.wrapper">
+	<Flex direction="column" :style="{ minHeight: `${minHeight}px` }" :class="$style.wrapper">
 		<ClientOnly>
 			<Transition name="fade">
 				<Flex v-if="isLoading" direction="column" align="center" gap="16" :class="$style.loading">
