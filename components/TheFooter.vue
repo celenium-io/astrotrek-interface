@@ -41,25 +41,37 @@ const appConfig = useAppConfig()
 			</Flex>
 
 			<Flex direction="column" align="end" gap="24">
-				<Flex align="center" gap="16">
+				<Flex align="center" gap="16" :class="$style.links">
 					<Text size="13" weight="600" color="support">Blockchain -></Text>
-					<Text size="13" weight="600" color="secondary">Blocks</Text>
-					<Text size="13" weight="600" color="secondary">Transactions</Text>
-					<Text size="13" weight="600" color="secondary">Addresses</Text>
-					<Text size="13" weight="600" color="secondary">Validators</Text>
-					<Text size="13" weight="600" color="secondary">Rollups</Text>
+					<NuxtLink to="/blocks">
+						<Text size="13" weight="600" color="secondary">Blocks</Text>
+					</NuxtLink>
+					<NuxtLink to="/txs">
+						<Text size="13" weight="600" color="secondary">Transactions</Text>
+					</NuxtLink>
+					<NuxtLink to="/accounts">
+						<Text size="13" weight="600" color="secondary">Addresses</Text>
+					</NuxtLink>
+					<NuxtLink to="/validators">
+						<Text size="13" weight="600" color="secondary">Validators</Text>
+					</NuxtLink>
+					<NuxtLink to="/rollups">
+						<Text size="13" weight="600" color="secondary">Rollups</Text>
+					</NuxtLink>
 				</Flex>
-				<Flex align="center" gap="16">
+				<Flex align="center" gap="16" :class="$style.links">
 					<Text size="13" weight="600" color="support">Resources -></Text>
-					<Text size="13" weight="600" color="secondary">Docs</Text>
-					<Text size="13" weight="600" color="secondary">Privacy Policy</Text>
-					<Text size="13" weight="600" color="secondary">Terms of use</Text>
+					<a href="https://www.pklab.io/privacy" target="_blank">
+						<Text size="13" weight="600" color="secondary">Privacy Policy</Text>
+					</a>
+					<a href="https://www.pklab.io/terms" target="_blank">
+						<Text size="13" weight="600" color="secondary">Terms of use</Text>
+					</a>
 				</Flex>
 
-				<Flex align="center" gap="16">
-					<Text size="12" weight="500" color="support">Version <Text color="tertiary">1.7.3</Text></Text>
-					<Text size="12" weight="500" color="support">Updated <Text color="tertiary">2 days ago</Text></Text>
-				</Flex>
+				<Text size="12" weight="500" color="tertiary">
+					Version <Text color="secondary">{{ appConfig.version }}</Text>
+				</Text>
 			</Flex>
 		</Flex>
 	</Flex>
@@ -97,15 +109,16 @@ const appConfig = useAppConfig()
 	background: var(--op-5);
 }
 
+.links {
+	& a {
+		display: flex;
+	}
+}
+
 @media (max-width: 600px) {
 	.container {
 		flex-direction: column;
 		gap: 12px;
-	}
-
-	.links {
-		flex-wrap: wrap;
-		justify-content: center;
 	}
 }
 </style>
