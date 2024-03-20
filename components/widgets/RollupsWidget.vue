@@ -74,7 +74,17 @@ const calculateHeight = (size) => {
 
 		<Flex direction="column" gap="8">
 			<Text size="28" weight="500" color="primary"> {{ comma(lastHead.total_rollups) }} </Text>
-			<Text size="12" weight="500" color="tertiary">Total Rollups</Text>
+
+			<Flex align="center" justify="between">
+				<Text size="12" weight="500" color="tertiary">Total Rollups</Text>
+
+				<NuxtLink to="/rollups">
+					<Flex align="center" gap="4">
+						<Text size="13" weight="600" color="brand">View Rollups</Text>
+						<Icon size="14" name="trend-up" color="brand" />
+					</Flex>
+				</NuxtLink>
+			</Flex>
 		</Flex>
 	</Flex>
 </template>
