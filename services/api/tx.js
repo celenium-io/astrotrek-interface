@@ -76,14 +76,14 @@ export const fetchTxByHash = async (hash) => {
 	}
 }
 
-export const fetchTxActions = async (hash, limit, offset) => {
+export const fetchTxActions = async ({hash, limit, offset}) => {
 	try {
 		const url = new URL(`${useServerURL()}/tx/${hash}/actions`)
 
         if (limit) url.searchParams.append("limit", limit)
 		if (offset) url.searchParams.append("offset", offset)
 
-		const data = await $fetch(url.href)
+		const data = await useFetch(url.href)
 		return data
 	} catch (error) {
 		console.error(error)

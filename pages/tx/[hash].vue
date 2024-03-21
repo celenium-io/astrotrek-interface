@@ -4,9 +4,10 @@ import { comma, shortHash } from "~/services/utils"
 
 /** Modules */
 import TxMetadata from "~/components/modules/tx/TxMetadata.vue"
+import TxActions from "~/components/modules/tx/TxActions.vue";
 
 /** API */
-import { fetchTxByHash } from "~/services/api/tx"
+import { fetchTxActions, fetchTxByHash } from "~/services/api/tx"
 
 definePageMeta({
 	layout: "default",
@@ -15,6 +16,8 @@ definePageMeta({
 const route = useRoute()
 
 const tx = ref()
+const actions = ref([])
+const isLoading = ref(false)
 
 const { data } = await fetchTxByHash(route.params.hash)
 if (!data.value) {
@@ -23,6 +26,15 @@ if (!data.value) {
 	})
 } else {
 	tx.value = data.value
+}
+
+const fetchActions = async () => {
+	isLoading.value = true
+
+	const { data } = await fetchTxActions({ hash: tx.value?.hash })
+	actions.value = data.value
+
+	isLoading.value = false
 }
 
 useHead({
@@ -71,8 +83,10 @@ useHead({
 	],
 })
 
-const tabs = ref([{ name: "Details" }])
+const tabs = ref([{ name: "Actions" }])
 const activeTab = ref(tabs.value[0].name)
+
+await fetchActions()
 </script>
 
 <template>
@@ -89,13 +103,15 @@ const activeTab = ref(tabs.value[0].name)
 
 			<Flex align="center" justify="between" wide>
 				<Flex align="center" gap="8">
-					<Icon name="tx" size="14" color="primary" />
+					<Icon name="tx" size="14" :color="tx.status === 'success' ? 'green' : 'red'" />
 					<Text size="14" weight="500" color="primary">
 						Transaction <Text weight="600">{{ shortHash(tx.hash) }}</Text>
 					</Text>
 				</Flex>
 			</Flex>
 		</Flex>
+
+		<TxMetadata :tx="tx" />
 
 		<Flex direction="column" gap="8">
 			<Flex align="center" gap="8">
@@ -111,7 +127,7 @@ const activeTab = ref(tabs.value[0].name)
 				</Text>
 			</Flex>
 
-			<TxMetadata v-if="activeTab === 'Details'" :tx="tx" />
+			<TxActions v-if="activeTab === 'Actions'" :actions="actions" :isLoading="isLoading" />
 		</Flex>
 	</Flex>
 </template>
@@ -127,6 +143,7 @@ const activeTab = ref(tabs.value[0].name)
 }
 
 .tab {
+	height: 40px;
 	border-radius: 6px;
 	cursor: pointer;
 
@@ -135,12 +152,13 @@ const activeTab = ref(tabs.value[0].name)
 	transition: all 0.2s ease;
 
 	&:hover {
-		background: var(--op-10);
+		color: var(--brand);
 	}
 
 	&.active {
-		background: var(--op-10);
-		color: var(--txt-primary);
+		color: var(--brand);
+		/* opacity: 0.6; */
 	}
 }
+
 </style>

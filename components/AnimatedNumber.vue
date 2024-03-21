@@ -25,7 +25,7 @@ const charsLength = computed(() => renderText.value.split("").length)
 					<span>0</span>
 				</div>
 			</div>
-			<Text v-else size="16" color="tertiary" weight="600"> , </Text>
+			<Text v-else size="16" color="tertiary" weight="600">&nbsp;</Text>
 		</template>
 	</Flex>
 </template>

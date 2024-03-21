@@ -1,6 +1,6 @@
 <script setup>
 /** Services */
-import { comma } from "~/services/utils"
+import { comma, spaces } from "~/services/utils"
 
 /** Modules */
 import BlockMetadata from "@/components/modules/block/BlockMetadata.vue"
@@ -17,8 +17,9 @@ definePageMeta({
 const route = useRoute()
 
 const block = ref()
-const txs = ref()
-const actions = ref()
+const txs = ref([])
+const actions = ref([])
+const isLoading = ref(false)
 
 const { data } = await fetchBlockByHeight(route.params.height)
 if (!data.value) {
@@ -29,8 +30,27 @@ if (!data.value) {
 	block.value = data.value
 }
 
+const fetchTxs = async () => {
+	isLoading.value = true
+
+	const { data } = await fetchBlockTxs({ height: block.value.height })
+	txs.value = data.value
+
+	isLoading.value = false
+}
+
+const fetchActions = async () => {
+	isLoading.value = true
+
+	const { data } = await fetchBlockActions({ height: block.value.height })
+	actions.value = data.value
+	console.log(actions.value);
+
+	isLoading.value = false
+}
+
 useHead({
-	title: `Block ${comma(block.value?.height)} - Astria Explorer`,
+	title: `Block ${spaces(block.value?.height)} - Astria Explorer`,
 	link: [
 		{
 			rel: "canonical",
@@ -44,7 +64,7 @@ useHead({
 		},
 		{
 			property: "og:title",
-			content: `Block ${comma(block.value?.height)} - Astria Explorer`,
+			content: `Block ${spaces(block.value?.height)} - Astria Explorer`,
 		},
 		{
 			property: "og:description",
@@ -56,7 +76,7 @@ useHead({
 		},
 		{
 			name: "twitter:title",
-			content: `Block ${comma(block.value?.height)} - Astria Explorer`,
+			content: `Block ${spaces(block.value?.height)} - Astria Explorer`,
 		},
 		{
 			name: "twitter:description",
@@ -65,26 +85,26 @@ useHead({
 	],
 })
 
-const tabs = ref([{ name: "Details" }, { name: "Transactions" }, { name: "Actions" }])
+const tabs = ref([{ name: "Transactions" }, { name: "Actions" }])
 const activeTab = ref(tabs.value[0].name)
 
 watch(
 	() => activeTab.value,
 	async () => {
 		if (activeTab.value === "Transactions") {
-			if (txs.value) return
+			if (txs.value.length > 0) return
 
-			const { data } = await fetchBlockTxs({ height: block.value.height })
-			txs.value = data.value
+			fetchTxs()
 		}
 		if (activeTab.value === "Actions") {
-			if (actions.value) return
+			if (actions.value.length > 0) return
 
-			const { data } = await fetchBlockActions({ height: block.value.height })
-			actions.value = data.value
+			fetchActions()
 		}
 	},
 )
+
+await fetchTxs()
 </script>
 
 <template>
@@ -103,12 +123,14 @@ watch(
 				<Flex align="center" gap="8">
 					<Icon name="block" size="14" color="primary" />
 					<Text size="14" weight="500" color="primary">
-						Block <Text weight="600">{{ comma(block.height) }}</Text>
+						Block <Text weight="600">{{ spaces(block.height) }}</Text>
 					</Text>
 				</Flex>
 			</Flex>
 		</Flex>
 
+		<BlockMetadata :block="block" />
+		
 		<Flex direction="column" gap="8">
 			<Flex align="center" gap="8">
 				<Text
@@ -123,9 +145,8 @@ watch(
 				</Text>
 			</Flex>
 
-			<BlockMetadata v-if="activeTab === 'Details'" :block="block" />
-			<BlockTransactions v-if="activeTab === 'Transactions'" :txs="txs" />
-			<BlockActions v-if="activeTab === 'Actions'" :actions="actions" />
+			<BlockTransactions v-if="activeTab === 'Transactions'" :txs="txs" :isLoading="isLoading" />
+			<BlockActions v-if="activeTab === 'Actions'" :actions="actions" :isLoading="isLoading" />
 		</Flex>
 	</Flex>
 </template>
@@ -141,6 +162,7 @@ watch(
 }
 
 .tab {
+	height: 40px;
 	border-radius: 6px;
 	cursor: pointer;
 
@@ -149,12 +171,12 @@ watch(
 	transition: all 0.2s ease;
 
 	&:hover {
-		background: var(--op-10);
+		color: var(--brand);
 	}
 
 	&.active {
-		background: var(--op-10);
-		color: var(--txt-primary);
+		color: var(--brand);
+		/* opacity: 0.6; */
 	}
 }
 </style>

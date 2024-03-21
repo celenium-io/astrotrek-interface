@@ -3,7 +3,7 @@
 import { DateTime } from "luxon"
 
 /** Services */
-import { midHash, shortHash, space, comma } from "@/services/utils"
+import { midHash, shortHash, space, spaces } from "@/services/utils"
 
 /** UI */
 import Button from "@/components/ui/Button.vue"
@@ -57,7 +57,7 @@ const emit = defineEmits(["onClose"])
 					<Flex justify="between" :class="$style.card">
 						<Flex direction="column" gap="8">
 							<Text size="12" weight="600" color="secondary">Block Height</Text>
-							<Text size="12" weight="600" color="tertiary">{{ comma(tx.height) }}</Text>
+							<Text size="12" weight="600" color="tertiary">{{ spaces(tx.height) }}</Text>
 						</Flex>
 
 						<Icon name="arrow-narrow-up-right" size="12" color="secondary" />

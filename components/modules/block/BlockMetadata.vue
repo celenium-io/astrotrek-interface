@@ -181,20 +181,23 @@ const showMore = ref(false)
 		</template>
 	</Flex>
 
-	<Button @click="showMore = !showMore" size="small" type="secondary">{{ showMore ? "Hide" : "Show More" }}</Button>
+	<Flex @click="showMore = !showMore" align="center" justify="end" gap="4" :class="$style.show_more">
+		<Icon size="12" name="chevron-double" color="brand" :rotate="showMore ? 180 : 0" />
+		<Text size="12" weight="600" color="brand">Show {{ showMore ? 'Less' : 'More' }}</Text>
+	</Flex>
 </template>
 
 <style module>
 .wrapper {
 	border-radius: 8px;
 	box-shadow: inset 0 0 0 1px var(--op-5);
-	background: var(--op-8);
+	background: var(--op-3);
 }
 
 .item {
 	height: 36px;
 
-	border-bottom: 1px solid var(--op-5);
+	/* border-bottom: 1px solid var(--op-5); */
 
 	padding: 0 12px;
 
@@ -213,6 +216,12 @@ const showMore = ref(false)
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+}
+
+.show_more {
+	margin-top: -10px;
+
+	cursor: pointer;
 }
 
 @media (max-width: 650px) {

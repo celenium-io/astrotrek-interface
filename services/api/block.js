@@ -57,9 +57,8 @@ export const fetchBlockByHeight = async (height) => {
 
 export const fetchBlockTxs = async ({ limit, offset, height }) => {
 	try {
-		const url = new URL(`${useServerURL()}/tx`)
+		const url = new URL(`${useServerURL()}/block/${height}/txs`)
 
-		url.searchParams.append("height", height)
 		if (limit) url.searchParams.append("limit", limit)
 		if (offset) url.searchParams.append("offset", offset)
 
@@ -72,9 +71,8 @@ export const fetchBlockTxs = async ({ limit, offset, height }) => {
 
 export const fetchBlockActions = async ({ limit, offset, height }) => {
 	try {
-		const url = new URL(`${useServerURL()}/tx`)
+		const url = new URL(`${useServerURL()}/block/${height}/actions`)
 
-		url.searchParams.append("height", height)
 		if (limit) url.searchParams.append("limit", limit)
 		if (offset) url.searchParams.append("offset", offset)
 
