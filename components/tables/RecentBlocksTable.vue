@@ -48,7 +48,7 @@ watch(
 			</NuxtLink>
 		</Flex>
 
-		<BlocksTable :blocks="!isPaused ? blocks : blocksSnapshot" />
+		<BlocksTable :blocks="!isPaused ? blocks : blocksSnapshot" recentBlocks />
 
 		<Flex align="center" gap="6" :class="$style.bot">
 			<Button

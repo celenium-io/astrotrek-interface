@@ -111,7 +111,14 @@ const handleOpenTx = async (action) => {
 		background: var(--op-10);
 	}
 
+	&:first-child {
+		border-top-left-radius: 8px;
+		border-top-right-radius: 8px;
+	}
+
 	&:last-child {
+		border-bottom-left-radius: 8px;
+		border-bottom-right-radius: 8px;
 		border-bottom: 1px solid var(--op-5);
 	}
 
@@ -128,8 +135,15 @@ const handleOpenTx = async (action) => {
 	white-space: nowrap;
 }
 
+.extBtn {
+	/* background:; */
+	background-color: transparent;
+	transition: transform 0.2s, box-shadow 0.2s;
+}
+
 .extBtn:hover {
-	transform: scale(1.2);
+	transform: scale(1.3);
+	/* box-shadow: 0 0 10px rgba(120, 119, 119, 0.3); */
 }
 
 @media (max-width: 800px) {

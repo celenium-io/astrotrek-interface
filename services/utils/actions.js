@@ -47,10 +47,10 @@ export const getDescription = (action) => {
 			description = `Pushed ${base64Decode(data.data).length} bytes to ${strToHex(base64Decode(data.rollup_id))}`
 			break;
 		case "transfer":
-			description = `Sent ${data.amount} to ${data.to}`
+			description = `Sent ${data.amount} nria to ${data.to}`
 			break;
 		case "mint":
-			description = `Minted ${data.amount} to ${data.to}`
+			description = `Minted ${data.amount} nria to ${data.to}`
 			break;
 		case "sudo_address_change":
 			description = `Set ${data.new_address} as new sudo address`

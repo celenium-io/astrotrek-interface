@@ -97,6 +97,7 @@ const props = defineProps({
 	height: 60px;
 
 	border-top: 1px solid var(--op-5);
+
 	cursor: pointer;
 
 	padding: 0 16px;
@@ -107,12 +108,14 @@ const props = defineProps({
 		background: var(--op-5);
 	}
 
-	&:active {
-		background: var(--op-10);
+	&:last-child {
+		border-bottom-left-radius: 8px;
+		border-bottom-right-radius: 8px;
+		border-bottom: 1px solid var(--op-5);
 	}
 
-	&:last-child {
-		border-bottom: 1px solid var(--op-5);
+	&:active {
+		background: var(--op-10);
 	}
 
 	&.disabled {

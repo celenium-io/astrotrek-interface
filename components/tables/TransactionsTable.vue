@@ -23,6 +23,10 @@ const props = defineProps({
 		type: Number,
 		required: false,
 	},
+	recentTxs: {
+		type: Boolean,
+		default: false,
+	}
 })
 </script>
 
@@ -47,7 +51,7 @@ const props = defineProps({
 			@click="sidebarsStore.open('tx', t)"
 			justify="between"
 			align="center"
-			:class="[$style.row, isLoading && $style.disabled]"
+			:class="[!recentTxs && $style.row, recentTxs && $style.row_recent_txs, isLoading && $style.disabled]"
 		>
 			<Flex direction="column" gap="8">
 				<Flex align="center" gap="6">
@@ -95,6 +99,42 @@ const props = defineProps({
 }
 
 .row {
+	height: 60px;
+
+	border-top: 1px solid var(--op-5);
+
+	cursor: pointer;
+
+	padding: 0 16px;
+
+	transition: all 0.2s ease;
+
+	&:hover {
+		background: var(--op-5);
+	}
+	
+	&:first-child {
+		border-top-left-radius: 8px;
+		border-top-right-radius: 8px;
+	}
+
+	&:last-child {
+		border-bottom-left-radius: 8px;
+		border-bottom-right-radius: 8px;
+		border-bottom: 1px solid var(--op-5);
+	}
+
+	&:active {
+		background: var(--op-10);
+	}
+
+	&.disabled {
+		pointer-events: none;
+		opacity: 0.2;
+	}
+}
+
+.row_recent_txs {
 	height: 60px;
 
 	border-top: 1px solid var(--op-5);

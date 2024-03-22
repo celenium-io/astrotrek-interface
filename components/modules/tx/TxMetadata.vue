@@ -55,27 +55,15 @@ const showMore = ref(false)
 		</NuxtLink>
 
 		<Flex align="center" :class="$style.item">
-			<Text size="13" weight="600" color="secondary" :class="$style.key">Gas Used</Text>
+			<Text size="13" weight="600" color="secondary" :class="$style.key">Signer</Text>
 
-			<Text size="13" weight="600" color="primary" mono :class="$style.value">{{ tx.gas_used }}</Text>
-		</Flex>
-
-		<Flex align="center" :class="$style.item">
-			<Text size="13" weight="600" color="secondary" :class="$style.key">Gas Wanted</Text>
-
-			<Text size="13" weight="600" color="primary" mono :class="$style.value">{{ tx.gas_wanted }}</Text>
+			<Flex align="center" gap="8" :class="$style.value">
+				<CopyButton :text="tx.signer" />
+				<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ space(tx.signer) }}</Text>
+			</Flex>
 		</Flex>
 
 		<template v-if="showMore">
-				<Flex align="center" :class="$style.item">
-					<Text size="13" weight="600" color="secondary" :class="$style.key">Signer</Text>
-
-					<Flex align="center" gap="8" :class="$style.value">
-						<CopyButton :text="tx.signer" />
-						<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ space(tx.signer) }}</Text>
-					</Flex>
-				</Flex>
-
 				<Flex align="center" :class="$style.item">
 					<Text size="13" weight="600" color="secondary" :class="$style.key">Signature</Text>
 
@@ -83,6 +71,18 @@ const showMore = ref(false)
 						<CopyButton :text="tx.signature" />
 						<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ space(tx.signature) }}</Text>
 					</Flex>
+				</Flex>
+				
+				<Flex align="center" :class="$style.item">
+					<Text size="13" weight="600" color="secondary" :class="$style.key">Gas Used</Text>
+
+					<Text size="13" weight="600" color="primary" mono :class="$style.value">{{ tx.gas_used }}</Text>
+				</Flex>
+
+				<Flex align="center" :class="$style.item">
+					<Text size="13" weight="600" color="secondary" :class="$style.key">Gas Wanted</Text>
+
+					<Text size="13" weight="600" color="primary" mono :class="$style.value">{{ tx.gas_wanted }}</Text>
 				</Flex>
 
 				<Flex align="center" :class="$style.item">
@@ -118,8 +118,6 @@ const showMore = ref(false)
 
 .item {
 	height: 36px;
-
-	/* border-bottom: 1px solid var(--op-5); */
 
 	padding: 0 12px;
 
