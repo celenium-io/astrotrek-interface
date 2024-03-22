@@ -13,6 +13,12 @@ import Button from "@/components/ui/Button.vue"
 import Sidebar from "@/components/ui/Sidebar.vue"
 import TransactionsList from "@/components/tables/TransactionsList.vue"
 
+/** Store */
+import { useCacheStore } from "@/store/cache"
+import { useModalsStore } from "@/store/modals"
+const cacheStore = useCacheStore()
+const modalsStore = useModalsStore()
+
 const props = defineProps({
 	block: {
 		type: Object,
@@ -23,6 +29,12 @@ const props = defineProps({
 		default: false,
 	},
 })
+
+const handleViewRawData = () => {
+	cacheStore.current.block = props.block
+	cacheStore.current._target = "block"
+	modalsStore.open("rawData")
+}
 
 const emit = defineEmits(["onClose"])
 
@@ -59,10 +71,17 @@ watch(
 		<Flex direction="column" justify="between" wide>
 			<Flex direction="column" gap="16">
 				<Flex direction="column" gap="8">
-					<Flex align="center" gap="4">
-						<Icon name="block" size="12" color="secondary" />
-						<Text size="13" weight="500" color="secondary"> Block </Text>
+					<Flex align="center" gap="8">
+						<Flex align="center" gap="4">
+							<Icon name="block" size="12" color="secondary" />
+							<Text size="13" weight="500" color="secondary"> Block </Text>
+						</Flex>
+						
+						<Button @click="handleViewRawData" type="tertiary" size="mini">
+							<Icon name="code-brackets" size="14" color="brand" />
+						</Button>
 					</Flex>
+
 					<Text size="16" weight="600" height="120" color="primary"> {{ spaces(block.height) }} </Text>
 				</Flex>
 

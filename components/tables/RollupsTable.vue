@@ -1,6 +1,6 @@
 <script setup>
 /** Services */
-import { shortHash, comma } from "@/services/utils"
+import { shortHash, spaces } from "@/services/utils"
 
 /** Store */
 import { useSidebarsStore } from "@/store/sidebars"
@@ -34,7 +34,7 @@ const props = defineProps({
 		<Flex
 			v-if="rollups"
 			v-for="rollup in rollups"
-			@click="sidebarsStore.open('block', b)"
+			@click="sidebarsStore.open('rollup', rollup)"
 			justify="between"
 			align="center"
 			:class="[$style.row, isLoading && $style.disabled]"
@@ -56,7 +56,7 @@ const props = defineProps({
 
 					<Text size="12" weight="500" color="secondary">
 						<Text color="tertiary">First Height</Text>
-						{{ comma(rollup.first_height) }}
+						{{ spaces(rollup.first_height) }}
 					</Text>
 				</Flex>
 			</Flex>

@@ -6,6 +6,7 @@ import { defineStore, acceptHMRUpdate } from "pinia"
 export const useSidebarsStore = defineStore("sidebars", () => {
 	const sidebars = reactive({
 		block: false,
+		rollup: false,
 		tx: false,
 	})
 

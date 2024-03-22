@@ -1,17 +1,27 @@
 <script setup>
+/** API */
+import { fetchTxByHash } from "~/services/api/tx"
+
 /** Services */
 import { getDescription, getTitle } from "@/services/utils/actions.js";
 
 /** Store */
 import { useCacheStore } from "@/store/cache"
 import { useModalsStore } from "@/store/modals"
+import { useSidebarsStore } from "@/store/sidebars"
 const cacheStore = useCacheStore()
 const modalsStore = useModalsStore()
+const sidebarsStore = useSidebarsStore()
 
 const props = defineProps({
 	actions: {
 		type: Array,
+		required: true,
 	},
+	txLink: {
+		type: Boolean,
+		default: false,
+	}
 })
 
 const handleViewRawData = (action) => {
@@ -19,6 +29,16 @@ const handleViewRawData = (action) => {
 	cacheStore.current._target = "action"
 	modalsStore.open("rawData")
 }
+
+const handleOpenTx = async (action) => {
+	const { data } = await fetchTxByHash(action.tx_hash)
+	if (data.value) {
+		sidebarsStore.open('tx', data.value)
+	} else {
+		// Add notification
+	}
+}
+
 </script>
 
 <template>
@@ -48,7 +68,8 @@ const handleViewRawData = (action) => {
 				</Flex>
 			</Flex>
 
-			<Icon name="code-brackets" size="18" color="brand" />
+			<Icon v-if="txLink" @click.prevent.stop="handleOpenTx(act)" name="tx" color="brand" />
+			<Icon v-else name="code-brackets" size="18" color="brand" />
 		</Flex>
 	</Flex>
 </template>

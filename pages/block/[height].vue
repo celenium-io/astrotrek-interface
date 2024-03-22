@@ -38,6 +38,8 @@ if (!data.value) {
 }
 
 const fetchTxs = async () => {
+	if (!block.value.stats.tx_count) return
+
 	isLoading.value = true
 
 	const { data } = await fetchBlockTxs({ height: block.value.height })
@@ -47,6 +49,8 @@ const fetchTxs = async () => {
 }
 
 const fetchActions = async () => {
+	if (!block.value.stats.tx_count) return
+
 	isLoading.value = true
 
 	const { data } = await fetchBlockActions({ height: block.value.height })

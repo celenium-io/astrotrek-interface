@@ -24,6 +24,9 @@ export const useCacheStore = defineStore("cache", () => {
 		messages: null,
 		blobs: null,
 
+		/** rollup */
+		rollup: null,
+
 		/** block */
 		block: null,
 

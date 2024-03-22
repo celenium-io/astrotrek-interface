@@ -9,8 +9,11 @@ import { midHash, shortHash, space, spaces } from "@/services/utils"
 import Button from "@/components/ui/Button.vue"
 import Sidebar from "@/components/ui/Sidebar.vue"
 
-/** Shared Components */
-import ActionBadge from "@/components/shared/ActionBadge.vue"
+/** Store */
+import { useCacheStore } from "@/store/cache"
+import { useModalsStore } from "@/store/modals"
+const cacheStore = useCacheStore()
+const modalsStore = useModalsStore()
 
 const props = defineProps({
 	tx: {
@@ -23,6 +26,12 @@ const props = defineProps({
 	},
 })
 
+const handleViewRawData = () => {
+	cacheStore.current.block = props.tx
+	cacheStore.current._target = "transaction"
+	modalsStore.open("rawData")
+}
+
 const emit = defineEmits(["onClose"])
 </script>
 
@@ -31,9 +40,15 @@ const emit = defineEmits(["onClose"])
 		<Flex direction="column" justify="between" wide>
 			<Flex direction="column" gap="16">
 				<Flex direction="column" gap="8">
-					<Flex align="center" gap="4">
-						<Icon name="tx" size="12" :color="tx.status === 'success' ? 'green' : 'red'" />
-						<Text size="13" weight="500" color="secondary"> Transaction </Text>
+					<Flex align="center" gap="8">
+						<Flex align="center" gap="4">
+							<Icon name="tx" size="12" :color="tx.status === 'success' ? 'green' : 'red'" />
+							<Text size="13" weight="500" color="secondary"> Transaction </Text>
+						</Flex>
+						
+						<Button @click="handleViewRawData" type="tertiary" size="mini">
+							<Icon name="code-brackets" size="14" color="brand" />
+						</Button>
 					</Flex>
 
 					<Flex align="center" gap="8">

@@ -18,10 +18,9 @@ const props = defineProps({
 	<Flex direction="column" :class="$style.wrapper">
 		<LoadingHolder v-if="isLoading" title="Loading actions . ." />
 
-		<!-- <Text v-if="actions.length > 0" size="13" height="140" color="tertiary">{{ actions }}</Text> -->
 		<ActionsTable v-if="actions.length > 0" :actions="actions" />
 		
-		<EmptyHolder v-else-if="!isLoading" title="Contains no actions . ." />
+		<EmptyHolder v-else-if="!isLoading" title="This block doesn't contain any action . ." />
 	</Flex>
 </template>
 
