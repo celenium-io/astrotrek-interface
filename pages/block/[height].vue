@@ -44,7 +44,6 @@ const fetchActions = async () => {
 
 	const { data } = await fetchBlockActions({ height: block.value.height })
 	actions.value = data.value
-	console.log(actions.value);
 
 	isLoading.value = false
 }

@@ -3,20 +3,28 @@
 import { capitalize, midHash } from "@/services/utils"
 
 /** Store */
-import { useSidebarsStore } from "@/store/sidebars"
-const sidebarsStore = useSidebarsStore()
+import { useCacheStore } from "@/store/cache"
+import { useModalsStore } from "@/store/modals"
+const cacheStore = useCacheStore()
+const modalsStore = useModalsStore()
 
 const props = defineProps({
 	actions: {
 		type: Array,
 	},
 })
+
+const handleViewRawAction = () => {
+	cacheStore.current._target = "action"
+	modalsStore.open("rawData")
+}
 </script>
 
 <template>
 	<Flex direction="column" wide :class="$style.wrapper">
 		<Flex
 			v-for="act in actions"
+			@click="handleViewRawAction"
 			justify="between"
 			align="center"
 			:class="$style.row"

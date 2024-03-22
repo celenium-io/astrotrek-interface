@@ -8,7 +8,9 @@ export const useModalsStore = defineStore("modals", () => {
 	const history = ref([])
 
 	const lastModal = ref()
-	const modals = reactive({})
+	const modals = reactive({
+		rawData: false,
+	})
 
 	const open = (target) => {
 		if (!modals[target]) {

@@ -11,8 +11,6 @@ const props = defineProps({
 	},
 })
 
-console.dir(props.tx)
-
 const showMore = ref(false)
 </script>
 
