@@ -35,7 +35,10 @@ const showMore = ref(false)
 			<Flex align="center" :class="$style.item">
 				<Text size="13" weight="600" color="secondary" :class="$style.key">First Height</Text>
 
-				<Text size="13" weight="600" color="primary" mono :class="$style.value">{{ spaces(rollup.first_height) }}</Text>
+				<Flex align="center" gap="4" :class="$style.value">
+					<Text size="13" weight="600" color="primary" mono>{{ spaces(rollup.first_height) }}</Text>
+					<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
+				</Flex>
 			</Flex>
 		</NuxtLink>
 

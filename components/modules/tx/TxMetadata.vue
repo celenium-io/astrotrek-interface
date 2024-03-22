@@ -50,7 +50,11 @@ const showMore = ref(false)
 			<Flex align="center" :class="$style.item">
 				<Text size="13" weight="600" color="secondary" :class="$style.key">Block Height</Text>
 
-				<Text size="13" weight="600" color="primary" mono :class="$style.value">{{ spaces(tx.height) }}</Text>
+				<Flex align="center" gap="6" :class="$style.value">
+					<Text size="13" weight="600" color="primary" mono :class="$style.value">{{ spaces(tx.height) }}</Text>
+					<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
+				</Flex>
+				
 			</Flex>
 		</NuxtLink>
 
@@ -72,7 +76,7 @@ const showMore = ref(false)
 						<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ space(tx.signature) }}</Text>
 					</Flex>
 				</Flex>
-				
+
 				<Flex align="center" :class="$style.item">
 					<Text size="13" weight="600" color="secondary" :class="$style.key">Gas Used</Text>
 
