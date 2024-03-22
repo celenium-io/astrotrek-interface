@@ -1,6 +1,6 @@
 <script setup>
 /** Services */
-import { capitalize, midHash } from "@/services/utils"
+import { getDescription, getTitle } from "@/services/utils/actions.js";
 
 /** Store */
 import { useCacheStore } from "@/store/cache"
@@ -14,7 +14,7 @@ const props = defineProps({
 	},
 })
 
-const handleViewRawAction = () => {
+const handleViewRawData = () => {
 	cacheStore.current._target = "action"
 	modalsStore.open("rawData")
 }
@@ -24,7 +24,7 @@ const handleViewRawAction = () => {
 	<Flex direction="column" wide :class="$style.wrapper">
 		<Flex
 			v-for="act in actions"
-			@click="handleViewRawAction"
+			@click="handleViewRawData"
 			justify="between"
 			align="center"
 			:class="$style.row"
@@ -35,19 +35,19 @@ const handleViewRawAction = () => {
 
 					<Flex align="center" gap="8">
 						<Text size="13" weight="600" color="primary">
-							{{ capitalize(act.type) }}
+							{{ getTitle(act) }}
 						</Text>
 					</Flex>
 				</Flex>
 
 				<Flex align="center" gap="8">
-					<Text v-if="act.tx_hash" size="12" weight="500" color="secondary">
-						<Text color="tertiary">Tx</Text>
-
-						{{ midHash(act.tx_hash) }}
+					<Text size="12" weight="500" color="secondary">
+						{{ getDescription(act) }}
 					</Text>
 				</Flex>
 			</Flex>
+
+			<Icon name="code-brackets" size="18" color="brand" />
 		</Flex>
 	</Flex>
 </template>

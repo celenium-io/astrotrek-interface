@@ -6,8 +6,18 @@ import { comma, shortHash } from "~/services/utils"
 import TxMetadata from "~/components/modules/tx/TxMetadata.vue"
 import TxActions from "~/components/modules/tx/TxActions.vue";
 
+/** UI */
+import Tooltip from "~/components/ui/Tooltip.vue";
+
 /** API */
 import { fetchTxActions, fetchTxByHash } from "~/services/api/tx"
+
+/** Store */
+import { useCacheStore } from "@/store/cache"
+import { useModalsStore } from "@/store/modals"
+import { capitalize } from "vue";
+const cacheStore = useCacheStore()
+const modalsStore = useModalsStore()
 
 definePageMeta({
 	layout: "default",
@@ -83,6 +93,11 @@ useHead({
 	],
 })
 
+const handleViewRawData = () => {
+	cacheStore.current._target = "transaction"
+	modalsStore.open("rawData")
+}
+
 const tabs = ref([{ name: "Actions" }])
 const activeTab = ref(tabs.value[0].name)
 
@@ -103,11 +118,20 @@ await fetchActions()
 
 			<Flex align="center" justify="between" wide>
 				<Flex align="center" gap="8">
-					<Icon name="tx" size="14" :color="tx.status === 'success' ? 'green' : 'red'" />
+					<Tooltip>
+						<Icon name="tx" size="14" :color="tx.status === 'success' ? 'green' : 'red'" />
+
+						<template #content>
+							<Text :color="tx.status === 'success' ? 'green' : 'red'">{{ capitalize(tx.status) }}</Text>
+						</template>
+					</Tooltip>
+					
 					<Text size="14" weight="500" color="primary">
 						Transaction <Text weight="600">{{ shortHash(tx.hash) }}</Text>
 					</Text>
 				</Flex>
+
+				<Icon @click="handleViewRawData" name="code-brackets" size="18" color="brand" :style="{cursor: 'pointer'}" />
 			</Flex>
 		</Flex>
 

@@ -10,6 +10,12 @@ import BlockActions from "@/components/modules/block/BlockActions.vue"
 /** API */
 import { fetchBlockByHeight, fetchBlockTxs, fetchBlockActions } from "~/services/api/block"
 
+/** Store */
+import { useCacheStore } from "@/store/cache"
+import { useModalsStore } from "@/store/modals"
+const cacheStore = useCacheStore()
+const modalsStore = useModalsStore()
+
 definePageMeta({
 	layout: "default",
 })
@@ -84,6 +90,11 @@ useHead({
 	],
 })
 
+const handleViewRawData = () => {
+	cacheStore.current._target = "block"
+	modalsStore.open("rawData")
+}
+
 const tabs = ref([{ name: "Transactions" }, { name: "Actions" }])
 const activeTab = ref(tabs.value[0].name)
 
@@ -125,6 +136,8 @@ await fetchTxs()
 						Block <Text weight="600">{{ spaces(block.height) }}</Text>
 					</Text>
 				</Flex>
+
+				<Icon @click="handleViewRawData" name="code-brackets" size="18" color="brand" :style="{cursor: 'pointer'}" />
 			</Flex>
 		</Flex>
 
