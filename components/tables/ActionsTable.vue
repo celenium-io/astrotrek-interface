@@ -1,8 +1,12 @@
 <script setup>
+/** Vendor */
+import { DateTime } from "luxon"
+
 /** API */
 import { fetchTxByHash } from "~/services/api/tx"
 
 /** Services */
+import { spaces } from "@/services/utils";
 import { getDescription, getTitle } from "@/services/utils/actions.js";
 
 /** Store */
@@ -52,24 +56,34 @@ const handleOpenTx = async (action) => {
 		>
 			<Flex direction="column" gap="8">
 				<Flex align="center" gap="6">
-					<Icon name="action" size="12" color="tertiary" />
+					<Icon name="action" size="13" color="tertiary" />
 
 					<Flex align="center" gap="8">
 						<Text size="13" weight="600" color="primary">
 							{{ getTitle(act) }}
 						</Text>
 					</Flex>
-				</Flex>
 
-				<Flex align="center" gap="8">
-					<Text size="12" weight="500" color="secondary">
+					<Text size="13" weight="500" color="secondary" :class="$style.description">
 						{{ getDescription(act) }}
 					</Text>
 				</Flex>
+
+				<Flex align="center" gap="8">
+					<Flex gap="4">
+						<Text size="12" color="tertiary">Block</Text>
+
+						<Text size="12" color="tertiary"> {{ spaces(act.height) }} </Text>
+					</Flex>
+					
+					<Flex align="center" gap="4">
+						<Text size="12" color="tertiary"> {{ DateTime.fromISO(act.time).setLocale("en").toFormat("tt, LLL d, y") }} </Text>
+					</Flex>
+				</Flex>
 			</Flex>
 
-			<Icon v-if="txLink" @click.prevent.stop="handleOpenTx(act)" name="tx" color="brand" />
-			<Icon v-else name="code-brackets" size="18" color="brand" />
+			<Icon v-if="txLink" @click.prevent.stop="handleOpenTx(act)" name="tx" color="brand" :class="$style.extBtn" />
+			<Icon v-else name="code-brackets" size="18" color="brand" :class="$style.extBtn" />
 		</Flex>
 	</Flex>
 </template>
@@ -107,9 +121,69 @@ const handleOpenTx = async (action) => {
 	}
 }
 
+.description {
+	padding-left: 8px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.extBtn:hover {
+	transform: scale(1.2);
+}
+
+@media (max-width: 800px) {
+	.wrapper {
+		width: 100%;
+	}
+
+	.row {
+		width: 100%;
+		/* overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap; */
+	}
+
+	.description {
+		width: 400px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+}
+
 @media (max-width: 1000px) {
 	.wrapper {
 		width: 100%;
 	}
 }
+
+@media (max-width: 800px) {
+	.wrapper {
+		width: 100%;
+	}
+
+	.row {
+		width: 100%;
+	}
+
+	.description {
+		width: 400px;
+	}
+}
+
+@media (max-width: 600px) {
+	.wrapper {
+		width: 100%;
+	}
+
+	.row {
+		width: 100%;
+	}
+
+	.description {
+		width: 300px;
+	}
+}
+
 </style>

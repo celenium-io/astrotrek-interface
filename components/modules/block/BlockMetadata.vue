@@ -1,4 +1,7 @@
 <script setup>
+/** Vendor */
+import { DateTime } from "luxon"
+
 /** Services */
 import { formatBytes, space } from "@/services/utils"
 
@@ -21,7 +24,7 @@ const showMore = ref(false)
 
 			<Flex align="center" gap="8" :class="$style.value">
 				<CopyButton :text="block.hash" />
-				<Text size="13" weight="600" color="primary" mono>{{ space(block.hash) }}</Text>
+				<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ space(block.hash) }}</Text>
 			</Flex>
 		</Flex>
 
@@ -30,7 +33,7 @@ const showMore = ref(false)
 
 			<Flex align="center" gap="8" :class="$style.value">
 				<CopyButton :text="block.proposer.address" />
-				<Text size="13" weight="600" color="primary" mono>
+				<Text size="13" weight="600" color="primary" mono :class="$style.overflow">
 					{{ block.proposer.name }}
 					<Text color="tertiary">{{ space(block.proposer.address) }} </Text>
 				</Text>
@@ -41,7 +44,8 @@ const showMore = ref(false)
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Timestamp</Text>
 
 			<Text size="13" weight="600" color="primary" mono :class="$style.value">
-				{{ block.time }}
+				{{ DateTime.fromISO(block.time).setLocale("en").toFormat("tt, LLL d, y") }}
+				<Text color="tertiary"> ({{ DateTime.fromISO(block.time).toRelative({ locale: "en", style: "short" }) }}) </Text>
 			</Text>
 		</Flex>
 
@@ -88,7 +92,7 @@ const showMore = ref(false)
 
 				<Flex align="center" gap="8" :class="$style.value">
 					<CopyButton :text="block.app_hash" />
-					<Text size="13" weight="600" color="primary" mono>
+					<Text size="13" weight="600" color="primary" mono :class="$style.overflow">
 						{{ space(block.app_hash) }}
 					</Text>
 				</Flex>
@@ -99,7 +103,7 @@ const showMore = ref(false)
 
 				<Flex align="center" gap="8" :class="$style.value">
 					<CopyButton :text="block.consensus_hash" />
-					<Text size="13" weight="600" color="primary" mono>
+					<Text size="13" weight="600" color="primary" mono :class="$style.overflow">
 						{{ space(block.consensus_hash) }}
 					</Text>
 				</Flex>
@@ -110,7 +114,7 @@ const showMore = ref(false)
 
 				<Flex align="center" gap="8" :class="$style.value">
 					<CopyButton :text="block.data_hash" />
-					<Text size="13" weight="600" color="primary" mono>
+					<Text size="13" weight="600" color="primary" mono :class="$style.overflow">
 						{{ space(block.data_hash) }}
 					</Text>
 				</Flex>
@@ -121,7 +125,7 @@ const showMore = ref(false)
 
 				<Flex align="center" gap="8" :class="$style.value">
 					<CopyButton :text="block.evidence_hash" />
-					<Text size="13" weight="600" color="primary" mono>
+					<Text size="13" weight="600" color="primary" mono :class="$style.overflow">
 						{{ space(block.evidence_hash) }}
 					</Text>
 				</Flex>
@@ -132,7 +136,7 @@ const showMore = ref(false)
 
 				<Flex align="center" gap="8" :class="$style.value">
 					<CopyButton :text="block.last_commit_hash" />
-					<Text size="13" weight="600" color="primary" mono>
+					<Text size="13" weight="600" color="primary" mono :class="$style.overflow">
 						{{ space(block.last_commit_hash) }}
 					</Text>
 				</Flex>
@@ -143,7 +147,7 @@ const showMore = ref(false)
 
 				<Flex align="center" gap="8" :class="$style.value">
 					<CopyButton :text="block.last_results_hash" />
-					<Text size="13" weight="600" color="primary" mono>
+					<Text size="13" weight="600" color="primary" mono :class="$style.overflow">
 						{{ space(block.last_results_hash) }}
 					</Text>
 				</Flex>
@@ -154,7 +158,7 @@ const showMore = ref(false)
 
 				<Flex align="center" gap="8" :class="$style.value">
 					<CopyButton :text="block.parent_hash" />
-					<Text size="13" weight="600" color="primary" mono>
+					<Text size="13" weight="600" color="primary" mono :class="$style.overflow">
 						{{ space(block.parent_hash) }}
 					</Text>
 				</Flex>
@@ -165,7 +169,7 @@ const showMore = ref(false)
 
 				<Flex align="center" gap="8" :class="$style.value">
 					<CopyButton :text="block.validators_hash" />
-					<Text size="13" weight="600" color="primary" mono>
+					<Text size="13" weight="600" color="primary" mono :class="$style.overflow">
 						{{ space(block.validators_hash) }}
 					</Text>
 				</Flex>
@@ -197,8 +201,6 @@ const showMore = ref(false)
 .item {
 	height: 36px;
 
-	/* border-bottom: 1px solid var(--op-5); */
-
 	padding: 0 12px;
 
 	&:last-child {
@@ -212,14 +214,17 @@ const showMore = ref(false)
 
 .value {
 	min-width: 0;
+}
 
+.overflow {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
 
 .show_more {
-	margin-top: -10px;
+	margin-right: 6px;
+	margin-top: -4px;
 
 	cursor: pointer;
 }

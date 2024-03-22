@@ -16,11 +16,11 @@ const props = defineProps({
 
 <template>
 	<Flex direction="column" :class="$style.wrapper">
-		<LoadingHolder v-if="isLoading" title="Loading actions . ." />
+		<LoadingHolder v-if="isLoading" title="Loading actions.." />
 
 		<ActionsTable v-if="actions.length > 0" :actions="actions" />
 		
-		<EmptyHolder v-else-if="!isLoading" title="Contains no actions . ." />
+		<EmptyHolder v-else-if="!isLoading" title="This transaction doesn't contain any action" />
 	</Flex>
 </template>
 

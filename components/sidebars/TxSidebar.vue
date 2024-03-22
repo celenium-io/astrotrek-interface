@@ -3,10 +3,11 @@
 import { DateTime } from "luxon"
 
 /** Services */
-import { midHash, shortHash, space, spaces } from "@/services/utils"
+import { capitalize, midHash, shortHash, space, spaces } from "@/services/utils"
 
 /** UI */
 import Button from "@/components/ui/Button.vue"
+import Tooltip from "@/components/ui/Tooltip.vue"
 import Sidebar from "@/components/ui/Sidebar.vue"
 
 /** Store */
@@ -38,17 +39,18 @@ const emit = defineEmits(["onClose"])
 <template>
 	<Sidebar :show="show" @onClose="emit('onClose')">
 		<Flex direction="column" justify="between" wide>
-			<Flex direction="column" gap="16">
+			<Flex direction="column" gap="16" :class="$style.content">
 				<Flex direction="column" gap="8">
-					<Flex align="center" gap="8">
-						<Flex align="center" gap="4">
-							<Icon name="tx" size="12" :color="tx.status === 'success' ? 'green' : 'red'" />
-							<Text size="13" weight="500" color="secondary"> Transaction </Text>
-						</Flex>
+					<Flex align="center" gap="4">
+						<Tooltip>
+							<Icon name="tx" size="14" :color="tx.status === 'success' ? 'green' : 'red'" />
+
+							<template #content>
+								<Text :color="tx.status === 'success' ? 'green' : 'red'">{{ capitalize(tx.status) }}</Text>
+							</template>
+						</Tooltip>
 						
-						<Button @click="handleViewRawData" type="tertiary" size="mini">
-							<Icon name="code-brackets" size="14" color="brand" />
-						</Button>
+						<Text size="13" weight="500" color="secondary"> Transaction </Text>
 					</Flex>
 
 					<Flex align="center" gap="8">
@@ -116,7 +118,7 @@ const emit = defineEmits(["onClose"])
 				</Flex>
 			</Flex>
 
-			<Button @click="emit('onClose')" :link="`/tx/${tx.hash}`" type="secondary" size="medium">Open Transaction</Button>
+			<Button @click="emit('onClose')" :link="`/tx/${tx.hash}`" type="secondary" size="medium" :class="$style.fixed-btn">Open Transaction</Button>
 		</Flex>
 	</Sidebar>
 </template>
@@ -141,5 +143,16 @@ const emit = defineEmits(["onClose"])
 	height: 1px;
 
 	background: var(--op-10);
+}
+
+.content {
+	height: 100%;
+	overflow-y: auto;
+}
+
+.fixed-btn {
+	height: 32px;
+	position: fixed;
+	bottom: 0;
 }
 </style>

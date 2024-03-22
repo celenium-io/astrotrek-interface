@@ -1,4 +1,7 @@
 <script setup>
+/** Vendor */
+import { DateTime } from "luxon"
+
 /** Services */
 import { formatBytes, space, comma, spaces } from "@/services/utils"
 
@@ -21,8 +24,17 @@ const showMore = ref(false)
 
 			<Flex align="center" gap="8" :class="$style.value">
 				<CopyButton :text="tx.hash" />
-				<Text size="13" weight="600" color="primary" mono>{{ space(tx.hash) }}</Text>
+				<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ space(tx.hash) }}</Text>
 			</Flex>
+		</Flex>
+
+		<Flex align="center" :class="$style.item">
+			<Text size="13" weight="600" color="secondary" :class="$style.key">Timestamp</Text>
+
+			<Text size="13" weight="600" color="primary" mono :class="$style.value">
+				{{ DateTime.fromISO(tx.time).setLocale("en").toFormat("tt, LLL d, y") }}
+				<Text color="tertiary"> ({{ DateTime.fromISO(tx.time).toRelative({ locale: "en", style: "short" }) }}) </Text>
+			</Text>
 		</Flex>
 
 		<Flex align="center" :class="$style.item">
@@ -60,7 +72,7 @@ const showMore = ref(false)
 
 					<Flex align="center" gap="8" :class="$style.value">
 						<CopyButton :text="tx.signer" />
-						<Text size="13" weight="600" color="primary" mono>{{ space(tx.signer) }}</Text>
+						<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ space(tx.signer) }}</Text>
 					</Flex>
 				</Flex>
 
@@ -69,7 +81,7 @@ const showMore = ref(false)
 
 					<Flex align="center" gap="8" :class="$style.value">
 						<CopyButton :text="tx.signature" />
-						<Text size="13" weight="600" color="primary" mono :class="$style.value">{{ space(tx.signature) }}</Text>
+						<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ space(tx.signature) }}</Text>
 					</Flex>
 				</Flex>
 
@@ -122,13 +134,18 @@ const showMore = ref(false)
 
 .value {
 	min-width: 0;
+}
 
+.overflow {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
 
 .show_more {
+	margin-right: 6px;
+	margin-top: -4px;
+
 	cursor: pointer;
 }
 

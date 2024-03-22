@@ -131,4 +131,23 @@ const calculateHeight = (size) => {
 		width: 100%;
 	}
 }
+
+@media (max-width: 750px) {
+	.chart {
+		width: 100%;
+	}
+
+	.bar_wrapper {
+		width: 100%;
+
+		border-radius: 5px;
+	}
+
+	.bar {
+		width: 14px;
+
+		border-radius: 5px;
+	}
+}
+
 </style>

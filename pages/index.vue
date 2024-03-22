@@ -97,8 +97,10 @@ const handleHide = () => {
 
 		<Flex direction="column" gap="24">
 			<Flex align="center" gap="24" :class="$style.widgets">
-				<BlockWidget />
-				<RollupsWidget />
+				<Flex align="center" gap="24" :class="$style.first_widgets">
+					<BlockWidget />
+					<RollupsWidget />
+				</Flex>
 				<TxsWidget />
 			</Flex>
 
@@ -141,6 +143,12 @@ const handleHide = () => {
 	}
 
 	.tables {
+		flex-direction: column;
+	}
+}
+
+@media (max-width: 750px) {
+	.first_widgets {
 		flex-direction: column;
 	}
 }

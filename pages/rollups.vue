@@ -66,20 +66,23 @@ useHead({
 const rollups = ref([])
 const isLoading = ref(false)
 
+const limit = ref(15)
 const getRollups = async () => {
 	isLoading.value = true
 
 	const { data } = await fetchRollups({
-		limit: 15,
-		offset: (page.value - 1) * 15,
+		limit: limit.value,
+		offset: (page.value - 1) * limit.value,
 	})
 	rollups.value = data.value
+	handleNextCondition.value = rollups.value.length < limit.value
 
 	isLoading.value = false
 }
 
 /** Pagination */
 const page = ref(1)
+const handleNextCondition = ref(true)
 
 const handleNext = () => {
 	page.value += 1
@@ -110,7 +113,7 @@ watch(
 						<Icon name="chevron" size="14" color="primary" style="transform: rotate(90deg)" />
 					</Button>
 					<Button size="mini" type="secondary">Page {{ page }}</Button>
-					<Button @click="handleNext" size="mini" type="secondary" :disabled="isLoading">
+					<Button @click="handleNext" size="mini" type="secondary" :disabled="isLoading || handleNextCondition">
 						<Icon name="chevron" size="14" color="primary" style="transform: rotate(-90deg)" />
 					</Button>
 				</Flex>
@@ -132,9 +135,9 @@ watch(
 
 .card {
 	border-radius: 12px;
-	background: var(--card-background);
+	background: var(--op-3);
 
-	padding: 16px 0 14px 0;
+	padding: 16px 0 0 0;
 }
 
 .top {

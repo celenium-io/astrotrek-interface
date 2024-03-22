@@ -1,23 +1,19 @@
 <script setup>
 /** Services */
-import { comma, shortHash } from "~/services/utils"
+import { capitalize, shortHash } from "~/services/utils"
 
 /** Modules */
 import TxMetadata from "~/components/modules/tx/TxMetadata.vue"
 import TxActions from "~/components/modules/tx/TxActions.vue";
+
+/** Components */
+import RawDataView from "@/components/shared/RawDataView.vue"
 
 /** UI */
 import Tooltip from "~/components/ui/Tooltip.vue";
 
 /** API */
 import { fetchTxActions, fetchTxByHash } from "~/services/api/tx"
-
-/** Store */
-import { useCacheStore } from "@/store/cache"
-import { useModalsStore } from "@/store/modals"
-import { capitalize } from "vue";
-const cacheStore = useCacheStore()
-const modalsStore = useModalsStore()
 
 definePageMeta({
 	layout: "default",
@@ -36,7 +32,7 @@ if (!data.value) {
 	})
 } else {
 	tx.value = data.value
-	cacheStore.current.transaction = tx.value
+	console.log(tx.value);
 }
 
 const fetchActions = async () => {
@@ -44,6 +40,7 @@ const fetchActions = async () => {
 
 	const { data } = await fetchTxActions({ hash: tx.value?.hash })
 	actions.value = data.value
+	console.log(actions.value);
 
 	isLoading.value = false
 }
@@ -94,11 +91,6 @@ useHead({
 	],
 })
 
-const handleViewRawData = () => {
-	cacheStore.current._target = "transaction"
-	modalsStore.open("rawData")
-}
-
 const tabs = ref([{ name: "Actions" }])
 const activeTab = ref(tabs.value[0].name)
 
@@ -106,8 +98,8 @@ await fetchActions()
 </script>
 
 <template>
-	<Flex direction="column" gap="24" :class="$style.wrapper">
-		<Flex direction="column" gap="16">
+	<Flex direction="column" gap="16" :class="$style.wrapper">
+		<Flex direction="column" gap="40">
 			<Breadcrumbs
 				v-if="tx"
 				:items="[
@@ -131,14 +123,14 @@ await fetchActions()
 						Transaction <Text weight="600">{{ shortHash(tx.hash) }}</Text>
 					</Text>
 				</Flex>
-
-				<Icon @click="handleViewRawData" name="code-brackets" size="18" color="brand" :style="{cursor: 'pointer'}" />
+				
+				<RawDataView :entity="tx" name="transaction" />
 			</Flex>
 		</Flex>
 
 		<TxMetadata :tx="tx" />
 
-		<Flex direction="column" gap="8">
+		<Flex direction="column" gap="2">
 			<Flex align="center" gap="8">
 				<Text
 					v-for="tab in tabs"
@@ -163,12 +155,12 @@ await fetchActions()
 	width: 100%;
 
 	padding: 0 24px;
-	margin-top: 60px;
+	margin-top: 24px;
 	margin-bottom: 120px;
 }
 
 .tab {
-	height: 40px;
+	height: 32px;
 	border-radius: 6px;
 	cursor: pointer;
 

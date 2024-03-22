@@ -1,6 +1,6 @@
 <template>
 	<Flex gap="8" :class="$style.wrapper">
-		<Flex direction="column" gap="8">
+		<!-- <Flex direction="column" gap="8"> -->
 			<NuxtLink to="/blocks">
 				<Flex gap="12" :class="$style.item">
 					<Icon name="block" color="primary" size="20" :class="$style.item_icon" />
@@ -22,9 +22,9 @@
 					</Flex>
 				</Flex>
 			</NuxtLink>
-		</Flex>
+		<!-- </Flex> -->
 
-		<Flex direction="column" gap="8">
+		<!-- <Flex direction="column" gap="8">
 			<NuxtLink to="/accounts">
 				<Flex gap="12" :class="$style.item">
 					<Icon name="account" color="primary" size="20" :class="$style.item_icon" />
@@ -46,7 +46,7 @@
 					</Flex>
 				</Flex>
 			</NuxtLink>
-		</Flex>
+		</Flex> -->
 
 		<NuxtLink to="/rollups">
 			<Flex gap="12" :class="$style.item">

@@ -1,4 +1,7 @@
 <script setup>
+/** UI */
+import Tooltip from "@/components/ui/Tooltip.vue";
+
 /** Services */
 import { shortHash, spaces } from "@/services/utils"
 
@@ -61,21 +64,23 @@ const props = defineProps({
 				</Flex>
 			</Flex>
 
-			<Flex direction="column" align="end" gap="8">
+			<Tooltip>
 				<Flex align="center" gap="4">
-					<Icon name="tx-circle" size="12" color="light-green" />
-					<Text size="13" weight="600" color="primary"> {{ rollup.actions_count }} <Text color="secondary">Txs</Text> </Text>
+					<Icon name="action" size="13" color="tertiary" />
+					<Text size="13" weight="600" color="primary"> {{ rollup.actions_count }} </Text>
 				</Flex>
 
-				<Text size="12" weight="500" color="tertiary"> Actions </Text>
-			</Flex>
+				<template #content>
+					<Text size="12" color="tertiary">Actions count</Text>
+				</template>
+			</Tooltip>
 		</Flex>
 	</Flex>
 </template>
 
 <style module>
 .wrapper {
-	min-height: 900px;
+	/* min-height: 900px; */
 	position: relative;
 
 	margin-top: 20px;

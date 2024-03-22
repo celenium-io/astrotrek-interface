@@ -26,9 +26,7 @@ const props = defineProps({
 <style module>
 .wrapper {
 	border-radius: 8px;
-	/* box-shadow: inset 0 0 0 1px var(--op-5); */
-	/* background: var(--op-8); */
 
-	padding: 12px 0 12px 0;
+	padding: 18px 0 18px 0;
 }
 </style>

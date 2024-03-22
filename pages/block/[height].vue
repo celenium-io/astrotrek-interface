@@ -1,20 +1,17 @@
 <script setup>
 /** Services */
-import { comma, spaces } from "~/services/utils"
+import { spaces } from "~/services/utils"
 
 /** Modules */
 import BlockMetadata from "@/components/modules/block/BlockMetadata.vue"
 import BlockTransactions from "@/components/modules/block/BlockTransactions.vue"
 import BlockActions from "@/components/modules/block/BlockActions.vue"
 
+/** Components */
+import RawDataView from "@/components/shared/RawDataView.vue"
+
 /** API */
 import { fetchBlockByHeight, fetchBlockTxs, fetchBlockActions } from "~/services/api/block"
-
-/** Store */
-import { useCacheStore } from "@/store/cache"
-import { useModalsStore } from "@/store/modals"
-const cacheStore = useCacheStore()
-const modalsStore = useModalsStore()
 
 definePageMeta({
 	layout: "default",
@@ -34,7 +31,6 @@ if (!data.value) {
 	})
 } else {
 	block.value = data.value
-	cacheStore.current.block = block.value
 }
 
 const fetchTxs = async () => {
@@ -95,11 +91,6 @@ useHead({
 	],
 })
 
-const handleViewRawData = () => {
-	cacheStore.current._target = "block"
-	modalsStore.open("rawData")
-}
-
 const tabs = ref([{ name: "Transactions" }, { name: "Actions" }])
 const activeTab = ref(tabs.value[0].name)
 
@@ -124,7 +115,7 @@ await fetchTxs()
 
 <template>
 	<Flex direction="column" gap="24" :class="$style.wrapper">
-		<Flex direction="column" gap="16">
+		<Flex direction="column" gap="40">
 			<Breadcrumbs
 				v-if="block"
 				:items="[
@@ -142,13 +133,13 @@ await fetchTxs()
 					</Text>
 				</Flex>
 
-				<Icon @click="handleViewRawData" name="code-brackets" size="18" color="brand" :style="{cursor: 'pointer'}" />
+				<RawDataView :entity="block" name="block" />
 			</Flex>
 		</Flex>
 
 		<BlockMetadata :block="block" />
 		
-		<Flex direction="column" gap="8">
+		<Flex direction="column" gap="2">
 			<Flex align="center" gap="8">
 				<Text
 					v-for="tab in tabs"
@@ -179,7 +170,7 @@ await fetchTxs()
 }
 
 .tab {
-	height: 40px;
+	height: 32px;
 	border-radius: 6px;
 	cursor: pointer;
 

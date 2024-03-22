@@ -159,5 +159,19 @@ await getAvgBlockTime()
 	.wrapper {
 		width: 100%;
 	}
+
+	.chart {
+		width: 100%;
+		gap: 5px;
+	}
+
+	.bar_wrapper {
+		width: 100%;
+	}
+
+	.bar {
+		width: 5px;
+	}
 }
+
 </style>

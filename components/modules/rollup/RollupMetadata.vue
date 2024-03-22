@@ -1,6 +1,6 @@
 <script setup>
 /** Services */
-import { formatBytes, space, comma, spaces } from "@/services/utils"
+import { formatBytes, space, spaces } from "@/services/utils"
 
 /** UI */
 import Button from "@/components/ui/Button.vue"
@@ -21,7 +21,7 @@ const showMore = ref(false)
 
 			<Flex align="center" gap="8" :class="$style.value">
 				<CopyButton :text="rollup.hash" />
-				<Text size="13" weight="600" color="primary" mono>{{ space(rollup.hash) }}</Text>
+				<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ space(rollup.hash) }}</Text>
 			</Flex>
 		</Flex>
 
@@ -73,8 +73,6 @@ const showMore = ref(false)
 .item {
 	height: 36px;
 
-	/* border-bottom: 1px solid var(--op-5); */
-
 	padding: 0 12px;
 
 	&:last-child {
@@ -88,13 +86,18 @@ const showMore = ref(false)
 
 .value {
 	min-width: 0;
+}
 
+.overflow {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
 
 .show_more {
+	margin-right: 6px;
+	margin-top: -4px;
+
 	cursor: pointer;
 }
 

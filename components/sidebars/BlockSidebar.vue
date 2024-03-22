@@ -69,17 +69,11 @@ watch(
 <template>
 	<Sidebar :show="show" @onClose="emit('onClose')">
 		<Flex direction="column" justify="between" wide>
-			<Flex direction="column" gap="16">
+			<Flex direction="column" gap="16" :class="$style.content">
 				<Flex direction="column" gap="8">
-					<Flex align="center" gap="8">
-						<Flex align="center" gap="4">
-							<Icon name="block" size="12" color="secondary" />
-							<Text size="13" weight="500" color="secondary"> Block </Text>
-						</Flex>
-						
-						<Button @click="handleViewRawData" type="tertiary" size="mini">
-							<Icon name="code-brackets" size="14" color="brand" />
-						</Button>
+					<Flex align="center" gap="4">
+						<Icon name="block" size="12" color="secondary" />
+						<Text size="13" weight="500" color="secondary"> Block </Text>
 					</Flex>
 
 					<Text size="16" weight="600" height="120" color="primary"> {{ spaces(block.height) }} </Text>
@@ -212,7 +206,7 @@ watch(
 				</Flex>
 			</Flex>
 
-			<Button @click="emit('onClose')" :link="`/block/${block.height}`" type="secondary" size="medium">Open Block</Button>
+			<Button @click="emit('onClose')" :link="`/block/${block.height}`" type="secondary" size="medium" :class="$style.fixed-btn">Open Block</Button>
 		</Flex>
 	</Sidebar>
 </template>
@@ -230,5 +224,16 @@ watch(
 	height: 1px;
 
 	background: var(--op-10);
+}
+
+.content {
+	height: 100%;
+	overflow-y: auto;
+}
+
+.fixed-btn {
+	height: 32px;
+	position: fixed;
+	bottom: 0;
 }
 </style>

@@ -1,23 +1,19 @@
 <script setup>
 /** Services */
-import { comma, shortHash } from "~/services/utils"
+import { shortHash } from "~/services/utils"
 
 /** Modules */
 import RollupMetadata from "~/components/modules/rollup/RollupMetadata.vue"
 import RollupActions from "~/components/modules/rollup/RollupActions.vue";
+
+/** Components */
+import RawDataView from "@/components/shared/RawDataView.vue"
 
 /** UI */
 import Button from "~/components/ui/Button.vue"
 
 /** API */
 import { fetchRollupActions, fetchRollupByHash } from "~/services/api/rollup"
-
-/** Store */
-import { useCacheStore } from "@/store/cache"
-import { useModalsStore } from "@/store/modals"
-import { capitalize } from "vue";
-const cacheStore = useCacheStore()
-const modalsStore = useModalsStore()
 
 definePageMeta({
 	layout: "default",
@@ -36,7 +32,6 @@ if (!data.value) {
 	})
 } else {
 	rollup.value = data.value
-	cacheStore.current.rollup = rollup.value
 }
 
 const limit = ref(15)
@@ -49,7 +44,6 @@ const fetchActions = async () => {
 		offset: (page.value - 1) * limit.value,
 	})
 	actions.value = data.value
-	console.log(actions.value);
 	handleNextCondition.value = actions.value.length < limit.value
 
 	isLoading.value = false
@@ -113,11 +107,6 @@ useHead({
 	],
 })
 
-const handleViewRawData = () => {
-	cacheStore.current._target = "rollup"
-	modalsStore.open("rawData")
-}
-
 const tabs = ref([{ name: "Actions" }])
 const activeTab = ref(tabs.value[0].name)
 
@@ -134,7 +123,7 @@ watch(
 
 <template>
 	<Flex direction="column" gap="24" :class="$style.wrapper">
-		<Flex direction="column" gap="16">
+		<Flex direction="column" gap="40">
 			<Breadcrumbs
 				v-if="rollup"
 				:items="[
@@ -153,14 +142,14 @@ watch(
 					</Text>
 				</Flex>
 
-				<Icon @click="handleViewRawData" name="code-brackets" size="18" color="brand" :style="{cursor: 'pointer'}" />
+				<RawDataView :entity="rollup" name="rollup" />
 			</Flex>
 		</Flex>
 
 		<RollupMetadata :rollup="rollup" />
 
-		<Flex direction="column" gap="8">
-			<Flex align="center" justify="between" gap="8">
+		<Flex direction="column" gap="2">
+			<Flex align="center" justify="between">
 				<Text
 					v-for="tab in tabs"
 					@click="activeTab = tab.name"
@@ -172,7 +161,7 @@ watch(
 					{{ tab.name }}
 				</Text>
 
-				<Flex align="center" gap="6">
+				<Flex align="center" gap="6" :class="$style.pagination">
 					<Button @click="handlePrev" size="mini" type="secondary" :disabled="page === 1 || isLoading">
 						<Icon name="chevron" size="14" color="primary" style="transform: rotate(90deg)" />
 					</Button>
@@ -194,12 +183,12 @@ watch(
 	width: 100%;
 
 	padding: 0 24px;
-	margin-top: 60px;
+	margin-top: 24px;
 	margin-bottom: 120px;
 }
 
 .tab {
-	height: 40px;
+	height: 32px;
 	border-radius: 6px;
 	cursor: pointer;
 
@@ -215,6 +204,10 @@ watch(
 		color: var(--brand);
 		/* opacity: 0.6; */
 	}
+}
+
+.pagination {
+	padding-bottom: 6px;
 }
 
 </style>
