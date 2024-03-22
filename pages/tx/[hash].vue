@@ -36,6 +36,7 @@ if (!data.value) {
 	})
 } else {
 	tx.value = data.value
+	cacheStore.current.transaction = tx.value
 }
 
 const fetchActions = async () => {

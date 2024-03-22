@@ -34,6 +34,7 @@ if (!data.value) {
 	})
 } else {
 	block.value = data.value
+	cacheStore.current.block = block.value
 }
 
 const fetchTxs = async () => {

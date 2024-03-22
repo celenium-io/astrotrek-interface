@@ -14,7 +14,8 @@ const props = defineProps({
 	},
 })
 
-const handleViewRawData = () => {
+const handleViewRawData = (action) => {
+	cacheStore.current.action = action
 	cacheStore.current._target = "action"
 	modalsStore.open("rawData")
 }
@@ -24,7 +25,7 @@ const handleViewRawData = () => {
 	<Flex direction="column" wide :class="$style.wrapper">
 		<Flex
 			v-for="act in actions"
-			@click="handleViewRawData"
+			@click="handleViewRawData(act)"
 			justify="between"
 			align="center"
 			:class="$style.row"

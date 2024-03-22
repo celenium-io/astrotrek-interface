@@ -32,6 +32,8 @@ watch(
 	() => props.show,
 	() => {
 		nextTick(() => {
+			if (!props.show) return
+			console.log(cacheStore.current[cacheStore.current._target])
 			const state = EditorState.create({
 				doc: JSON.stringify(cacheStore.current[cacheStore.current._target], null, 2),
 				extensions: [
