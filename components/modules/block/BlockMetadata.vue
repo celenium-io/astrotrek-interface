@@ -239,5 +239,9 @@ const showMore = ref(false)
 
 		overflow: hidden;
 	}
+
+	.value {
+		width: 100%;
+	}
 }
 </style>
