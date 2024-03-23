@@ -102,12 +102,10 @@ const calculateHeight = (size) => {
 
 .chart {
 	height: 32px;
+}
 
-	&:hover {
-		.bar:not(:hover) {
-			background: var(--txt-support);
-		}
-	}
+.chart:hover .bar_wrapper:not(:hover) .bar {
+	background: var(--txt-support);
 }
 
 .bar_wrapper {
@@ -117,12 +115,16 @@ const calculateHeight = (size) => {
 }
 
 .bar {
-	width: 4px;
+	width: 5px;
 
 	border-radius: 50px;
 	background: var(--brand);
 
 	transition: all 0.2s ease;
+}
+
+.bar:hover {
+	background: var(--brand);
 }
 
 @media (max-width: 1000px) {
