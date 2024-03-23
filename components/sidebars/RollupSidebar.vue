@@ -21,8 +21,6 @@ const props = defineProps({
 	},
 })
 
-console.log('rollup', props.rollup);
-
 const emit = defineEmits(["onClose"])
 </script>
 

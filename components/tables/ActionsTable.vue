@@ -136,14 +136,12 @@ const handleOpenTx = async (action) => {
 }
 
 .extBtn {
-	/* background:; */
 	background-color: transparent;
 	transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .extBtn:hover {
 	transform: scale(1.3);
-	/* box-shadow: 0 0 10px rgba(120, 119, 119, 0.3); */
 }
 
 @media (max-width: 800px) {
@@ -153,9 +151,6 @@ const handleOpenTx = async (action) => {
 
 	.row {
 		width: 100%;
-		/* overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap; */
 	}
 
 	.description {
@@ -197,6 +192,20 @@ const handleOpenTx = async (action) => {
 
 	.description {
 		width: 300px;
+	}
+}
+
+@media (max-width: 600px) {
+	.wrapper {
+		width: 100%;
+	}
+
+	.row {
+		width: 100%;
+	}
+
+	.description {
+		width: 180px;
 	}
 }
 

@@ -223,8 +223,7 @@ const showMore = ref(false)
 }
 
 .show_more {
-	margin-right: 6px;
-	margin-top: -4px;
+	margin-top: -10px;
 
 	cursor: pointer;
 }

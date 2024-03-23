@@ -32,7 +32,6 @@ if (!data.value) {
 	})
 } else {
 	tx.value = data.value
-	console.log(tx.value);
 }
 
 const fetchActions = async () => {
@@ -40,7 +39,6 @@ const fetchActions = async () => {
 
 	const { data } = await fetchTxActions({ hash: tx.value?.hash })
 	actions.value = data.value
-	console.log(actions.value);
 
 	isLoading.value = false
 }

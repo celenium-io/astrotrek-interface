@@ -51,7 +51,7 @@ const showMore = ref(false)
 				<Text size="13" weight="600" color="secondary" :class="$style.key">Block Height</Text>
 
 				<Flex align="center" gap="6" :class="$style.value">
-					<Text size="13" weight="600" color="primary" mono :class="$style.value">{{ spaces(tx.height) }}</Text>
+					<Text size="13" weight="600" color="primary" mono>{{ spaces(tx.height) }}</Text>
 					<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
 				</Flex>
 				
@@ -162,5 +162,10 @@ const showMore = ref(false)
 
 		overflow: hidden;
 	}
+
+	.value {
+		width: 100%;
+	}
+
 }
 </style>

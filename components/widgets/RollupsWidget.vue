@@ -140,13 +140,13 @@ const calculateHeight = (size) => {
 	.bar_wrapper {
 		width: 100%;
 
-		border-radius: 5px;
+		border-radius: 4px;
 	}
 
 	.bar {
-		width: 14px;
+		width: 17px;
 
-		border-radius: 5px;
+		border-radius: 4px;
 	}
 }
 
