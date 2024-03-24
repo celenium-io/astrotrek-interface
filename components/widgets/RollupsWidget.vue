@@ -80,8 +80,8 @@ const calculateHeight = (size) => {
 
 				<NuxtLink to="/rollups">
 					<Flex align="center" gap="4">
-						<Text size="13" weight="600" color="brand">View Rollups</Text>
-						<Icon size="14" name="trend-up" color="brand" />
+						<Text size="12" weight="600" color="brand">View Rollups</Text>
+						<Icon size="12" name="trend-up" color="brand" />
 					</Flex>
 				</NuxtLink>
 			</Flex>
@@ -115,7 +115,7 @@ const calculateHeight = (size) => {
 }
 
 .bar {
-	width: 5px;
+	width: 4px;
 
 	border-radius: 50px;
 	background: var(--brand);
