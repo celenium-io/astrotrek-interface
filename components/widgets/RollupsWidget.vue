@@ -17,6 +17,11 @@ const appStore = useAppStore()
 
 const lastHead = computed(() => appStore.lastHead)
 
+const chartEl = ref(null)
+const chartWidth = computed(() => chartEl.value?.wrapper?.offsetWidth)
+const barWidth = computed(() => Math.max(Math.round((chartWidth.value - chartWidth.value * 0.23) / 24) - 2, 4))
+const marginBar = computed(() => (chartWidth.value - barWidth * 24) / 23)
+
 const dataSizeSeries = ref([])
 const getDataSizeSeries = async () => {
 	const data = await fetchSeries({
@@ -52,12 +57,20 @@ const calculateHeight = (size) => {
 			</Flex>
 		</Flex>
 
-		<Flex gap="4" :class="$style.chart">
-			<Tooltip v-for="ds in dataSizeSeries">
-				<Flex align="end" :class="$style.bar_wrapper">
+		<Flex ref="chartEl" :class="$style.chart">
+			<Tooltip v-for="(ds, index) in dataSizeSeries" :style="{width: '100%'}">
+				<Flex
+					align="end"
+					:class="$style.bar_wrapper"
+					:style="{
+						marginLeft: index !== 0 ? `${marginBar}px` : '0px',
+						width: `${barWidth}px`,
+					}"
+				>
 					<Flex
 						:class="$style.bar"
 						:style="{
+							width: `${barWidth}px`,
 							height: `${calculateHeight(ds.value)}%`,
 						}"
 					/>
@@ -91,7 +104,8 @@ const calculateHeight = (size) => {
 
 <style module>
 .wrapper {
-	max-width: 232px;
+	max-width: 100%;
+	width: 100%;
 	height: 196px;
 
 	background: var(--card-background);
@@ -101,6 +115,7 @@ const calculateHeight = (size) => {
 }
 
 .chart {
+	width: 100%;
 	height: 32px;
 }
 
@@ -111,13 +126,11 @@ const calculateHeight = (size) => {
 .bar_wrapper {
 	height: 32px;
 	background: var(--op-8);
-	border-radius: 50px;
+	border-radius: 3px;
 }
 
 .bar {
-	width: 4px;
-
-	border-radius: 50px;
+	border-radius: 3px;
 	background: var(--brand);
 
 	transition: all 0.2s ease;
@@ -129,11 +142,11 @@ const calculateHeight = (size) => {
 
 @media (max-width: 1000px) {
 	.wrapper {
-		max-width: initial;
+		max-width: 380px;
 		width: 100%;
 	}
 }
-
+/*
 @media (max-width: 750px) {
 	.chart {
 		width: 100%;
@@ -150,6 +163,6 @@ const calculateHeight = (size) => {
 
 		border-radius: 4px;
 	}
-}
+} */
 
 </style>

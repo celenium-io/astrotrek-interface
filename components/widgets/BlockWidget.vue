@@ -48,11 +48,25 @@ const calculateHeight = (size) => {
 }
 
 await getAvgBlockTime()
+
+const chartBlocksEl = ref(null)
+const chartWidth = computed(() => chartBlocksEl.value?.wrapper?.offsetWidth)
+const barWidth = computed(() => Math.max(Math.round((chartWidth.value - chartWidth.value * 0.43) / 44), 4))
+const marginBar = computed(() => (chartWidth.value - barWidth * 44) / 43)
+// const barWidth = computed(() => Math.max(Math.round(chartWidth.value / 100), 4))
+// const marginBar = computed(() => (chartWidth.value - (44 * barWidth.value)) / 43)
+
+onMounted(() => {
+	// chartWidth.value = chartEl.value.wrapper.offsetWidth
+	console.log(chartWidth.value);
+})
+
+
 </script>
 
 <template>
 	<Flex direction="column" gap="20" :class="$style.wrapper">
-		<Flex direction="column" gap="16">
+		<Flex direction="column" gap="16" :style="{max_width: '100%', width: '100%'}">
 			<Flex direction="column" gap="10">
 				<Flex align="center" gap="6">
 					<Text size="16" weight="600" color="primary"> Block </Text>
@@ -68,14 +82,22 @@ await getAvgBlockTime()
 				</Flex>
 			</Flex>
 
-			<Flex direction="column" gap="12">
-				<Flex align="end" gap="4" :class="$style.chart">
-					<Tooltip v-for="b in blocks">
-						<Flex align="end" :class="$style.bar_wrapper">
+			<Flex direction="column" gap="12" :style="{max_width: '100%', width: '100%'}">
+				<Flex ref="chartBlocksEl" align="end" :class="$style.chart">
+					<Tooltip v-for="(b, index) in blocks" :style="{max_width: '100%', width: '100%'}">
+						<Flex
+							align="end"
+							:class="$style.bar_wrapper"
+							:style="{
+								marginLeft: index !== 0 ? `${marginBar}px` : '0px',
+								width: `${barWidth}px`,
+							}"
+						>
 							<Flex
 								@click="sidebarsStore.open('block', b)"
 								:class="$style.bar"
 								:style="{
+									width: `${barWidth}px`,
 									height: `${calculateHeight(b.stats.bytes_in_block)}%`,
 								}"
 							/>
@@ -106,7 +128,9 @@ await getAvgBlockTime()
 
 <style module>
 .wrapper {
-	width: 380px;
+	max-width: 100%;
+	width: 100%;
+	/* width: 380px; */
 
 	background: var(--card-background);
 	border-radius: 12px;
@@ -131,7 +155,7 @@ await getAvgBlockTime()
 }
 
 .bar {
-	width: 4px;
+	/* width: 4px; */
 
 	background: var(--brand);
 	border-radius: 50px;
@@ -162,16 +186,16 @@ await getAvgBlockTime()
 
 	.chart {
 		width: 100%;
-		gap: 5px;
+		/* gap: 5px; */
 	}
 
 	.bar_wrapper {
 		width: 100%;
 	}
 
-	.bar {
+	/* .bar {
 		width: 5px;
-	}
+	} */
 }
 
 </style>
