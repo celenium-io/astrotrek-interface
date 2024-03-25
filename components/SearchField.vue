@@ -15,6 +15,8 @@ import { shortHash } from "~/services/utils"
 /** API */
 import { search } from "@/services/api/store"
 
+const router = useRouter()
+
 let removeOutside = null
 
 const searchEl = ref()
@@ -23,6 +25,9 @@ const inputEl = ref()
 const searchTerm = ref()
 const results = ref([])
 const history = ref([])
+
+const isLoading = ref(false)
+const notFound = ref(false)
 
 const show = ref(false)
 
@@ -56,8 +61,18 @@ onMounted(() => {
 })
 
 const debouncedSearch = useDebounceFn(async (e) => {
+	if (!searchTerm.value) return
+
+	isLoading.value = true
 	const { data } = await search(searchTerm.value?.trim())
-	results.value = data.value || []
+
+	if (data.value.length) {
+		results.value = data.value.filter((item) => ["tx", "rollup", "block"].includes(item.type))
+	} else {
+		notFound.value = true
+	}
+
+	isLoading.value = false
 }, 250)
 watch(
 	() => searchTerm.value,
@@ -70,13 +85,21 @@ watch(
 const handleClear = () => {
 	results.value = []
 	searchTerm.value = null
+	notFound.value = false
 }
 
-const handleSaveToHistory = (item) => {
+const handleClearHistory = () => {
+	history.value = []
+	localStorage.removeItem("history")
+}
+
+const handleSaveToHistory = (target) => {
 	if (localStorage.history) {
-		localStorage.history = JSON.stringify([item, ...JSON.parse(localStorage.history).slice(0, 4)])
+		if (JSON.parse(localStorage.history).find((item) => item.value === target.value)) return
+
+		localStorage.history = JSON.stringify([target, ...JSON.parse(localStorage.history).slice(0, 4)])
 	} else {
-		localStorage.history = JSON.stringify([item])
+		localStorage.history = JSON.stringify([target])
 	}
 }
 
@@ -84,6 +107,17 @@ const onKeydown = (e) => {
 	if (e.code === "Escape") {
 		show.value = false
 		inputEl.value.blur()
+	}
+
+	if (e.code === "Enter") {
+		const target = results.value[0]
+		router.push(`/${target.type}/${target.value}`)
+
+		handleSaveToHistory(target)
+
+		show.value = false
+		inputEl.value.blur()
+		handleClear()
 	}
 }
 watch(
@@ -103,6 +137,7 @@ watch(
 			activeTab.value = tabs.value[0].name
 
 			searchTerm.value = null
+			notFound.value = false
 
 			window.removeEventListener("keydown", onKeydown)
 
@@ -114,27 +149,40 @@ watch(
 
 <template>
 	<Flex ref="searchEl" :class="$style.wrapper">
-		<Flex @click="inputEl.focus()" align="center" justify="between" :class="$style.field">
+		<Flex @click="inputEl.focus()" align="center" justify="between" gap="8" :class="$style.field">
 			<Flex align="center" gap="8">
 				<Icon name="search" size="16" color="secondary" />
 				<input ref="inputEl" v-model="searchTerm" placeholder="Search" @focus="show = true" />
 			</Flex>
 
-			<Flex align="center" justify="center" :class="$style.kbd">
-				<Text size="12" weight="600" color="secondary">/</Text>
+			<Flex @click="handleClear" align="center" justify="center" :class="$style.kbd">
+				<Spinner v-if="isLoading" size="12" />
+				<Text v-else-if="!searchTerm" size="12" weight="600" color="secondary">/</Text>
+				<Icon v-else name="close" size="12" color="secondary" />
 			</Flex>
 		</Flex>
 
 		<Transition name="search">
 			<div v-if="show" :class="$style.popup_controller">
-				<Flex direction="column" :class="$style.popup">
+				<Flex direction="column" :class="[$style.popup]">
 					<Flex :class="$style.header">
 						<Text v-if="!results.length && history.length" size="12" weight="600" color="secondary">Search History</Text>
 						<Text v-else size="12" weight="600" color="secondary">Results</Text>
 					</Flex>
 
 					<Flex
-						v-if="!results.length && !history.length"
+						v-if="notFound && !results.length && searchTerm"
+						direction="column"
+						align="center"
+						justify="center"
+						gap="8"
+						:class="$style.inner"
+					>
+						<Text size="13" weight="600" color="primary">Nothing was found</Text>
+						<Text size="12" weight="500" color="tertiary">You can find blocks, transactions, or rollups</Text>
+					</Flex>
+					<Flex
+						v-else-if="!results.length && !history.length"
 						direction="column"
 						align="center"
 						justify="center"
@@ -185,9 +233,19 @@ watch(
 						<Text v-if="results.length" size="12" weight="600" color="tertiary">{{ results.length }} results</Text>
 						<Text v-else size="12" weight="600" color="tertiary">No results</Text>
 
-						<Flex align="center" gap="8">
-							<Text v-if="results.length" @click="handleClear" size="12" weight="600" color="brand"> Clear results</Text>
-						</Flex>
+						<Text v-if="results.length" @click="handleClear" size="12" weight="600" color="brand" :class="$style.txt_button">
+							Clear results</Text
+						>
+						<Text
+							v-if="history.length && !results.length"
+							@click="handleClearHistory"
+							size="12"
+							weight="600"
+							color="brand"
+							:class="$style.txt_button"
+						>
+							Clear history</Text
+						>
 					</Flex>
 				</Flex>
 			</div>
@@ -228,8 +286,10 @@ watch(
 }
 
 .kbd {
+	width: 24px;
 	height: 22px;
 
+	cursor: pointer;
 	box-shadow: inset 0 0 0 1px var(--op-8);
 	border-radius: 5px;
 
@@ -303,6 +363,10 @@ watch(
 	&.active {
 		background: rgba(221, 80, 34, 15%);
 	}
+}
+
+.txt_button {
+	cursor: pointer;
 }
 
 @media (max-width: 500px) {
