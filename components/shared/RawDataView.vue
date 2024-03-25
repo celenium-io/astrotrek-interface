@@ -43,4 +43,9 @@ const handleViewRawData = () => {
 .wrapper:hover {
 	transform: scale(1.2);
 }
+
+.wrapper:active {
+	transform: scale(1.5);
+	transition: all 0.2s ease;
+}
 </style>

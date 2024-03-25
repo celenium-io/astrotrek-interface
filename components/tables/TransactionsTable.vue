@@ -2,6 +2,9 @@
 /** Vendor */
 import { DateTime } from "luxon"
 
+/** Components */
+import LinkToEntity from "@/components/shared/LinkToEntity.vue";
+
 /** UI */
 import ActionsList from "@/components/shared/ActionsList.vue"
 
@@ -58,11 +61,8 @@ const props = defineProps({
 					<Icon name="tx-circle" size="16" :color="t.status === 'success' ? 'light-green' : 'red'" />
 
 					<Flex align="center" gap="8">
-						<Flex align="center" gap="6">
-							<Text size="13" weight="600" color="primary">
-								{{ midHash(t.hash) }}
-							</Text>
-						</Flex>
+						<LinkToEntity :entity="{ title: midHash(t.hash), type: 'tx', id: t.hash}" size="13" color="primary" weight="600" />
+						<!-- <Text v-else size="13" weight="600" color="primary"> {{ midHash(t.hash) }} </Text> -->
 
 						<ActionsList :actions="t.action_types" />
 					</Flex>

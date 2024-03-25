@@ -133,24 +133,24 @@ const handleHide = () => {
 }
 
 .first_widgets {
-	max-width: 63%;
-	width: 63%;
-	gap: 4%;
+	max-width: 60%;
+	width: 60%;
+	gap: 3%;
 }
 
 .block_widget {
-	max-width: 55%;
-	width: 55%;
+	max-width: 60%;
+	width: 60%;
 }
 
 .rollup_widget {
-	max-width: 40%;
-	width: 40%;
+	max-width: 37%;
+	width: 37%;
 }
 
 .tx_widget {
-	max-width: 35%;
-	width: 35%;
+	max-width: 38%;
+	width: 38%;
 }
 
 @media (max-width: 1000px) {

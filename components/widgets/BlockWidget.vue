@@ -53,15 +53,6 @@ const chartBlocksEl = ref(null)
 const chartWidth = computed(() => chartBlocksEl.value?.wrapper?.offsetWidth)
 const barWidth = computed(() => Math.max(Math.round((chartWidth.value - chartWidth.value * 0.43) / 44), 4))
 const marginBar = computed(() => (chartWidth.value - barWidth * 44) / 43)
-// const barWidth = computed(() => Math.max(Math.round(chartWidth.value / 100), 4))
-// const marginBar = computed(() => (chartWidth.value - (44 * barWidth.value)) / 43)
-
-onMounted(() => {
-	// chartWidth.value = chartEl.value.wrapper.offsetWidth
-	console.log(chartWidth.value);
-})
-
-
 </script>
 
 <template>

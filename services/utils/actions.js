@@ -1,6 +1,6 @@
-import { base64Decode, capitalize, strToHex } from "./index.js";
+import { base64Decode, capitalize, formatBytes, strToHex } from "./index.js";
 
-export const getTitle = (action) => {
+export const getActionTitle = (action) => {
 	if (!action) return "Action"
 
 	let title = ""
@@ -37,14 +37,14 @@ export const getTitle = (action) => {
 	return title
 }
 
-export const getDescription = (action) => {
+export const getActionDescription = (action) => {
 	if (!action) return ""
 
 	let description = ""
 	let data = action.data
 	switch (action.type) {
 		case "sequence":
-			description = `Pushed ${base64Decode(data.data).length} bytes to ${strToHex(base64Decode(data.rollup_id))}`
+			description = `Pushed ${formatBytes(base64Decode(data.data).length)} to ${strToHex(base64Decode(data.rollup_id))}`
 			break;
 		case "transfer":
 			description = `Sent ${data.amount} nria to ${data.to}`
@@ -89,4 +89,16 @@ export const getDescription = (action) => {
 	}
 	
 	return description
+}
+
+export const getActionDataLength = (action) => {
+	if (!action) return
+	
+	return formatBytes(base64Decode(action.data.data).length)
+}
+
+export const getActionRollupId = (action) => {
+	if (!action) return
+	
+	return strToHex(base64Decode(action.data.rollup_id))
 }

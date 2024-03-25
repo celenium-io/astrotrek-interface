@@ -2,6 +2,9 @@
 /** Vendor */
 import { DateTime } from "luxon"
 
+/** Components */
+import LinkToEntity from "@/components/shared/LinkToEntity.vue";
+
 /** Services */
 import { formatBytes, spaces, splitAddress } from "@/services/utils"
 
@@ -54,7 +57,8 @@ const props = defineProps({
 				<Flex align="center" gap="6">
 					<Icon name="block" size="16" color="secondary" />
 
-					<Text size="13" weight="600" color="primary"> {{ spaces(b.height) }} </Text>
+					<LinkToEntity :entity="{ title: spaces(b.height), type: 'block', id: b.height}" size="13" color="primary" weight="600" />
+					<!-- <Text v-else size="13" weight="600" color="primary"> {{ spaces(b.height) }} </Text> -->
 				</Flex>
 
 				<Flex align="center" gap="8">

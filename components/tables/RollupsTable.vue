@@ -2,8 +2,11 @@
 /** UI */
 import Tooltip from "@/components/ui/Tooltip.vue";
 
+/** Components */
+import LinkToEntity from "@/components/shared/LinkToEntity.vue";
+
 /** Services */
-import { shortHash, spaces } from "@/services/utils"
+import { formatBytes, midHash, shortHash, spaces } from "@/services/utils"
 
 /** Store */
 import { useSidebarsStore } from "@/store/sidebars"
@@ -46,21 +49,20 @@ const props = defineProps({
 				<Flex align="center" gap="6">
 					<Icon name="rollup" size="16" color="secondary" />
 
-					<Text size="13" weight="600" color="primary"> {{ shortHash(rollup.hash) }} </Text>
+					<!-- <Text size="13" weight="600" color="primary"> {{ shortHash(rollup.hash) }} </Text> -->
+					<LinkToEntity :entity="{ title: midHash(rollup.hash), type: 'rollup', id: rollup.hash}" color="primary" />
 				</Flex>
 
 				<Flex align="center" gap="8">
 					<Text size="12" weight="500" color="secondary">
 						<Text color="tertiary">Size</Text>
-						{{ rollup.size }}
+						{{ formatBytes(rollup.size) }}
 					</Text>
 
 					<div :class="$style.dot" />
 
-					<Text size="12" weight="500" color="secondary">
-						<Text color="tertiary">First Height</Text>
-						{{ spaces(rollup.first_height) }}
-					</Text>
+					<Text size="12" weight="500" color="tertiary">First Height&nbsp;</Text>
+					<LinkToEntity :entity="{ title: spaces(rollup.first_height), type: 'block', id: rollup.first_height}" color="secondary" />
 				</Flex>
 			</Flex>
 

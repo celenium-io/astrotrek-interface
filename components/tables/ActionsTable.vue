@@ -7,7 +7,10 @@ import { fetchTxByHash } from "~/services/api/tx"
 
 /** Services */
 import { spaces } from "@/services/utils";
-import { getDescription, getTitle } from "@/services/utils/actions.js";
+import { getActionDataLength, getActionDescription, getActionRollupId, getActionTitle } from "@/services/utils/actions.js";
+
+/** Components */
+import LinkToEntity from "@/components/shared/LinkToEntity.vue";
 
 /** Store */
 import { useCacheStore } from "@/store/cache"
@@ -16,6 +19,8 @@ import { useSidebarsStore } from "@/store/sidebars"
 const cacheStore = useCacheStore()
 const modalsStore = useModalsStore()
 const sidebarsStore = useSidebarsStore()
+
+const router = useRouter()
 
 const props = defineProps({
 	actions: {
@@ -60,20 +65,38 @@ const handleOpenTx = async (action) => {
 
 					<Flex align="center" gap="8">
 						<Text size="13" weight="600" color="primary">
-							{{ getTitle(act) }}
+							{{ getActionTitle(act) }}
 						</Text>
 					</Flex>
 
-					<Text size="13" weight="500" color="secondary" :class="$style.description">
-						{{ getDescription(act) }}
-					</Text>
+					<Flex v-if="act.type === 'sequence'" :class="$style.description">
+						<Text size="13" weight="500" color="secondary">
+							{{ `Pushed ${getActionDataLength(act)} to&nbsp` }}
+						</Text>
+
+						<LinkToEntity :entity="{ title: getActionRollupId(act), type: 'rollup', id: getActionRollupId(act) }" color="secondary" size="13" :class="$style.link" />						
+					</Flex>
+
+					<Flex v-else-if="act.type === 'init_bridge_account'" :class="$style.description">
+						<Text size="13" weight="500" color="secondary">
+							{{ `Bridge account was initialized for&nbsp` }}
+						</Text>
+
+						<LinkToEntity :entity="{ title: getActionRollupId(act), type: 'rollup', id: getActionRollupId(act) }" color="secondary" size="13" :class="$style.link" />						
+					</Flex>
+
+					<Flex v-else>
+						<Text size="13" weight="500" color="secondary" :class="$style.description">
+							{{ getActionDescription(act) }}
+						</Text>
+					</Flex>
 				</Flex>
 
-				<Flex align="center" gap="8">
+				<Flex align="center" gap="12">
 					<Flex gap="4">
 						<Text size="12" color="tertiary">Block</Text>
 
-						<Text size="12" color="tertiary"> {{ spaces(act.height) }} </Text>
+						<LinkToEntity :entity="{ title: spaces(act.height), type: 'block', id: act.height }" :class="$style.link" />
 					</Flex>
 					
 					<Flex align="center" gap="4">
@@ -144,21 +167,8 @@ const handleOpenTx = async (action) => {
 	transform: scale(1.3);
 }
 
-@media (max-width: 800px) {
-	.wrapper {
-		width: 100%;
-	}
-
-	.row {
-		width: 100%;
-	}
-
-	.description {
-		width: 400px;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
+.extBtn:active {
+	transform: scale(1.5);
 }
 
 @media (max-width: 1000px) {
@@ -178,20 +188,6 @@ const handleOpenTx = async (action) => {
 
 	.description {
 		width: 400px;
-	}
-}
-
-@media (max-width: 600px) {
-	.wrapper {
-		width: 100%;
-	}
-
-	.row {
-		width: 100%;
-	}
-
-	.description {
-		width: 300px;
 	}
 }
 
