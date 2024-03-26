@@ -62,7 +62,7 @@ watch(
 
 <template>
 	<Sidebar :show="show" @onClose="emit('onClose')">
-		<Flex direction="column" justify="between" wide>
+		<Flex direction="column" justify="between" wide gap="16">
 			<Flex direction="column" gap="16" :class="$style.content">
 				<Flex direction="column" gap="8">
 					<Flex align="center" gap="4">
@@ -200,7 +200,7 @@ watch(
 				</Flex>
 			</Flex>
 
-			<Button @click="emit('onClose')" :link="`/block/${block.height}`" type="secondary" size="medium" :class="$style.fixed-btn">Open Block</Button>
+			<Button @click="emit('onClose')" :link="`/block/${block.height}`" type="secondary" size="medium">Open Block</Button>
 		</Flex>
 	</Sidebar>
 </template>
@@ -223,11 +223,5 @@ watch(
 .content {
 	height: 100%;
 	overflow-y: auto;
-}
-
-.fixed-btn {
-	height: 32px;
-	position: fixed;
-	bottom: 0;
 }
 </style>

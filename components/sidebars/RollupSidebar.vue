@@ -9,7 +9,6 @@ import { formatBytes, midHash, shortHash, space, spaces } from "@/services/utils
 import Button from "@/components/ui/Button.vue"
 import Sidebar from "@/components/ui/Sidebar.vue"
 
-
 const props = defineProps({
 	rollup: {
 		type: Object,
@@ -26,7 +25,7 @@ const emit = defineEmits(["onClose"])
 
 <template>
 	<Sidebar :show="show" @onClose="emit('onClose')">
-		<Flex direction="column" justify="between" wide :class="$style.content">
+		<Flex direction="column" justify="between" wide gap="16" :class="$style.content">
 			<Flex direction="column" gap="16">
 				<Flex direction="column" gap="8">
 					<Flex align="center" gap="4">
@@ -72,7 +71,7 @@ const emit = defineEmits(["onClose"])
 				</Flex>
 			</Flex>
 
-			<Button @click="emit('onClose')" :link="`/rollup/${rollup.hash}`" type="secondary" size="medium" :class="$style.fixed-btn">Open Rollup</Button>
+			<Button @click="emit('onClose')" :link="`/rollup/${rollup.hash}`" type="secondary" size="medium">Open Rollup</Button>
 		</Flex>
 	</Sidebar>
 </template>
@@ -102,11 +101,5 @@ const emit = defineEmits(["onClose"])
 .content {
 	height: 100%;
 	overflow-y: auto;
-}
-
-.fixed-btn {
-	height: 32px;
-	position: fixed;
-	bottom: 0;
 }
 </style>

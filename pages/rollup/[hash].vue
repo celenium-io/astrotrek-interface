@@ -4,7 +4,7 @@ import { shortHash } from "~/services/utils"
 
 /** Modules */
 import RollupMetadata from "~/components/modules/rollup/RollupMetadata.vue"
-import RollupActions from "~/components/modules/rollup/RollupActions.vue";
+import RollupActions from "~/components/modules/rollup/RollupActions.vue"
 
 /** Components */
 import RawDataView from "@/components/shared/RawDataView.vue"
@@ -119,7 +119,6 @@ watch(
 		fetchActions()
 	},
 )
-
 </script>
 
 <template>
@@ -149,18 +148,20 @@ watch(
 
 		<RollupMetadata :rollup="rollup" />
 
-		<Flex direction="column" gap="2">
+		<Flex direction="column" gap="12">
 			<Flex align="center" justify="between">
-				<Text
-					v-for="tab in tabs"
-					@click="activeTab = tab.name"
-					size="13"
-					weight="600"
-					color="secondary"
-					:class="[$style.tab, activeTab === tab.name && $style.active]"
-				>
-					{{ tab.name }}
-				</Text>
+				<Flex align="center" gap="8">
+					<Text
+						v-for="tab in tabs"
+						@click="activeTab = tab.name"
+						size="13"
+						weight="600"
+						color="secondary"
+						:class="[$style.tab, activeTab === tab.name && $style.active]"
+					>
+						{{ tab.name }}
+					</Text>
+				</Flex>
 
 				<Flex align="center" gap="6" :class="$style.pagination">
 					<Button @click="handlePrev" size="mini" type="secondary" :disabled="page === 1 || isLoading">
@@ -189,9 +190,10 @@ watch(
 }
 
 .tab {
-	height: 32px;
 	border-radius: 6px;
 	cursor: pointer;
+	background: var(--op-5);
+	border: 1px solid transparent;
 
 	padding: 6px 8px;
 
@@ -203,12 +205,11 @@ watch(
 
 	&.active {
 		color: var(--brand);
-		/* opacity: 0.6; */
+		border: 1px solid var(--brand);
 	}
 }
 
 .pagination {
 	padding-bottom: 6px;
 }
-
 </style>

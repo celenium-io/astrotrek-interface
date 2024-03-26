@@ -14,7 +14,7 @@ import Tooltip from "@/components/ui/Tooltip.vue"
 import Sidebar from "@/components/ui/Sidebar.vue"
 
 /** Components */
-import ActionsList from "@/components/tables/ActionsList.vue";
+import ActionsList from "@/components/tables/ActionsList.vue"
 
 /** Store */
 import { useCacheStore } from "@/store/cache"
@@ -62,12 +62,11 @@ watch(
 		}
 	},
 )
-
 </script>
 
 <template>
 	<Sidebar :show="show" @onClose="emit('onClose')">
-		<Flex direction="column" justify="between" wide>
+		<Flex direction="column" justify="between" gap="16" wide>
 			<Flex direction="column" gap="16" :class="$style.content">
 				<Flex direction="column" gap="8">
 					<Flex align="center" gap="4">
@@ -78,7 +77,7 @@ watch(
 								<Text :color="tx.status === 'success' ? 'green' : 'red'">{{ capitalize(tx.status) }}</Text>
 							</template>
 						</Tooltip>
-						
+
 						<Text size="13" weight="500" color="secondary"> Transaction </Text>
 					</Flex>
 
@@ -152,7 +151,7 @@ watch(
 				</Flex>
 			</Flex>
 
-			<Button @click="emit('onClose')" :link="`/tx/${tx.hash}`" type="secondary" size="medium" :class="$style.fixed-btn">Open Transaction</Button>
+			<Button @click="emit('onClose')" :link="`/tx/${tx.hash}`" type="secondary" size="medium"> Open Transaction </Button>
 		</Flex>
 	</Sidebar>
 </template>
@@ -182,11 +181,5 @@ watch(
 .content {
 	height: 100%;
 	overflow-y: auto;
-}
-
-.fixed-btn {
-	height: 32px;
-	position: fixed;
-	bottom: 0;
 }
 </style>

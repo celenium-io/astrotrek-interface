@@ -107,10 +107,10 @@ const handleOpenTx = async (action) => {
 				</Flex>
 			</Flex>
 
-			<Button size="mini" type="tertiary" :class="$style.extBtn">
+			<Button @click.prevent.stop="handleOpenTx(act)" size="mini" type="tertiary" :class="$style.extBtn">
 				<template v-if="txLink">
-					<Icon @click.prevent.stop="handleOpenTx(act)" name="tx" color="secondary" />
-					View Tx
+					<Icon name="tx" color="brand" />
+					<Text color="brand">View Tx</Text>
 				</template>
 				<template v-else>
 					<Icon name="code-brackets" size="14" color="brand" />
