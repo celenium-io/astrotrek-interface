@@ -138,8 +138,8 @@ await fetchTxs()
 		</Flex>
 
 		<BlockMetadata :block="block" />
-		
-		<Flex direction="column" gap="2">
+
+		<Flex direction="column" gap="12">
 			<Flex align="center" gap="8">
 				<Text
 					v-for="tab in tabs"
@@ -170,9 +170,10 @@ await fetchTxs()
 }
 
 .tab {
-	height: 32px;
 	border-radius: 6px;
 	cursor: pointer;
+	background: var(--op-5);
+	border: 1px solid transparent;
 
 	padding: 6px 8px;
 
@@ -184,7 +185,7 @@ await fetchTxs()
 
 	&.active {
 		color: var(--brand);
-		/* opacity: 0.6; */
+		border: 1px solid var(--brand);
 	}
 }
 </style>

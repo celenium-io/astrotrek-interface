@@ -2,15 +2,18 @@
 /** Vendor */
 import { DateTime } from "luxon"
 
+/** UI */
+import Button from "@/components/ui/Button.vue"
+
 /** API */
 import { fetchTxByHash } from "~/services/api/tx"
 
 /** Services */
-import { spaces } from "@/services/utils";
-import { getActionDataLength, getActionDescription, getActionRollupId, getActionTitle } from "@/services/utils/actions.js";
+import { spaces } from "@/services/utils"
+import { getActionDataLength, getActionDescription, getActionRollupId, getActionTitle } from "@/services/utils/actions.js"
 
 /** Components */
-import LinkToEntity from "@/components/shared/LinkToEntity.vue";
+import LinkToEntity from "@/components/shared/LinkToEntity.vue"
 
 /** Store */
 import { useCacheStore } from "@/store/cache"
@@ -20,8 +23,6 @@ const cacheStore = useCacheStore()
 const modalsStore = useModalsStore()
 const sidebarsStore = useSidebarsStore()
 
-const router = useRouter()
-
 const props = defineProps({
 	actions: {
 		type: Array,
@@ -30,7 +31,7 @@ const props = defineProps({
 	txLink: {
 		type: Boolean,
 		default: false,
-	}
+	},
 })
 
 const handleViewRawData = (action) => {
@@ -42,23 +43,14 @@ const handleViewRawData = (action) => {
 const handleOpenTx = async (action) => {
 	const { data } = await fetchTxByHash(action.tx_hash)
 	if (data.value) {
-		sidebarsStore.open('tx', data.value)
-	} else {
-		// Add notification
+		sidebarsStore.open("tx", data.value)
 	}
 }
-
 </script>
 
 <template>
 	<Flex direction="column" wide :class="$style.wrapper">
-		<Flex
-			v-for="act in actions"
-			@click="handleViewRawData(act)"
-			justify="between"
-			align="center"
-			:class="$style.row"
-		>
+		<Flex v-for="act in actions" @click="handleViewRawData(act)" justify="between" align="center" :class="$style.row">
 			<Flex direction="column" gap="8">
 				<Flex align="center" gap="6">
 					<Icon name="action" size="13" color="tertiary" />
@@ -74,7 +66,12 @@ const handleOpenTx = async (action) => {
 							{{ `Pushed ${getActionDataLength(act)} to&nbsp` }}
 						</Text>
 
-						<LinkToEntity :entity="{ title: getActionRollupId(act), type: 'rollup', id: getActionRollupId(act) }" color="secondary" size="13" :class="$style.link" />						
+						<LinkToEntity
+							:entity="{ title: getActionRollupId(act), type: 'rollup', id: getActionRollupId(act) }"
+							color="secondary"
+							size="13"
+							:class="$style.link"
+						/>
 					</Flex>
 
 					<Flex v-else-if="act.type === 'init_bridge_account'" :class="$style.description">
@@ -82,7 +79,12 @@ const handleOpenTx = async (action) => {
 							{{ `Bridge account was initialized for&nbsp` }}
 						</Text>
 
-						<LinkToEntity :entity="{ title: getActionRollupId(act), type: 'rollup', id: getActionRollupId(act) }" color="secondary" size="13" :class="$style.link" />						
+						<LinkToEntity
+							:entity="{ title: getActionRollupId(act), type: 'rollup', id: getActionRollupId(act) }"
+							color="secondary"
+							size="13"
+							:class="$style.link"
+						/>
 					</Flex>
 
 					<Flex v-else>
@@ -98,15 +100,23 @@ const handleOpenTx = async (action) => {
 
 						<LinkToEntity :entity="{ title: spaces(act.height), type: 'block', id: act.height }" :class="$style.link" />
 					</Flex>
-					
+
 					<Flex align="center" gap="4">
 						<Text size="12" color="tertiary"> {{ DateTime.fromISO(act.time).setLocale("en").toFormat("tt, LLL d, y") }} </Text>
 					</Flex>
 				</Flex>
 			</Flex>
 
-			<Icon v-if="txLink" @click.prevent.stop="handleOpenTx(act)" name="tx" color="brand" :class="$style.extBtn" />
-			<Icon v-else name="code-brackets" size="18" color="brand" :class="$style.extBtn" />
+			<Button size="mini" type="tertiary" :class="$style.extBtn">
+				<template v-if="txLink">
+					<Icon @click.prevent.stop="handleOpenTx(act)" name="tx" color="secondary" />
+					View Tx
+				</template>
+				<template v-else>
+					<Icon name="code-brackets" size="14" color="brand" />
+					<Text color="brand">View Raw</Text>
+				</template>
+			</Button>
 		</Flex>
 	</Flex>
 </template>
@@ -137,17 +147,21 @@ const handleOpenTx = async (action) => {
 	&:first-child {
 		border-top-left-radius: 8px;
 		border-top-right-radius: 8px;
+		border-top: none;
 	}
 
 	&:last-child {
 		border-bottom-left-radius: 8px;
 		border-bottom-right-radius: 8px;
-		border-bottom: 1px solid var(--op-5);
 	}
 
 	&.disabled {
 		pointer-events: none;
 		opacity: 0.2;
+	}
+
+	&:hover:has(.extBtn:hover) {
+		background: transparent;
 	}
 }
 
@@ -156,19 +170,6 @@ const handleOpenTx = async (action) => {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-}
-
-.extBtn {
-	background-color: transparent;
-	transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.extBtn:hover {
-	transform: scale(1.3);
-}
-
-.extBtn:active {
-	transform: scale(1.5);
 }
 
 @media (max-width: 1000px) {
@@ -204,5 +205,4 @@ const handleOpenTx = async (action) => {
 		width: 180px;
 	}
 }
-
 </style>

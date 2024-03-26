@@ -1,6 +1,6 @@
 <script setup>
 /** Services */
-import { getActionDescription, getActionTitle } from "@/services/utils/actions.js";
+import { getActionDescription, getActionTitle } from "@/services/utils/actions.js"
 
 const props = defineProps({
 	actions: {
@@ -17,7 +17,7 @@ const props = defineProps({
 
 				<Text size="12" weight="600" color="primary"> {{ getActionTitle(act) }} </Text>
 
-				<Text size="12" color="tertiary" :class="$style.description"> {{ getActionDescription(act) }} </Text>
+				<Text size="12" color="tertiary" weight="500" :class="$style.description"> {{ getActionDescription(act) }} </Text>
 			</Flex>
 		</Flex>
 
@@ -30,19 +30,9 @@ const props = defineProps({
 
 <style module>
 .action {
-	/* cursor: pointer; */
-
-	padding: 2px 6px;
+	padding: 2px 0;
 
 	transition: all 0.2s ease;
-
-	/* &:hover * {
-		color: var(--brand);
-	}
-
-	&:active {
-		transform: translateY(1px);
-	} */
 }
 
 .description {

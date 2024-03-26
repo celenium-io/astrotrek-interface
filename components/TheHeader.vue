@@ -2,9 +2,33 @@
 /** UI */
 import { Dropdown, DropdownItem } from "@/components/ui/Dropdown"
 
+/** Local */
 import NavigationPopup from "./NavigationPopup.vue"
 
+/**
+ * Composable
+ */
+import { useOutside } from "@/composables/outside"
+
+let removeOutside = null
+
+const navigationPopupEl = ref()
 const showPopup = ref(false)
+
+watch(
+	() => showPopup.value,
+	() => {
+		if (showPopup.value) {
+			nextTick(() => {
+				removeOutside = useOutside(navigationPopupEl.value.$el, () => {
+					showPopup.value = false
+				})
+			})
+		} else {
+			if (removeOutside) removeOutside()
+		}
+	},
+)
 </script>
 
 <template>
@@ -33,7 +57,7 @@ const showPopup = ref(false)
 				</NuxtLink>
 
 				<!-- <Flex @pointerenter="showPopup = true" @pointerleave="showPopup = false" @click="showPopup = !showPopup" align="center" gap="6" :class="$style.link"> -->
-				<Flex @click="showPopup = !showPopup" align="center" gap="6" :class="$style.link">					
+				<Flex @click="showPopup = !showPopup" ref="navigationPopupEl" align="center" gap="6" :class="$style.link">
 					<Text size="13" weight="600" color="primary">Explore</Text>
 					<Icon name="chevron" size="14" color="tertiary" :style="{ transform: `rotate(${showPopup ? '180deg' : '0deg'})` }" />
 

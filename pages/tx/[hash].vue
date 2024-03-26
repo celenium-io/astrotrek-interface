@@ -4,13 +4,13 @@ import { capitalize, shortHash } from "~/services/utils"
 
 /** Modules */
 import TxMetadata from "~/components/modules/tx/TxMetadata.vue"
-import TxActions from "~/components/modules/tx/TxActions.vue";
+import TxActions from "~/components/modules/tx/TxActions.vue"
 
 /** Components */
 import RawDataView from "@/components/shared/RawDataView.vue"
 
 /** UI */
-import Tooltip from "~/components/ui/Tooltip.vue";
+import Tooltip from "~/components/ui/Tooltip.vue"
 
 /** API */
 import { fetchTxActions, fetchTxByHash } from "~/services/api/tx"
@@ -116,19 +116,19 @@ await fetchActions()
 							<Text :color="tx.status === 'success' ? 'green' : 'red'">{{ capitalize(tx.status) }}</Text>
 						</template>
 					</Tooltip>
-					
+
 					<Text size="14" weight="500" color="primary">
 						Transaction <Text weight="600">{{ shortHash(tx.hash) }}</Text>
 					</Text>
 				</Flex>
-				
+
 				<RawDataView :entity="tx" name="transaction" />
 			</Flex>
 		</Flex>
 
 		<TxMetadata :tx="tx" />
 
-		<Flex direction="column" gap="2">
+		<Flex direction="column" gap="12">
 			<Flex align="center" gap="8">
 				<Text
 					v-for="tab in tabs"
@@ -158,9 +158,10 @@ await fetchActions()
 }
 
 .tab {
-	height: 32px;
 	border-radius: 6px;
 	cursor: pointer;
+	background: var(--op-5);
+	border: 1px solid transparent;
 
 	padding: 6px 8px;
 
@@ -172,8 +173,7 @@ await fetchActions()
 
 	&.active {
 		color: var(--brand);
-		/* opacity: 0.6; */
+		border: 1px solid var(--brand);
 	}
 }
-
 </style>
