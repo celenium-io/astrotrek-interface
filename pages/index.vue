@@ -71,31 +71,26 @@ useHead({
 	],
 })
 
-const hideHeroSection = ref(false)
+const hideHeroSection = useCookie("hideHeroSection", { default: () => false })
 
 onBeforeMount(async () => {
-	hideHeroSection.value = localStorage.hideHeroSection
-
 	const data = await fetchLatestBlocks()
 	appStore.latestBlocks = data
 	appStore.isLatestBlocksLoaded = true
 })
 
 const handleHide = () => {
-	localStorage.hideHeroSection = true
 	hideHeroSection.value = true
 }
 </script>
 
 <template>
 	<Flex direction="column" wide :class="$style.wrapper">
-		<ClientOnly>
-			<template v-if="!hideHeroSection">
-				<HeroSection @onHide="handleHide" :class="$style.hero_section" />
+		<template v-if="!hideHeroSection">
+			<HeroSection @onHide="handleHide" :class="$style.hero_section" />
 
-				<Divider :class="$style.divider" />
-			</template>
-		</ClientOnly>
+			<Divider :class="$style.divider" />
+		</template>
 
 		<Flex align="center" :class="$style.widgets">
 			<Flex align="center" :class="$style.first_widgets">
