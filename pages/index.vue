@@ -89,11 +89,13 @@ const handleHide = () => {
 
 <template>
 	<Flex direction="column" wide :class="$style.wrapper">
-		<template v-if="!hideHeroSection">
-			<HeroSection @onHide="handleHide" :class="$style.hero_section" />
+		<ClientOnly>
+			<template v-if="!hideHeroSection">
+				<HeroSection @onHide="handleHide" :class="$style.hero_section" />
 
-			<Divider :class="$style.divider" />
-		</template>
+				<Divider :class="$style.divider" />
+			</template>
+		</ClientOnly>
 
 		<Flex align="center" :class="$style.widgets">
 			<Flex align="center" :class="$style.first_widgets">
@@ -101,7 +103,7 @@ const handleHide = () => {
 				<RollupsWidget :class="$style.rollup_widget" />
 			</Flex>
 
-			<TxsWidget  :class="$style.tx_widget" />
+			<TxsWidget :class="$style.tx_widget" />
 		</Flex>
 
 		<Divider :class="$style.divider" />
