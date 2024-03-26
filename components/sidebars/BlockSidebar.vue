@@ -30,12 +30,6 @@ const props = defineProps({
 	},
 })
 
-const handleViewRawData = () => {
-	cacheStore.current.block = props.block
-	cacheStore.current._target = "block"
-	modalsStore.open("rawData")
-}
-
 const emit = defineEmits(["onClose"])
 
 const isLoadingTxs = ref(true)

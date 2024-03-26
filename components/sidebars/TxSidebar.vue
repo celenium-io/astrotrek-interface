@@ -2,6 +2,9 @@
 /** Vendor */
 import { DateTime } from "luxon"
 
+/** API */
+import { fetchTxActions } from "@/services/api/tx"
+
 /** Services */
 import { capitalize, midHash, shortHash, space, spaces } from "@/services/utils"
 
@@ -9,6 +12,9 @@ import { capitalize, midHash, shortHash, space, spaces } from "@/services/utils"
 import Button from "@/components/ui/Button.vue"
 import Tooltip from "@/components/ui/Tooltip.vue"
 import Sidebar from "@/components/ui/Sidebar.vue"
+
+/** Components */
+import ActionsList from "@/components/tables/ActionsList.vue";
 
 /** Store */
 import { useCacheStore } from "@/store/cache"
@@ -27,13 +33,36 @@ const props = defineProps({
 	},
 })
 
-const handleViewRawData = () => {
-	cacheStore.current.block = props.tx
-	cacheStore.current._target = "transaction"
-	modalsStore.open("rawData")
+const emit = defineEmits(["onClose"])
+
+const isLoadingActions = ref(true)
+const actions = ref([])
+
+const getActions = async () => {
+	isLoadingActions.value = true
+
+	if (props.tx.actions_count === 0) {
+		isLoadingActions.value = false
+		return
+	}
+
+	const { data } = await fetchTxActions({ hash: props.tx.hash })
+	actions.value = data.value || []
+
+	isLoadingActions.value = false
 }
 
-const emit = defineEmits(["onClose"])
+watch(
+	() => props.show,
+	() => {
+		if (props.show) {
+			getActions()
+		} else {
+			actions.value = []
+		}
+	},
+)
+
 </script>
 
 <template>
@@ -83,14 +112,19 @@ const emit = defineEmits(["onClose"])
 
 				<div :class="$style.divider" />
 
+				<Flex align="center" justify="between">
+					<Text size="13" weight="600" color="primary">Actions</Text>
+					<Text size="13" weight="600" color="primary">{{ tx.actions_count }}</Text>
+				</Flex>
+
+				<ActionsList v-if="actions.length" :actions="actions" />
+				<Text v-else-if="isLoadingActions" size="12" weight="500" color="tertiary">Loading actions...</Text>
+				<Text v-else size="12" weight="500" color="tertiary">There is no actions in the transaction</Text>
+
+				<div :class="$style.divider" />
+
 				<Flex direction="column" gap="16">
 					<Text size="12" weight="600" color="primary">Details</Text>
-
-					<Flex align="center" justify="between">
-						<Text size="13" weight="600" color="tertiary">Actions</Text>
-
-						<Text size="13" weight="600" color="primary"> {{ tx.actions_count }} </Text>
-					</Flex>
 
 					<Flex align="center" justify="between">
 						<Text size="13" weight="600" color="tertiary">Nonce</Text>

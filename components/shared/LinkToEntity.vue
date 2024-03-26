@@ -5,16 +5,16 @@ const props = defineProps({
 		required: true,
 	},
 	size: {
-		type: [Number, String],
-		default: 12,
+		type: String,
+		default: "12",
 	},
 	color: {
 		type: String,
 		default: "tertiary",
 	},
 	weight: {
-		type: [Number, String],
-		default: 500,
+		type: String,
+		default: "500",
 	}
 })
 

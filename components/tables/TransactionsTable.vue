@@ -6,7 +6,7 @@ import { DateTime } from "luxon"
 import LinkToEntity from "@/components/shared/LinkToEntity.vue";
 
 /** UI */
-import ActionsList from "@/components/shared/ActionsList.vue"
+import ActionsRow from "@/components/shared/ActionsRow.vue"
 
 /** Services */
 import { midHash, splitAddress } from "@/services/utils"
@@ -64,7 +64,7 @@ const props = defineProps({
 						<LinkToEntity :entity="{ title: midHash(t.hash), type: 'tx', id: t.hash}" size="13" color="primary" weight="600" />
 						<!-- <Text v-else size="13" weight="600" color="primary"> {{ midHash(t.hash) }} </Text> -->
 
-						<ActionsList :actions="t.action_types" />
+						<ActionsRow :actions="t.action_types" />
 					</Flex>
 				</Flex>
 
