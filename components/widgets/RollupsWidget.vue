@@ -104,8 +104,6 @@ const calculateHeight = (size) => {
 
 <style module>
 .wrapper {
-	max-width: 100%;
-	width: 100%;
 	height: 196px;
 
 	background: var(--card-background);
@@ -139,30 +137,4 @@ const calculateHeight = (size) => {
 .bar:hover {
 	background: var(--brand);
 }
-
-@media (max-width: 1000px) {
-	.wrapper {
-		max-width: 380px;
-		width: 100%;
-	}
-}
-/*
-@media (max-width: 750px) {
-	.chart {
-		width: 100%;
-	}
-
-	.bar_wrapper {
-		width: 100%;
-
-		border-radius: 4px;
-	}
-
-	.bar {
-		width: 17px;
-
-		border-radius: 4px;
-	}
-} */
-
 </style>

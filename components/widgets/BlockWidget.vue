@@ -119,10 +119,6 @@ const marginBar = computed(() => (chartWidth.value - barWidth * 44) / 43)
 
 <style module>
 .wrapper {
-	max-width: 100%;
-	width: 100%;
-	/* width: 380px; */
-
 	background: var(--card-background);
 	border-radius: 12px;
 
@@ -146,8 +142,6 @@ const marginBar = computed(() => (chartWidth.value - barWidth * 44) / 43)
 }
 
 .bar {
-	/* width: 4px; */
-
 	background: var(--brand);
 	border-radius: 50px;
 
@@ -171,22 +165,13 @@ const marginBar = computed(() => (chartWidth.value - barWidth * 44) / 43)
 }
 
 @media (max-width: 1000px) {
-	.wrapper {
-		width: 100%;
-	}
-
 	.chart {
 		width: 100%;
-		/* gap: 5px; */
 	}
 
 	.bar_wrapper {
 		width: 100%;
 	}
-
-	/* .bar {
-		width: 5px;
-	} */
 }
 
 </style>

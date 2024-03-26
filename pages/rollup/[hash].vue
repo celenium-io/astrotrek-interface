@@ -42,6 +42,7 @@ const fetchActions = async () => {
 		hash: rollup.value?.hash,
 		limit: limit.value,
 		offset: (page.value - 1) * limit.value,
+		sort: "desc",
 	})
 	actions.value = data.value
 	handleNextCondition.value = actions.value.length < limit.value

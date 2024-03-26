@@ -49,7 +49,6 @@ const props = defineProps({
 				<Flex align="center" gap="6">
 					<Icon name="rollup" size="16" color="secondary" />
 
-					<!-- <Text size="13" weight="600" color="primary"> {{ shortHash(rollup.hash) }} </Text> -->
 					<LinkToEntity :entity="{ title: midHash(rollup.hash), type: 'rollup', id: rollup.hash}" color="primary" />
 				</Flex>
 
@@ -62,6 +61,7 @@ const props = defineProps({
 					<div :class="$style.dot" />
 
 					<Text size="12" weight="500" color="tertiary">First Height&nbsp;</Text>
+
 					<LinkToEntity :entity="{ title: spaces(rollup.first_height), type: 'block', id: rollup.first_height}" color="secondary" />
 				</Flex>
 			</Flex>
@@ -82,7 +82,6 @@ const props = defineProps({
 
 <style module>
 .wrapper {
-	/* min-height: 900px; */
 	position: relative;
 
 	margin-top: 20px;

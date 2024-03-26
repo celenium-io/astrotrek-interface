@@ -129,28 +129,28 @@ const handleHide = () => {
 .widgets {
 	max-width: 100%;
 	width: 100%;
-	gap: 2%;
+	gap: 20px;
 }
 
 .first_widgets {
-	max-width: 60%;
-	width: 60%;
-	gap: 3%;
+	flex: 1;
+
+	gap: 20px;
 }
 
 .block_widget {
-	max-width: 60%;
-	width: 60%;
+	max-width: 380px;
+	width: 380px;
 }
 
 .rollup_widget {
-	max-width: 37%;
-	width: 37%;
+	min-width: 240px;
+	width: 240px;
 }
 
 .tx_widget {
-	max-width: 38%;
-	width: 38%;
+	max-width: 380px;
+	width: 380px;
 }
 
 @media (max-width: 1000px) {
@@ -164,29 +164,30 @@ const handleHide = () => {
 
 	.widgets {
 		flex-direction: column;
-		gap: 24px;
+		gap: 20px;
 	}
 
 	.first_widgets {
-		max-width: 100%;
 		width: 100%;
-		gap: 3%;
+
+		gap: 20px;
 	}
 
 	.block_widget {
-		max-width: 55%;
-		width: 55%;
+		max-width: initial;
+		width: 100%;
 	}
 
 	.rollup_widget {
-		max-width: 42%;
-		width: 42%;
+		max-width: 240px;
+		width: 240px;
 	}
 
 	.tx_widget {
 		max-width: 100%;
 		width: 100%;
 	}
+
 	.tables {
 		flex-direction: column;
 	}
