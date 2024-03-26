@@ -68,8 +68,8 @@ const props = defineProps({
 
 			<Tooltip>
 				<Flex align="center" gap="4">
-					<Icon name="action" size="13" color="tertiary" />
 					<Text size="13" weight="600" color="primary"> {{ rollup.actions_count }} </Text>
+					<Icon name="action" size="13" color="tertiary" />
 				</Flex>
 
 				<template #content>
