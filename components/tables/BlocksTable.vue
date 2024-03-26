@@ -2,6 +2,9 @@
 /** Vendor */
 import { DateTime } from "luxon"
 
+/** Components */
+import LinkToEntity from "@/components/shared/LinkToEntity.vue";
+
 /** Services */
 import { formatBytes, spaces, splitAddress } from "@/services/utils"
 
@@ -20,6 +23,10 @@ const props = defineProps({
 		type: Number,
 		required: false,
 	},
+	recentBlocks: {
+		type: Boolean,
+		default: false,
+	}
 })
 </script>
 
@@ -44,13 +51,14 @@ const props = defineProps({
 			@click="sidebarsStore.open('block', b)"
 			justify="between"
 			align="center"
-			:class="[$style.row, isLoading && $style.disabled]"
+			:class="[!recentBlocks && $style.row, recentBlocks && $style.row_recent_blocks, isLoading && $style.disabled]"
 		>
 			<Flex direction="column" gap="8">
 				<Flex align="center" gap="6">
 					<Icon name="block" size="16" color="secondary" />
 
-					<Text size="13" weight="600" color="primary"> {{ spaces(b.height) }} </Text>
+					<LinkToEntity :entity="{ title: spaces(b.height), type: 'block', id: b.height}" size="13" color="primary" weight="600" />
+					<!-- <Text v-else size="13" weight="600" color="primary"> {{ spaces(b.height) }} </Text> -->
 				</Flex>
 
 				<Flex align="center" gap="8">
@@ -97,6 +105,31 @@ const props = defineProps({
 }
 
 .row {
+	height: 60px;
+
+	cursor: pointer;
+
+	border-radius: 8px;
+
+	padding: 0 16px;
+
+	transition: all 0.2s ease;
+
+	&:hover {
+		background: var(--op-5);
+	}
+
+	&:active {
+		background: var(--op-10);
+	}
+
+	&.disabled {
+		pointer-events: none;
+		opacity: 0.2;
+	}
+}
+
+.row_recent_blocks {
 	height: 60px;
 
 	border-top: 1px solid var(--op-5);

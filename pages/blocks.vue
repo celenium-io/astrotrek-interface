@@ -131,10 +131,10 @@ watch(
 }
 
 .card {
-	border-radius: 12px;
-	background: var(--card-background);
+	border-radius: 8px;
+	background: var(--op-3);
 
-	padding: 16px 0 14px 0;
+	padding: 16px 0 0 0;
 }
 
 .top {

@@ -32,7 +32,8 @@ const showPopup = ref(false)
 					</Flex>
 				</NuxtLink>
 
-				<Flex @pointerenter="showPopup = true" @pointerleave="showPopup = false" align="center" gap="6" :class="$style.link">
+				<!-- <Flex @pointerenter="showPopup = true" @pointerleave="showPopup = false" @click="showPopup = !showPopup" align="center" gap="6" :class="$style.link"> -->
+				<Flex @click="showPopup = !showPopup" align="center" gap="6" :class="$style.link">					
 					<Text size="13" weight="600" color="primary">Explore</Text>
 					<Icon name="chevron" size="14" color="tertiary" :style="{ transform: `rotate(${showPopup ? '180deg' : '0deg'})` }" />
 
@@ -91,6 +92,8 @@ const showPopup = ref(false)
 
 .link {
 	padding: 16px 0;
+
+	cursor: pointer;
 }
 
 .network {

@@ -7,24 +7,24 @@
 
 					<Flex direction="column" gap="6">
 						<Text size="14" weight="600" color="primary">Blocks</Text>
-						<Text size="13" weight="500" color="tertiary">Very nice description</Text>
+						<Text size="13" weight="500" color="tertiary">Data blocks on the blockchain</Text>
 					</Flex>
 				</Flex>
 			</NuxtLink>
 
-			<NuxtLink to="/txs">
+			<NuxtLink to="/rollups">
 				<Flex gap="12" :class="$style.item">
-					<Icon name="tx" color="primary" size="20" :class="$style.item_icon" />
+					<Icon name="rollup" color="primary" size="20" :class="$style.item_icon" />
 
 					<Flex direction="column" gap="6">
-						<Text size="14" weight="600" color="primary">Transactions</Text>
-						<Text size="13" weight="500" color="tertiary">Very nice description</Text>
+						<Text size="14" weight="600" color="primary">Rollups</Text>
+						<Text size="13" weight="500" color="tertiary">Rollup's namespaces</Text>
 					</Flex>
 				</Flex>
 			</NuxtLink>
 		</Flex>
 
-		<Flex direction="column" gap="8">
+		<!-- <Flex direction="column" gap="8">
 			<NuxtLink to="/accounts">
 				<Flex gap="12" :class="$style.item">
 					<Icon name="account" color="primary" size="20" :class="$style.item_icon" />
@@ -46,15 +46,15 @@
 					</Flex>
 				</Flex>
 			</NuxtLink>
-		</Flex>
+		</Flex> -->
 
-		<NuxtLink to="/rollups">
+		<NuxtLink to="/txs">
 			<Flex gap="12" :class="$style.item">
-				<Icon name="rollup" color="primary" size="20" :class="$style.item_icon" />
+				<Icon name="tx" color="primary" size="20" :class="$style.item_icon" />
 
 				<Flex direction="column" gap="6">
-					<Text size="14" weight="600" color="primary">Rollups</Text>
-					<Text size="13" weight="500" color="tertiary">Very nice description</Text>
+					<Text size="14" weight="600" color="primary">Transactions</Text>
+					<Text size="13" weight="500" color="tertiary">Taransactions that change state</Text>
 				</Flex>
 			</Flex>
 		</NuxtLink>

@@ -7,3 +7,7 @@ export const capitalize = (s) => {
 	if (!s.length) return ""
 	return s.charAt(0).toUpperCase() + s.slice(1)
 }
+
+export function base64Decode(encodedString) {
+    return atob(encodedString);
+}

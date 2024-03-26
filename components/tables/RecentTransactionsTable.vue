@@ -64,7 +64,7 @@ watch(
 			</NuxtLink>
 		</Flex>
 
-		<TransactionsTable :txs="!isPaused ? transactions : transactionsSnapshot" />
+		<TransactionsTable :txs="!isPaused ? transactions : transactionsSnapshot" recentTxs />
 
 		<Flex align="center" justify="between" :class="$style.bot">
 			<Flex align="center" gap="6">

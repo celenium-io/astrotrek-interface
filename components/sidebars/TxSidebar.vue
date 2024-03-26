@@ -2,15 +2,25 @@
 /** Vendor */
 import { DateTime } from "luxon"
 
+/** API */
+import { fetchTxActions } from "@/services/api/tx"
+
 /** Services */
-import { midHash, shortHash, space, comma } from "@/services/utils"
+import { capitalize, midHash, shortHash, space, spaces } from "@/services/utils"
 
 /** UI */
 import Button from "@/components/ui/Button.vue"
+import Tooltip from "@/components/ui/Tooltip.vue"
 import Sidebar from "@/components/ui/Sidebar.vue"
 
-/** Shared Components */
-import ActionBadge from "@/components/shared/ActionBadge.vue"
+/** Components */
+import ActionsList from "@/components/tables/ActionsList.vue";
+
+/** Store */
+import { useCacheStore } from "@/store/cache"
+import { useModalsStore } from "@/store/modals"
+const cacheStore = useCacheStore()
+const modalsStore = useModalsStore()
 
 const props = defineProps({
 	tx: {
@@ -24,15 +34,51 @@ const props = defineProps({
 })
 
 const emit = defineEmits(["onClose"])
+
+const isLoadingActions = ref(true)
+const actions = ref([])
+
+const getActions = async () => {
+	isLoadingActions.value = true
+
+	if (props.tx.actions_count === 0) {
+		isLoadingActions.value = false
+		return
+	}
+
+	const { data } = await fetchTxActions({ hash: props.tx.hash })
+	actions.value = data.value || []
+
+	isLoadingActions.value = false
+}
+
+watch(
+	() => props.show,
+	() => {
+		if (props.show) {
+			getActions()
+		} else {
+			actions.value = []
+		}
+	},
+)
+
 </script>
 
 <template>
 	<Sidebar :show="show" @onClose="emit('onClose')">
 		<Flex direction="column" justify="between" wide>
-			<Flex direction="column" gap="16">
+			<Flex direction="column" gap="16" :class="$style.content">
 				<Flex direction="column" gap="8">
 					<Flex align="center" gap="4">
-						<Icon name="tx" size="12" :color="tx.status === 'success' ? 'green' : 'red'" />
+						<Tooltip>
+							<Icon name="tx" size="14" :color="tx.status === 'success' ? 'green' : 'red'" />
+
+							<template #content>
+								<Text :color="tx.status === 'success' ? 'green' : 'red'">{{ capitalize(tx.status) }}</Text>
+							</template>
+						</Tooltip>
+						
 						<Text size="13" weight="500" color="secondary"> Transaction </Text>
 					</Flex>
 
@@ -57,7 +103,7 @@ const emit = defineEmits(["onClose"])
 					<Flex justify="between" :class="$style.card">
 						<Flex direction="column" gap="8">
 							<Text size="12" weight="600" color="secondary">Block Height</Text>
-							<Text size="12" weight="600" color="tertiary">{{ comma(tx.height) }}</Text>
+							<Text size="12" weight="600" color="tertiary">{{ spaces(tx.height) }}</Text>
 						</Flex>
 
 						<Icon name="arrow-narrow-up-right" size="12" color="secondary" />
@@ -66,14 +112,19 @@ const emit = defineEmits(["onClose"])
 
 				<div :class="$style.divider" />
 
+				<Flex align="center" justify="between">
+					<Text size="13" weight="600" color="primary">Actions</Text>
+					<Text size="13" weight="600" color="primary">{{ tx.actions_count }}</Text>
+				</Flex>
+
+				<ActionsList v-if="actions.length" :actions="actions" />
+				<Text v-else-if="isLoadingActions" size="12" weight="500" color="tertiary">Loading actions...</Text>
+				<Text v-else size="12" weight="500" color="tertiary">There is no actions in the transaction</Text>
+
+				<div :class="$style.divider" />
+
 				<Flex direction="column" gap="16">
 					<Text size="12" weight="600" color="primary">Details</Text>
-
-					<Flex align="center" justify="between">
-						<Text size="13" weight="600" color="tertiary">Actions</Text>
-
-						<Text size="13" weight="600" color="primary"> {{ tx.actions_count }} </Text>
-					</Flex>
 
 					<Flex align="center" justify="between">
 						<Text size="13" weight="600" color="tertiary">Nonce</Text>
@@ -101,7 +152,7 @@ const emit = defineEmits(["onClose"])
 				</Flex>
 			</Flex>
 
-			<Button @click="emit('onClose')" :link="`/tx/${tx.hash}`" type="secondary" size="medium">Open Transaction</Button>
+			<Button @click="emit('onClose')" :link="`/tx/${tx.hash}`" type="secondary" size="medium" :class="$style.fixed-btn">Open Transaction</Button>
 		</Flex>
 	</Sidebar>
 </template>
@@ -126,5 +177,16 @@ const emit = defineEmits(["onClose"])
 	height: 1px;
 
 	background: var(--op-10);
+}
+
+.content {
+	height: 100%;
+	overflow-y: auto;
+}
+
+.fixed-btn {
+	height: 32px;
+	position: fixed;
+	bottom: 0;
 }
 </style>

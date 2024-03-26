@@ -2,8 +2,11 @@
 /** Vendor */
 import { DateTime } from "luxon"
 
+/** Components */
+import LinkToEntity from "@/components/shared/LinkToEntity.vue";
+
 /** UI */
-import ActionsList from "@/components/shared/ActionsList.vue"
+import ActionsRow from "@/components/shared/ActionsRow.vue"
 
 /** Services */
 import { midHash, splitAddress } from "@/services/utils"
@@ -23,6 +26,10 @@ const props = defineProps({
 		type: Number,
 		required: false,
 	},
+	recentTxs: {
+		type: Boolean,
+		default: false,
+	}
 })
 </script>
 
@@ -47,20 +54,17 @@ const props = defineProps({
 			@click="sidebarsStore.open('tx', t)"
 			justify="between"
 			align="center"
-			:class="[$style.row, isLoading && $style.disabled]"
+			:class="[!recentTxs && $style.row, recentTxs && $style.row_recent_txs, isLoading && $style.disabled]"
 		>
 			<Flex direction="column" gap="8">
 				<Flex align="center" gap="6">
 					<Icon name="tx-circle" size="16" :color="t.status === 'success' ? 'light-green' : 'red'" />
 
 					<Flex align="center" gap="8">
-						<Flex align="center" gap="6">
-							<Text size="13" weight="600" color="primary">
-								{{ midHash(t.hash) }}
-							</Text>
-						</Flex>
+						<LinkToEntity :entity="{ title: midHash(t.hash), type: 'tx', id: t.hash}" size="13" color="primary" weight="600" />
+						<!-- <Text v-else size="13" weight="600" color="primary"> {{ midHash(t.hash) }} </Text> -->
 
-						<ActionsList :actions="t.action_types" />
+						<ActionsRow :actions="t.action_types" />
 					</Flex>
 				</Flex>
 
@@ -95,6 +99,42 @@ const props = defineProps({
 }
 
 .row {
+	height: 60px;
+
+	border-top: 1px solid var(--op-5);
+
+	cursor: pointer;
+
+	padding: 0 16px;
+
+	transition: all 0.2s ease;
+
+	&:hover {
+		background: var(--op-5);
+	}
+	
+	&:first-child {
+		border-top-left-radius: 8px;
+		border-top-right-radius: 8px;
+	}
+
+	&:last-child {
+		border-bottom-left-radius: 8px;
+		border-bottom-right-radius: 8px;
+		border-bottom: 1px solid var(--op-5);
+	}
+
+	&:active {
+		background: var(--op-10);
+	}
+
+	&.disabled {
+		pointer-events: none;
+		opacity: 0.2;
+	}
+}
+
+.row_recent_txs {
 	height: 60px;
 
 	border-top: 1px solid var(--op-5);

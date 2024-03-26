@@ -1,6 +1,12 @@
 <script setup>
+/** UI */
+import Tooltip from "@/components/ui/Tooltip.vue";
+
+/** Components */
+import LinkToEntity from "@/components/shared/LinkToEntity.vue";
+
 /** Services */
-import { shortHash, comma } from "@/services/utils"
+import { formatBytes, midHash, shortHash, spaces } from "@/services/utils"
 
 /** Store */
 import { useSidebarsStore } from "@/store/sidebars"
@@ -34,7 +40,7 @@ const props = defineProps({
 		<Flex
 			v-if="rollups"
 			v-for="rollup in rollups"
-			@click="sidebarsStore.open('block', b)"
+			@click="sidebarsStore.open('rollup', rollup)"
 			justify="between"
 			align="center"
 			:class="[$style.row, isLoading && $style.disabled]"
@@ -43,39 +49,40 @@ const props = defineProps({
 				<Flex align="center" gap="6">
 					<Icon name="rollup" size="16" color="secondary" />
 
-					<Text size="13" weight="600" color="primary"> {{ shortHash(rollup.hash) }} </Text>
+					<LinkToEntity :entity="{ title: midHash(rollup.hash), type: 'rollup', id: rollup.hash}" color="primary" />
 				</Flex>
 
 				<Flex align="center" gap="8">
 					<Text size="12" weight="500" color="secondary">
 						<Text color="tertiary">Size</Text>
-						{{ rollup.size }}
+						{{ formatBytes(rollup.size) }}
 					</Text>
 
 					<div :class="$style.dot" />
 
-					<Text size="12" weight="500" color="secondary">
-						<Text color="tertiary">First Height</Text>
-						{{ comma(rollup.first_height) }}
-					</Text>
+					<Text size="12" weight="500" color="tertiary">First Height&nbsp;</Text>
+
+					<LinkToEntity :entity="{ title: spaces(rollup.first_height), type: 'block', id: rollup.first_height}" color="secondary" />
 				</Flex>
 			</Flex>
 
-			<Flex direction="column" align="end" gap="8">
+			<Tooltip>
 				<Flex align="center" gap="4">
-					<Icon name="tx-circle" size="12" color="light-green" />
-					<Text size="13" weight="600" color="primary"> {{ rollup.actions_count }} <Text color="secondary">Txs</Text> </Text>
+					<Text size="13" weight="600" color="primary"> {{ rollup.actions_count }} </Text>
+					
+					<Icon name="action" size="13" color="tertiary" />
 				</Flex>
 
-				<Text size="12" weight="500" color="tertiary"> Actions </Text>
-			</Flex>
+				<template #content>
+					<Text size="12" color="tertiary">Actions count</Text>
+				</template>
+			</Tooltip>
 		</Flex>
 	</Flex>
 </template>
 
 <style module>
 .wrapper {
-	min-height: 900px;
 	position: relative;
 
 	margin-top: 20px;
@@ -92,6 +99,7 @@ const props = defineProps({
 	height: 60px;
 
 	border-top: 1px solid var(--op-5);
+
 	cursor: pointer;
 
 	padding: 0 16px;
@@ -102,12 +110,14 @@ const props = defineProps({
 		background: var(--op-5);
 	}
 
-	&:active {
-		background: var(--op-10);
+	&:last-child {
+		border-bottom-left-radius: 8px;
+		border-bottom-right-radius: 8px;
+		border-bottom: 1px solid var(--op-5);
 	}
 
-	&:last-child {
-		border-bottom: 1px solid var(--op-5);
+	&:active {
+		background: var(--op-10);
 	}
 
 	&.disabled {

@@ -184,7 +184,6 @@ const todayTxs = computed(() => {
 
 <style module>
 .wrapper {
-	max-width: 380px;
 	height: 196px;
 
 	background: var(--card-background);

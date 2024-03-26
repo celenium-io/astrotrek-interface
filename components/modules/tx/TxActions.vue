@@ -20,7 +20,7 @@ const props = defineProps({
 
 		<ActionsTable v-if="actions.length > 0" :actions="actions" />
 		
-		<EmptyHolder v-else-if="!isLoading" title="This block doesn't contain any action" />
+		<EmptyHolder v-else-if="!isLoading" title="This transaction doesn't contain any action" />
 	</Flex>
 </template>
 

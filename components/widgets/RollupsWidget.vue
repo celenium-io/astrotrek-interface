@@ -17,6 +17,11 @@ const appStore = useAppStore()
 
 const lastHead = computed(() => appStore.lastHead)
 
+const chartEl = ref(null)
+const chartWidth = computed(() => chartEl.value?.wrapper?.offsetWidth)
+const barWidth = computed(() => Math.max(Math.round((chartWidth.value - chartWidth.value * 0.23) / 24) - 2, 4))
+const marginBar = computed(() => (chartWidth.value - barWidth * 24) / 23)
+
 const dataSizeSeries = ref([])
 const getDataSizeSeries = async () => {
 	const data = await fetchSeries({
@@ -52,12 +57,20 @@ const calculateHeight = (size) => {
 			</Flex>
 		</Flex>
 
-		<Flex gap="4" :class="$style.chart">
-			<Tooltip v-for="ds in dataSizeSeries">
-				<Flex align="end" :class="$style.bar_wrapper">
+		<Flex ref="chartEl" :class="$style.chart">
+			<Tooltip v-for="(ds, index) in dataSizeSeries" :style="{width: '100%'}">
+				<Flex
+					align="end"
+					:class="$style.bar_wrapper"
+					:style="{
+						marginLeft: index !== 0 ? `${marginBar}px` : '0px',
+						width: `${barWidth}px`,
+					}"
+				>
 					<Flex
 						:class="$style.bar"
 						:style="{
+							width: `${barWidth}px`,
 							height: `${calculateHeight(ds.value)}%`,
 						}"
 					/>
@@ -74,14 +87,23 @@ const calculateHeight = (size) => {
 
 		<Flex direction="column" gap="8">
 			<Text size="28" weight="500" color="primary"> {{ comma(lastHead.total_rollups) }} </Text>
-			<Text size="12" weight="500" color="tertiary">Total Rollups</Text>
+
+			<Flex align="center" justify="between">
+				<Text size="12" weight="500" color="tertiary">Total Rollups</Text>
+
+				<NuxtLink to="/rollups">
+					<Flex align="center" gap="4">
+						<Text size="12" weight="600" color="brand">View Rollups</Text>
+						<Icon size="12" name="trend-up" color="brand" />
+					</Flex>
+				</NuxtLink>
+			</Flex>
 		</Flex>
 	</Flex>
 </template>
 
 <style module>
 .wrapper {
-	max-width: 232px;
 	height: 196px;
 
 	background: var(--card-background);
@@ -91,34 +113,28 @@ const calculateHeight = (size) => {
 }
 
 .chart {
+	width: 100%;
 	height: 32px;
+}
 
-	&:hover {
-		.bar:not(:hover) {
-			background: var(--txt-support);
-		}
-	}
+.chart:hover .bar_wrapper:not(:hover) .bar {
+	background: var(--txt-support);
 }
 
 .bar_wrapper {
 	height: 32px;
 	background: var(--op-8);
-	border-radius: 50px;
+	border-radius: 3px;
 }
 
 .bar {
-	width: 4px;
-
-	border-radius: 50px;
+	border-radius: 3px;
 	background: var(--brand);
 
 	transition: all 0.2s ease;
 }
 
-@media (max-width: 1000px) {
-	.wrapper {
-		max-width: initial;
-		width: 100%;
-	}
+.bar:hover {
+	background: var(--brand);
 }
 </style>

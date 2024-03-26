@@ -3,7 +3,7 @@
 import { shortHash } from "@/services/utils"
 
 /** Components */
-import ActionsList from "@/components/shared/ActionsList.vue"
+import ActionsRow from "@/components/shared/ActionsRow.vue"
 
 const props = defineProps({
 	txs: {
@@ -22,7 +22,7 @@ const props = defineProps({
 					<Text size="12" weight="600" color="primary">{{ shortHash(t.hash) }}</Text>
 				</Flex>
 
-				<ActionsList :actions="t.action_types" />
+				<ActionsRow :actions="t.action_types" />
 			</Flex>
 		</NuxtLink>
 
@@ -35,16 +35,14 @@ const props = defineProps({
 
 <style module>
 .tx {
-	background: var(--op-8);
-	border-radius: 5px;
 	cursor: pointer;
 
 	padding: 2px 6px;
 
 	transition: all 0.2s ease;
 
-	&:hover {
-		background: var(--op-10);
+	&:hover * {
+		color: var(--brand);
 	}
 
 	&:active {

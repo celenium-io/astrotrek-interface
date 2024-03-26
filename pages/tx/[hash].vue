@@ -1,12 +1,19 @@
 <script setup>
 /** Services */
-import { comma, shortHash } from "~/services/utils"
+import { capitalize, shortHash } from "~/services/utils"
 
 /** Modules */
 import TxMetadata from "~/components/modules/tx/TxMetadata.vue"
+import TxActions from "~/components/modules/tx/TxActions.vue";
+
+/** Components */
+import RawDataView from "@/components/shared/RawDataView.vue"
+
+/** UI */
+import Tooltip from "~/components/ui/Tooltip.vue";
 
 /** API */
-import { fetchTxByHash } from "~/services/api/tx"
+import { fetchTxActions, fetchTxByHash } from "~/services/api/tx"
 
 definePageMeta({
 	layout: "default",
@@ -15,6 +22,8 @@ definePageMeta({
 const route = useRoute()
 
 const tx = ref()
+const actions = ref([])
+const isLoading = ref(false)
 
 const { data } = await fetchTxByHash(route.params.hash)
 if (!data.value) {
@@ -23,6 +32,15 @@ if (!data.value) {
 	})
 } else {
 	tx.value = data.value
+}
+
+const fetchActions = async () => {
+	isLoading.value = true
+
+	const { data } = await fetchTxActions({ hash: tx.value?.hash })
+	actions.value = data.value
+
+	isLoading.value = false
 }
 
 useHead({
@@ -71,13 +89,15 @@ useHead({
 	],
 })
 
-const tabs = ref([{ name: "Details" }])
+const tabs = ref([{ name: "Actions" }])
 const activeTab = ref(tabs.value[0].name)
+
+await fetchActions()
 </script>
 
 <template>
-	<Flex direction="column" gap="24" :class="$style.wrapper">
-		<Flex direction="column" gap="16">
+	<Flex direction="column" gap="16" :class="$style.wrapper">
+		<Flex direction="column" gap="40">
 			<Breadcrumbs
 				v-if="tx"
 				:items="[
@@ -89,15 +109,26 @@ const activeTab = ref(tabs.value[0].name)
 
 			<Flex align="center" justify="between" wide>
 				<Flex align="center" gap="8">
-					<Icon name="tx" size="14" color="primary" />
+					<Tooltip>
+						<Icon name="tx" size="14" :color="tx.status === 'success' ? 'green' : 'red'" />
+
+						<template #content>
+							<Text :color="tx.status === 'success' ? 'green' : 'red'">{{ capitalize(tx.status) }}</Text>
+						</template>
+					</Tooltip>
+					
 					<Text size="14" weight="500" color="primary">
 						Transaction <Text weight="600">{{ shortHash(tx.hash) }}</Text>
 					</Text>
 				</Flex>
+				
+				<RawDataView :entity="tx" name="transaction" />
 			</Flex>
 		</Flex>
 
-		<Flex direction="column" gap="8">
+		<TxMetadata :tx="tx" />
+
+		<Flex direction="column" gap="2">
 			<Flex align="center" gap="8">
 				<Text
 					v-for="tab in tabs"
@@ -111,7 +142,7 @@ const activeTab = ref(tabs.value[0].name)
 				</Text>
 			</Flex>
 
-			<TxMetadata v-if="activeTab === 'Details'" :tx="tx" />
+			<TxActions v-if="activeTab === 'Actions'" :actions="actions" :isLoading="isLoading" />
 		</Flex>
 	</Flex>
 </template>
@@ -122,11 +153,12 @@ const activeTab = ref(tabs.value[0].name)
 	width: 100%;
 
 	padding: 0 24px;
-	margin-top: 60px;
+	margin-top: 24px;
 	margin-bottom: 120px;
 }
 
 .tab {
+	height: 32px;
 	border-radius: 6px;
 	cursor: pointer;
 
@@ -135,12 +167,13 @@ const activeTab = ref(tabs.value[0].name)
 	transition: all 0.2s ease;
 
 	&:hover {
-		background: var(--op-10);
+		color: var(--brand);
 	}
 
 	&.active {
-		background: var(--op-10);
-		color: var(--txt-primary);
+		color: var(--brand);
+		/* opacity: 0.6; */
 	}
 }
+
 </style>

@@ -58,8 +58,6 @@ watch(
 
 <style module>
 .wrapper {
-	position: relative;
-
 	width: 420px;
 
 	position: fixed;
@@ -91,4 +89,12 @@ watch(
 		background: var(--op-5);
 	}
 }
+
+@media (max-width: 500px) {
+	.wrapper {
+		width: initial;
+		left: 16px;
+	}
+}
+
 </style>

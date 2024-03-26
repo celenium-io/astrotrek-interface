@@ -95,14 +95,13 @@ const handleHide = () => {
 			<Divider :class="$style.divider" />
 		</template>
 
-		<Flex direction="column" gap="24">
-			<Flex align="center" gap="24" :class="$style.widgets">
-				<BlockWidget />
-				<RollupsWidget />
-				<TxsWidget />
+		<Flex align="center" :class="$style.widgets">
+			<Flex align="center" :class="$style.first_widgets">
+				<BlockWidget :class="$style.block_widget" />
+				<RollupsWidget :class="$style.rollup_widget" />
 			</Flex>
 
-			<!-- <StatsWidget /> -->
+			<TxsWidget  :class="$style.tx_widget" />
 		</Flex>
 
 		<Divider :class="$style.divider" />
@@ -127,6 +126,33 @@ const handleHide = () => {
 	margin: 40px 0;
 }
 
+.widgets {
+	max-width: 100%;
+	width: 100%;
+	gap: 20px;
+}
+
+.first_widgets {
+	flex: 1;
+
+	gap: 20px;
+}
+
+.block_widget {
+	max-width: 380px;
+	width: 380px;
+}
+
+.rollup_widget {
+	min-width: 240px;
+	width: 240px;
+}
+
+.tx_widget {
+	max-width: 380px;
+	width: 380px;
+}
+
 @media (max-width: 1000px) {
 	.wrapper {
 		margin-top: 24px;
@@ -138,10 +164,49 @@ const handleHide = () => {
 
 	.widgets {
 		flex-direction: column;
+		gap: 20px;
+	}
+
+	.first_widgets {
+		width: 100%;
+
+		gap: 20px;
+	}
+
+	.block_widget {
+		max-width: initial;
+		width: 100%;
+	}
+
+	.rollup_widget {
+		max-width: 240px;
+		width: 240px;
+	}
+
+	.tx_widget {
+		max-width: 100%;
+		width: 100%;
 	}
 
 	.tables {
 		flex-direction: column;
+	}
+}
+
+@media (max-width: 750px) {
+	.first_widgets {
+		flex-direction: column;
+		gap: 24px;
+	}
+
+	.block_widget {
+		max-width: 100%;
+		width: 100%;
+	}
+
+	.rollup_widget {
+		max-width: 100%;
+		width: 100%;
 	}
 }
 
