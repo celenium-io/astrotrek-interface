@@ -45,7 +45,7 @@ const handleViewRawData = () => {
 }
 
 .wrapper:active {
-	transform: scale(1.5);
+	transform: scale(1.3);
 	transition: all 0.2s ease;
 }
 </style>
