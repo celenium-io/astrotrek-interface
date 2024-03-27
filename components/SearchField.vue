@@ -95,11 +95,25 @@ const handleClearHistory = () => {
 
 const handleSaveToHistory = (target) => {
 	if (localStorage.history) {
-		if (JSON.parse(localStorage.history).find((item) => item.value === target.value)) return
-
-		localStorage.history = JSON.stringify([target, ...JSON.parse(localStorage.history).slice(0, 4)])
+		if (!JSON.parse(localStorage.history).find((item) => item.value === target.value)) {
+			localStorage.history = JSON.stringify([target, ...JSON.parse(localStorage.history).slice(0, 4)])
+		}
 	} else {
 		localStorage.history = JSON.stringify([target])
+	}
+
+	show.value = false
+	inputEl.value.blur()
+	handleClear()
+}
+
+const getResultPath = (result) => {
+	switch (result.type) {
+		case "block":
+			return `/block/${result.body.height}`
+
+		default:
+			return `/${result.type}/${result.body.hash}`
 	}
 }
 
@@ -111,7 +125,7 @@ const onKeydown = (e) => {
 
 	if (e.code === "Enter") {
 		const target = results.value[0]
-		router.push(`/${target.type}/${target.value}`)
+		router.push(getResultPath(target))
 
 		handleSaveToHistory(target)
 
@@ -209,11 +223,7 @@ watch(
 						</NuxtLink>
 					</Flex>
 					<Flex v-else direction="column" gap="2" :class="$style.inner">
-						<NuxtLink
-							v-for="result in results"
-							:to="`/${result.type}/${result.body.hash}`"
-							@click="handleSaveToHistory(result)"
-						>
+						<NuxtLink v-for="result in results" :to="getResultPath(result)" @click="handleSaveToHistory(result)">
 							<Flex align="center" justify="between" :class="$style.item">
 								<Flex align="center" gap="6">
 									<Icon :name="result.type" size="12" color="secondary" />
