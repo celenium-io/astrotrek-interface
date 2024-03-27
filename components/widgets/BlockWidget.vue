@@ -51,7 +51,7 @@ await getAvgBlockTime()
 
 const chartBlocksEl = ref(null)
 const chartWidth = computed(() => chartBlocksEl.value?.wrapper?.offsetWidth)
-const barWidth = computed(() => Math.max(Math.round((chartWidth.value - chartWidth.value * 0.43) / 44), 4))
+const barWidth = computed(() => Math.max(Math.round((chartWidth.value - chartWidth.value * 0.43) / 44) - 1, 4))
 const marginBar = computed(() => (chartWidth.value - barWidth * 44) / 43)
 </script>
 
@@ -77,6 +77,7 @@ const marginBar = computed(() => (chartWidth.value - barWidth * 44) / 43)
 				<Flex ref="chartBlocksEl" align="end" :class="$style.chart">
 					<Tooltip v-for="(b, index) in blocks" :style="{max_width: '100%', width: '100%'}">
 						<Flex
+							@click="sidebarsStore.open('block', b)"
 							align="end"
 							:class="$style.bar_wrapper"
 							:style="{
@@ -85,7 +86,6 @@ const marginBar = computed(() => (chartWidth.value - barWidth * 44) / 43)
 							}"
 						>
 							<Flex
-								@click="sidebarsStore.open('block', b)"
 								:class="$style.bar"
 								:style="{
 									width: `${barWidth}px`,
@@ -126,13 +126,18 @@ const marginBar = computed(() => (chartWidth.value - barWidth * 44) / 43)
 }
 
 .chart {
+	width: 100%;
 	height: 32px;
 
-	&:hover {
+	/* &:hover {
 		.bar:not(:hover) {
 			background: var(--txt-support);
 		}
-	}
+	} */
+}
+
+.chart:hover .bar_wrapper:not(:hover) .bar {
+	background: var(--txt-support);
 }
 
 .bar_wrapper {
