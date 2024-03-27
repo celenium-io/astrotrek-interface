@@ -54,7 +54,7 @@
 
 				<Flex direction="column" gap="6">
 					<Text size="14" weight="600" color="primary">Transactions</Text>
-					<Text size="13" weight="500" color="tertiary">Taransactions that change state</Text>
+					<Text size="13" weight="500" color="tertiary">Transactions that change state</Text>
 				</Flex>
 			</Flex>
 		</NuxtLink>
