@@ -161,7 +161,9 @@ const handleOpenTx = async (action) => {
 }
 
 .description {
+	max-width: 800px;
 	padding-left: 8px;
+	
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -170,6 +172,10 @@ const handleOpenTx = async (action) => {
 @media (max-width: 1000px) {
 	.wrapper {
 		width: 100%;
+	}
+
+	.description {
+		width: 600px;
 	}
 }
 
