@@ -1,6 +1,7 @@
 <script setup>
 /** Services */
 import { capitalize } from "@/services/utils"
+import { getActionTitle } from "@/services/utils/actions.js"
 
 defineProps({
 	actions: {
@@ -24,13 +25,22 @@ defineProps({
 		default: "secondary",
 	},
 })
+
+// const getActionTitle = (actionType) => {
+// 	console.log(actionType.split('_'));
+// 	let title
+// 	actionType.split('_').forEach((el) => title+=)
+
+// 	return actionType
+// }
+
 </script>
 
 <template>
 	<Flex align="center" direction="row" gap="4" :class="$style.wrapper">
 		<Flex v-for="a in actions.slice(0, Math.min(actions.length, showNumber))">
 			<Text :size="size" :height="height" weight="600" :color="color">
-				{{ capitalize(a) }}
+				{{ capitalize(getActionTitle(a)) }}
 			</Text>
 		</Flex>
 

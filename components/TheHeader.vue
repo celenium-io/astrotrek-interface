@@ -71,12 +71,12 @@ watch(
 				<Dropdown>
 					<Flex align="center" gap="8" :class="$style.network">
 						<div :class="$style.dot" />
-						<Text size="13" weight="600" color="primary" :class="$style.network_name">Astria-Dusk-3</Text>
+						<Text size="13" weight="600" color="primary" :class="$style.network_name">Astria-Dusk</Text>
 						<Icon name="chevron" size="14" color="tertiary" />
 					</Flex>
 
 					<template #popup>
-						<DropdownItem> Astria-Dusk-3 </DropdownItem>
+						<DropdownItem> Astria-Dusk </DropdownItem>
 					</template>
 				</Dropdown>
 

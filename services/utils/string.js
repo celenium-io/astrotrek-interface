@@ -11,3 +11,10 @@ export const capitalize = (s) => {
 export function base64Decode(encodedString) {
     return atob(encodedString);
 }
+
+export function capitalizeAndReplaceUnderscore(s) {
+    let words = s.split('_');
+    let capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
+    
+    return capitalizedWords.join(' ');
+}

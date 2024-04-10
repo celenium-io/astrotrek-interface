@@ -11,12 +11,14 @@ const props = defineProps({
 
 <template>
 	<Flex direction="column" gap="6">
-		<Flex v-for="act in actions.slice(0, Math.min(actions.length, 5))" justify="between" align="center" wide :class="$style.action">
-			<Flex align="center" gap="8">
+		<Flex v-for="act in actions.slice(0, Math.min(actions.length, 5))" justify="between" align="center" gap="8" wide :class="$style.action">
+			<Flex align="center" gap="8" :class="$style.title_wrapper">
 				<Icon name="action" size="12" color="secondary" />
 
-				<Text size="12" weight="600" color="primary"> {{ getActionTitle(act) }} </Text>
+				<Text size="12" weight="600" color="primary" :class="$style.title"> {{ getActionTitle(act.type) }} </Text>
+			</Flex>
 
+			<Flex align="center" :class="$style.description_wrapper">
 				<Text size="12" color="tertiary" weight="500" :class="$style.description"> {{ getActionDescription(act) }} </Text>
 			</Flex>
 		</Flex>
@@ -30,14 +32,33 @@ const props = defineProps({
 
 <style module>
 .action {
+	max-width: 380px;
+
 	padding: 2px 0;
 
 	transition: all 0.2s ease;
 }
 
+.title_wrapper {
+	max-width: 40%;
+}
+
+.title {
+	width: 100%;
+
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.description_wrapper {
+	max-width: 60%
+}
 .description {
-	width: 285px;
+	width: 100%;
+
 	padding-left: 8px;
+
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;

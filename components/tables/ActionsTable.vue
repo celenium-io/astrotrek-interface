@@ -57,7 +57,7 @@ const handleOpenTx = async (action) => {
 
 					<Flex align="center" gap="8">
 						<Text size="13" weight="600" color="primary">
-							{{ getActionTitle(act) }}
+							{{ getActionTitle(act.type) }}
 						</Text>
 					</Flex>
 

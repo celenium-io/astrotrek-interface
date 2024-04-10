@@ -1,16 +1,16 @@
-import { base64Decode, capitalize, formatBytes, strToHex } from "./index.js";
+import { base64Decode, capitalize, capitalizeAndReplaceUnderscore, formatBytes, strToHex } from "./index.js";
 
-export const getActionTitle = (action) => {
-	if (!action) return "Action"
+export const getActionTitle = (actionType) => {
+	if (!actionType) return "Action"
 
 	let title = ""
-	switch (action.type) {
-		case "sudo_address_change":
-			title = "Sudo Address Change"
-			break;
-		case "validator_update":
-			title = "Validator Update"
-			break;
+	switch (actionType) {
+		// case "sudo_address_change":
+		// 	title = "Sudo Address Change"
+		// 	break;
+		// case "validator_update":
+		// 	title = "Validator Update"
+		// 	break;
 		case "ibc_relay":
 			title = "IBC Relay"
 			break;
@@ -20,17 +20,17 @@ export const getActionTitle = (action) => {
 		case "ics20_withdrawal":
 			title = "ICS20 Withdrawal"
 			break;
-		case "init_bridge_account":
-			title = "Init Bridge Account"
-			break;
-		case "bridge_lock":
-			title = "Bridge Lock"
-			break;
-		case "fee_asset_change":
-			title = "Fee Asset Change"
-			break;
+		// case "init_bridge_account":
+		// 	title = "Init Bridge Account"
+		// 	break;
+		// case "bridge_lock":
+		// 	title = "Bridge Lock"
+		// 	break;
+		// case "fee_asset_change":
+		// 	title = "Fee Asset Change"
+		// 	break;
 		default:
-			title = capitalize(action.type)
+			title = capitalizeAndReplaceUnderscore(actionType)
 			break;
 	}
 
