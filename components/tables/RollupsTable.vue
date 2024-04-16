@@ -1,12 +1,12 @@
 <script setup>
 /** UI */
-import Tooltip from "@/components/ui/Tooltip.vue";
+import Tooltip from "@/components/ui/Tooltip.vue"
 
 /** Components */
-import LinkToEntity from "@/components/shared/LinkToEntity.vue";
+import LinkToEntity from "@/components/shared/LinkToEntity.vue"
 
 /** Services */
-import { formatBytes, midHash, shortHash, spaces } from "@/services/utils"
+import { formatBytes, midHash, spaces } from "@/services/utils"
 
 /** Store */
 import { useSidebarsStore } from "@/store/sidebars"

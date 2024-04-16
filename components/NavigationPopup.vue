@@ -24,7 +24,7 @@
 			</NuxtLink>
 		</Flex>
 
-		<!-- <Flex direction="column" gap="8">
+		<Flex direction="column" gap="8">
 			<NuxtLink to="/accounts">
 				<Flex gap="12" :class="$style.item">
 					<Icon name="account" color="primary" size="20" :class="$style.item_icon" />
@@ -36,7 +36,7 @@
 				</Flex>
 			</NuxtLink>
 
-			<NuxtLink to="/validators">
+			<!-- <NuxtLink to="/validators">
 				<Flex gap="12" :class="$style.item">
 					<Icon name="validator" color="primary" size="20" :class="$style.item_icon" />
 
@@ -45,8 +45,8 @@
 						<Text size="13" weight="500" color="tertiary">Very nice description</Text>
 					</Flex>
 				</Flex>
-			</NuxtLink>
-		</Flex> -->
+			</NuxtLink> -->
+		</Flex>
 
 		<NuxtLink to="/txs">
 			<Flex gap="12" :class="$style.item">

@@ -1,6 +1,9 @@
 <script setup>
+/** Components */
+import LinkToEntity from "@/components/shared/LinkToEntity.vue"
+
 /** Services */
-import { shortHash, comma } from "@/services/utils"
+import { midHash, spaces } from "@/services/utils"
 
 /** Store */
 import { useSidebarsStore } from "@/store/sidebars"
@@ -43,7 +46,7 @@ const props = defineProps({
 				<Flex align="center" gap="6">
 					<Icon name="account" size="16" color="secondary" />
 
-					<Text size="13" weight="600" color="primary"> {{ shortHash(account.hash) }} </Text>
+					<LinkToEntity :entity="{ title: midHash(account.hash), type: 'account', id: account.hash}" color="primary" />
 				</Flex>
 
 				<Flex align="center" gap="8">
@@ -54,10 +57,9 @@ const props = defineProps({
 
 					<div :class="$style.dot" />
 
-					<Text size="12" weight="500" color="secondary">
-						<Text color="tertiary">First Height</Text>
-						{{ comma(account.first_height) }}
-					</Text>
+					<Text size="12" weight="500" color="tertiary">First Height&nbsp;</Text>
+
+					<LinkToEntity :entity="{ title: spaces(account.first_height), type: 'block', id: account.first_height}" color="secondary" />
 				</Flex>
 			</Flex>
 
@@ -75,7 +77,6 @@ const props = defineProps({
 
 <style module>
 .wrapper {
-	min-height: 900px;
 	position: relative;
 
 	margin-top: 20px;
@@ -92,6 +93,7 @@ const props = defineProps({
 	height: 60px;
 
 	border-top: 1px solid var(--op-5);
+
 	cursor: pointer;
 
 	padding: 0 16px;
@@ -102,12 +104,14 @@ const props = defineProps({
 		background: var(--op-5);
 	}
 
-	&:active {
-		background: var(--op-10);
+	&:last-child {
+		border-bottom-left-radius: 8px;
+		border-bottom-right-radius: 8px;
+		border-bottom: 1px solid var(--op-5);
 	}
 
-	&:last-child {
-		border-bottom: 1px solid var(--op-5);
+	&:active {
+		background: var(--op-10);
 	}
 
 	&.disabled {

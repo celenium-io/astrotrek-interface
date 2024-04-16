@@ -66,20 +66,23 @@ useHead({
 const accounts = ref([])
 const isLoading = ref(false)
 
+const limit = ref(15)
 const getAccounts = async () => {
 	isLoading.value = true
 
 	const { data } = await fetchAccounts({
-		limit: 15,
-		offset: (page.value - 1) * 15,
+		limit: limit.value,
+		offset: (page.value - 1) * limit.value,
 	})
 	accounts.value = data.value
+	handleNextCondition.value = accounts.value.length < limit.value
 
 	isLoading.value = false
 }
 
 /** Pagination */
 const page = ref(1)
+const handleNextCondition = ref(true)
 
 const handleNext = () => {
 	page.value += 1
@@ -110,7 +113,7 @@ watch(
 						<Icon name="chevron" size="14" color="primary" style="transform: rotate(90deg)" />
 					</Button>
 					<Button size="mini" type="secondary">Page {{ page }}</Button>
-					<Button @click="handleNext" size="mini" type="secondary" :disabled="isLoading">
+					<Button @click="handleNext" size="mini" type="secondary" :disabled="isLoading || handleNextCondition">
 						<Icon name="chevron" size="14" color="primary" style="transform: rotate(-90deg)" />
 					</Button>
 				</Flex>
@@ -131,61 +134,14 @@ watch(
 }
 
 .card {
-	border-radius: 12px;
-	background: var(--card-background);
+	border-radius: 8px;
+	background: var(--op-3);
 
-	padding: 16px 0 14px 0;
+	padding: 16px 0 0 0;
 }
 
 .top {
 	padding: 0 16px;
-}
-
-.rows {
-	margin-top: 20px;
-}
-
-.row {
-	height: 60px;
-
-	border-top: 1px solid var(--op-5);
-	cursor: pointer;
-
-	padding: 0 16px;
-
-	transition: all 0.2s ease;
-
-	&:hover {
-		background: var(--op-5);
-	}
-
-	&:active {
-		background: var(--op-10);
-	}
-
-	&:last-child {
-		border-bottom: 1px solid var(--op-5);
-	}
-}
-
-.small_dot {
-	width: 2px;
-	height: 2px;
-
-	border-radius: 50%;
-	background: var(--txt-secondary);
-}
-
-.dot {
-	width: 4px;
-	height: 4px;
-
-	border-radius: 50%;
-	background: var(--op-10);
-}
-
-.bot {
-	padding: 14px 16px 0 16px;
 }
 
 @media (max-width: 500px) {
