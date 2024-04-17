@@ -37,7 +37,7 @@ const props = defineProps({
 		<Flex
 			v-if="accounts"
 			v-for="account in accounts"
-			@click="sidebarsStore.open('block', b)"
+			@click="sidebarsStore.open('account', account)"
 			justify="between"
 			align="center"
 			:class="[$style.row, isLoading && $style.disabled]"

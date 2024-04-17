@@ -64,64 +64,6 @@ const showMore = ref(false)
 			<Text size="13" weight="600" color="primary" mono :class="$style.value"> {{ account.nonce }} </Text>
 		</Flex>
 
-		<!-- <Flex align="center" :class="$style.item">
-			<Text size="13" weight="600" color="secondary" :class="$style.key">Proposer</Text>
-
-			<Flex align="center" gap="8" :class="$style.value">
-				<CopyButton :text="block.proposer.address" />
-				<Text size="13" weight="600" color="primary" mono :class="$style.overflow">
-					{{ block.proposer.name }}
-					<Text color="tertiary">{{ space(block.proposer.address) }} </Text>
-				</Text>
-			</Flex>
-		</Flex>
-
-		<Flex align="center" :class="$style.item">
-			<Text size="13" weight="600" color="secondary" :class="$style.key">Timestamp</Text>
-
-			<Text size="13" weight="600" color="primary" mono :class="$style.value">
-				{{ DateTime.fromISO(block.time).setLocale("en").toFormat("tt, LLL d, y") }}
-				<Text color="tertiary"> ({{ DateTime.fromISO(block.time).toRelative({ locale: "en", style: "short" }) }}) </Text>
-			</Text>
-		</Flex>
-
-		<Flex align="center" :class="$style.item">
-			<Text size="13" weight="600" color="secondary" :class="$style.key">Action Types</Text>
-
-			<Text v-if="block.action_types.length" size="13" weight="600" color="primary" mono :class="$style.value">
-				{{ block.action_types.join(", ") }}
-			</Text>
-			<Text v-else size="13" weight="600" color="tertiary" mono :class="$style.value"> No action types </Text>
-		</Flex>
-
-		<Flex align="center" :class="$style.item">
-			<Text size="13" weight="600" color="secondary" :class="$style.key">Size</Text>
-
-			<Text size="13" weight="600" color="primary" mono :class="$style.value">
-				{{ formatBytes(block.stats.bytes_in_block) }}
-			</Text>
-		</Flex>
-
-		<Flex align="center" :class="$style.item">
-			<Text size="13" weight="600" color="secondary" :class="$style.key">Transactions</Text>
-
-			<Text size="13" weight="600" color="primary" mono :class="$style.value">
-				{{ block.stats.tx_count }}
-			</Text>
-		</Flex>
-
-		<Flex align="center" :class="$style.item">
-			<Text size="13" weight="600" color="secondary" :class="$style.key">Fee</Text>
-
-			<Text size="13" weight="600" color="primary" mono :class="$style.value"> {{ block.stats.fee }} NRIA </Text>
-		</Flex>
-
-		<Flex align="center" :class="$style.item">
-			<Text size="13" weight="600" color="secondary" :class="$style.key">Block Time</Text>
-
-			<Text size="13" weight="600" color="primary" mono :class="$style.value"> {{ block.stats.block_time / 1_000 }}s </Text>
-		</Flex> -->
-
 		<template v-if="showMore">
 			<!-- <Flex align="center" :class="$style.item">
 				<Text size="13" weight="600" color="secondary" :class="$style.key">App Hash</Text>
