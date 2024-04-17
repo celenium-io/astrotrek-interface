@@ -31,16 +31,18 @@ const showMore = ref(false)
 			<Text size="13" weight="600" color="primary" mono :class="$style.value"> {{ rollup.actions_count }} </Text>
 		</Flex>
 
-		<NuxtLink :to="`/block/${rollup.first_height}`">
-			<Flex align="center" :class="$style.item">
-				<Text size="13" weight="600" color="secondary" :class="$style.key">First Height</Text>
-
+		
+		<Flex align="center" :class="$style.item">
+			<Text size="13" weight="600" color="secondary" :class="$style.key">First Height</Text>
+			
+			<NuxtLink :to="`/block/${rollup.first_height}`">
 				<Flex align="center" gap="4" :class="$style.value">
 					<Text size="13" weight="600" color="primary" mono>{{ spaces(rollup.first_height) }}</Text>
 					<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
 				</Flex>
-			</Flex>
-		</NuxtLink>
+			</NuxtLink>
+		</Flex>
+		
 
 		<Flex align="center" :class="$style.item">
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Size</Text>

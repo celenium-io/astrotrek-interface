@@ -84,8 +84,6 @@ const props = defineProps({
 <style module>
 .wrapper {
 	position: relative;
-
-	margin-top: 20px;
 }
 
 .loading {
