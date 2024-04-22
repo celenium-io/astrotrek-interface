@@ -93,15 +93,23 @@ watch(
 					{{ DateTime.fromISO(tx.time).setLocale("en").toFormat("LLL d, y, tt") }}
 				</Text>
 
-				<Flex direction="column" gap="8" :class="$style.card">
-					<Text size="12" weight="600" color="secondary">Signer</Text>
-					<Text size="12" weight="600" color="tertiary">{{ space(tx.signer) }}</Text>
-				</Flex>
+				<NuxtLink @click="emit('onClose')" :to="`/account/${tx.signer}`">
+					<Flex justify="between" :class="$style.card">
+						<Flex direction="column" gap="8">
+							<Text size="12" weight="600" color="secondary">Signer</Text>
+
+							<Text size="12" weight="600" color="tertiary">{{ space(tx.signer) }}</Text>
+						</Flex>
+
+						<Icon name="arrow-narrow-up-right" size="12" color="secondary" />
+					</Flex>
+				</NuxtLink>
 
 				<NuxtLink @click="emit('onClose')" :to="`/block/${tx.height}`">
 					<Flex justify="between" :class="$style.card">
 						<Flex direction="column" gap="8">
 							<Text size="12" weight="600" color="secondary">Block Height</Text>
+							
 							<Text size="12" weight="600" color="tertiary">{{ spaces(tx.height) }}</Text>
 						</Flex>
 

@@ -69,7 +69,7 @@ export const getActionDescription = (action) => {
 			}
 			break;
 		case "ics20_withdrawal":
-			description = `withdraw ${data.amount} ${data.denom} to ${data.destination_chain_address}`
+			description = `Withdraw ${data.amount} ${data.denom} to ${data.destination_chain_address}`
 			break;
 		case "init_bridge_account":
 			description = `Bridge account was initialized for ${strToHex(base64Decode(data.rollup_id))}`

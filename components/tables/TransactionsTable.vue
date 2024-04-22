@@ -9,7 +9,7 @@ import LinkToEntity from "@/components/shared/LinkToEntity.vue";
 import ActionsRow from "@/components/shared/ActionsRow.vue"
 
 /** Services */
-import { midHash, splitAddress } from "@/services/utils"
+import { midHash, spaces, splitAddress } from "@/services/utils"
 
 /** Store */
 import { useSidebarsStore } from "@/store/sidebars"
@@ -58,18 +58,21 @@ const props = defineProps({
 
 					<Flex align="center" gap="8">
 						<LinkToEntity :entity="{ title: midHash(t.hash), type: 'tx', id: t.hash}" size="13" color="primary" weight="600" />
-						<!-- <Text v-else size="13" weight="600" color="primary"> {{ midHash(t.hash) }} </Text> -->
 
 						<ActionsRow :actions="t.action_types" />
 					</Flex>
 				</Flex>
 
 				<Flex align="center" gap="8">
-					<Text size="12" weight="500" color="secondary">
-						<Text color="tertiary">Signer</Text>
+					<Text size="12" weight="500" color="tertiary">Block</Text>
 
-						{{ splitAddress(t.signer, 4) }}
-					</Text>
+					<LinkToEntity :entity="{ title: spaces(t.height), type: 'block', id: t.height}" color="secondary" />
+
+					<div :class="$style.dot" />
+
+					<Text size="12" weight="500" color="tertiary">Signer</Text>
+
+					<LinkToEntity :entity="{ title: splitAddress(t.signer, 4), type: 'account', id: t.signer}" color="secondary" />
 				</Flex>
 			</Flex>
 
@@ -150,6 +153,14 @@ const props = defineProps({
 		pointer-events: none;
 		opacity: 0.2;
 	}
+}
+
+.dot {
+	width: 4px;
+	height: 4px;
+
+	border-radius: 50%;
+	background: var(--op-10);
 }
 
 @media (max-width: 1000px) {
