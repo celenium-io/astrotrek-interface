@@ -125,6 +125,7 @@ const handleOpenTx = async (action) => {
 	height: 60px;
 
 	border-top: 1px solid var(--op-5);
+	
 	cursor: pointer;
 
 	padding: 0 16px;

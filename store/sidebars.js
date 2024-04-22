@@ -9,6 +9,7 @@ export const useSidebarsStore = defineStore("sidebars", () => {
 		block: false,
 		rollup: false,
 		tx: false,
+		validator: false,
 	})
 
 	const entity = ref({})

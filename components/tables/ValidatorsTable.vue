@@ -1,6 +1,9 @@
 <script setup>
+/** Components */
+import LinkToEntity from "@/components/shared/LinkToEntity.vue"
+
 /** Services */
-import { shortHash, comma } from "@/services/utils"
+import { midHash, spaces } from "@/services/utils"
 
 /** Store */
 import { useSidebarsStore } from "@/store/sidebars"
@@ -33,8 +36,8 @@ const props = defineProps({
 
 		<Flex
 			v-if="validators"
-			v-for="validator in validators"
-			@click="sidebarsStore.open('block', b)"
+			v-for="v in validators"
+			@click="sidebarsStore.open('validator', v)"
 			justify="between"
 			align="center"
 			:class="[$style.row, isLoading && $style.disabled]"
@@ -43,12 +46,12 @@ const props = defineProps({
 				<Flex align="center" gap="6">
 					<Icon name="validator" size="16" color="secondary" />
 
-					<Text size="13" weight="600" color="primary"> {{ shortHash(validator.address) }} </Text>
+					<LinkToEntity :entity="{ title: midHash(v.address), type: 'validator', id: v.id}" color="primary" />
 				</Flex>
 
 				<Text size="12" weight="500" color="secondary">
 					<Text color="tertiary">Name</Text>
-					{{ validator.name }}
+					{{ v.name }}
 				</Text>
 			</Flex>
 		</Flex>
@@ -57,7 +60,6 @@ const props = defineProps({
 
 <style module>
 .wrapper {
-	min-height: 900px;
 	position: relative;
 
 	margin-top: 20px;
@@ -74,6 +76,7 @@ const props = defineProps({
 	height: 60px;
 
 	border-top: 1px solid var(--op-5);
+
 	cursor: pointer;
 
 	padding: 0 16px;
@@ -84,12 +87,14 @@ const props = defineProps({
 		background: var(--op-5);
 	}
 
-	&:active {
-		background: var(--op-10);
+	&:last-child {
+		border-bottom-left-radius: 8px;
+		border-bottom-right-radius: 8px;
+		border-bottom: 1px solid var(--op-5);
 	}
 
-	&:last-child {
-		border-bottom: 1px solid var(--op-5);
+	&:active {
+		background: var(--op-10);
 	}
 
 	&.disabled {
@@ -105,4 +110,5 @@ const props = defineProps({
 	border-radius: 50%;
 	background: var(--op-10);
 }
+
 </style>

@@ -142,55 +142,9 @@ watch(
 }
 
 .top {
+	padding: 0 16px;
+
 	margin-bottom: 20px;
-	padding: 0 16px;
-}
-
-.rows {
-	margin-top: 20px;
-}
-
-.row {
-	height: 60px;
-
-	border-top: 1px solid var(--op-5);
-	cursor: pointer;
-
-	padding: 0 16px;
-
-	transition: all 0.2s ease;
-
-	&:hover {
-		background: var(--op-5);
-	}
-
-	&:active {
-		background: var(--op-10);
-	}
-
-	&:last-child {
-		border-bottom: 1px solid var(--op-5);
-	}
-}
-
-.small_dot {
-	width: 2px;
-	height: 2px;
-
-	border-radius: 50%;
-	background: var(--txt-secondary);
-}
-
-.dot {
-	width: 4px;
-	height: 4px;
-
-	border-radius: 50%;
-	background: var(--op-10);
-}
-
-.bot {
-	padding: 14px 16px 0 16px;
 }
 
 @media (max-width: 500px) {

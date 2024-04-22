@@ -40,6 +40,9 @@ export const useCacheStore = defineStore("cache", () => {
 		/** address */
 		address: null,
 
+		/** validator */
+		validator: null,
+
 		/** bookmark */
 		bookmark: null,
 	})

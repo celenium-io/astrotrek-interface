@@ -13,12 +13,6 @@ import Button from "@/components/ui/Button.vue"
 import Sidebar from "@/components/ui/Sidebar.vue"
 import TransactionsList from "@/components/tables/TransactionsList.vue"
 
-/** Store */
-import { useCacheStore } from "@/store/cache"
-import { useModalsStore } from "@/store/modals"
-const cacheStore = useCacheStore()
-const modalsStore = useModalsStore()
-
 const props = defineProps({
 	block: {
 		type: Object,

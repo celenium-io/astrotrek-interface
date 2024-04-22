@@ -31,21 +31,21 @@
 
 					<Flex direction="column" gap="6">
 						<Text size="14" weight="600" color="primary">Accounts</Text>
-						<Text size="13" weight="500" color="tertiary">Very nice description</Text>
+						<Text size="13" weight="500" color="tertiary">All blockchain accounts</Text>
 					</Flex>
 				</Flex>
 			</NuxtLink>
 
-			<!-- <NuxtLink to="/validators">
+			<NuxtLink to="/validators">
 				<Flex gap="12" :class="$style.item">
 					<Icon name="validator" color="primary" size="20" :class="$style.item_icon" />
 
 					<Flex direction="column" gap="6">
 						<Text size="14" weight="600" color="primary">Validators</Text>
-						<Text size="13" weight="500" color="tertiary">Very nice description</Text>
+						<Text size="13" weight="500" color="tertiary">Validators that produce blocks</Text>
 					</Flex>
 				</Flex>
-			</NuxtLink> -->
+			</NuxtLink>
 		</Flex>
 
 		<NuxtLink to="/txs">

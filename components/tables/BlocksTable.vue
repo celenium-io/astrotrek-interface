@@ -93,8 +93,6 @@ const props = defineProps({
 <style module>
 .wrapper {
 	position: relative;
-
-	margin-top: 20px;
 }
 
 .loading {
@@ -108,6 +106,7 @@ const props = defineProps({
 	height: 60px;
 
 	border-top: 1px solid var(--op-5);
+
 	cursor: pointer;
 
 	padding: 0 16px;
@@ -118,13 +117,19 @@ const props = defineProps({
 		background: var(--op-5);
 	}
 
-	&:active {
-		background: var(--op-10);
+	&:first-child {
+		border-top-left-radius: 8px;
+		border-top-right-radius: 8px;
+		border-top: none;
 	}
 
-	&:last-child:hover {
+	&:last-child {
 		border-bottom-left-radius: 8px;
 		border-bottom-right-radius: 8px;
+	}
+
+	&:active {
+		background: var(--op-10);
 	}
 
 	&.disabled {
@@ -167,5 +172,11 @@ const props = defineProps({
 
 	border-radius: 50%;
 	background: var(--op-10);
+}
+
+@media (max-width: 1000px) {
+	.wrapper {
+		width: 100%;
+	}
 }
 </style>

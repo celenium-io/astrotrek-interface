@@ -141,6 +141,8 @@ watch(
 
 .top {
 	padding: 0 16px;
+
+	margin-bottom: 20px;
 }
 
 .rows {
