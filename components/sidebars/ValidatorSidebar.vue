@@ -135,8 +135,8 @@ watch(
 					<Text v-else-if="isLoadingUptime" size="12" weight="500" color="tertiary">Loading validator uptime...</Text>
 				</Flex>
 
-				<Flex direction="column" gap="16">
-					<Text size="12" weight="600" color="primary">Details</Text>
+				<!-- <Flex direction="column" gap="16"> -->
+					<!-- <Text size="12" weight="600" color="primary">Details</Text> -->
 
 					<!-- <Flex align="center" justify="between">
 						<Text size="13" weight="600" color="tertiary">Balance</Text>
@@ -155,7 +155,7 @@ watch(
 
 						<Text size="13" weight="600" color="primary" tabular> {{ account.nonce }} </Text>
 					</Flex> -->
-				</Flex>
+				<!-- </Flex> -->
 			</Flex>
 
 			<Button @click="emit('onClose')" :link="`/validator/${validator.id}`" type="secondary" size="medium">Open Validator</Button>

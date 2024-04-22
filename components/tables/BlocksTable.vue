@@ -58,14 +58,13 @@ const props = defineProps({
 					<Icon name="block" size="16" color="secondary" />
 
 					<LinkToEntity :entity="{ title: spaces(b.height), type: 'block', id: b.height}" size="13" color="primary" weight="600" />
-					<!-- <Text v-else size="13" weight="600" color="primary"> {{ spaces(b.height) }} </Text> -->
 				</Flex>
 
 				<Flex align="center" gap="8">
-					<Text size="12" weight="500" color="secondary">
-						<Text color="tertiary">Proposer</Text>
-						{{ b.proposer ? splitAddress(b.proposer.address) : "Genesis" }}
-					</Text>
+					<Text size="12" weight="500" color="tertiary">Proposer</Text>
+
+					<LinkToEntity v-if="b.proposer" :entity="{ title: splitAddress(b.proposer.address), type: 'validator', id: b.proposer.id}" color="secondary" />
+					<Text v-else size="12" weight="500" color="secondary">Genesis</Text>
 
 					<div :class="$style.dot" />
 
