@@ -22,21 +22,27 @@ const showMore = ref(false)
 		<Flex align="center" :class="$style.item">
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Hash</Text>
 
-			<Flex align="center" gap="8" :class="$style.value">
+			<Flex v-if="block.height > 0" align="center" gap="8" :class="$style.value">
 				<CopyButton :text="block.hash" />
 				<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ space(block.hash) }}</Text>
+			</Flex>
+			<Flex v-else align="center" gap="8" :class="$style.value">
+				<Text size="13" weight="600" color="primary" mono> Genesis </Text>
 			</Flex>
 		</Flex>
 
 		<Flex align="center" :class="$style.item">
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Proposer</Text>
 
-			<Flex align="center" gap="8" :class="$style.value">
+			<Flex v-if="block.proposer" align="center" gap="8" :class="$style.value">
 				<CopyButton :text="block.proposer.address" />
 				<Text size="13" weight="600" color="primary" mono :class="$style.overflow">
 					{{ block.proposer.name }}
-					<Text color="tertiary">{{ space(block.proposer.address) }} </Text>
+					<Text color="tertiary">{{ space(block.proposer?.address) }} </Text>
 				</Text>
+			</Flex>
+			<Flex v-else align="center" gap="8" :class="$style.value">
+				<Text size="13" weight="600" color="primary" mono> Genesis </Text>
 			</Flex>
 		</Flex>
 
@@ -86,7 +92,7 @@ const showMore = ref(false)
 			<Text size="13" weight="600" color="primary" mono :class="$style.value"> {{ block.stats.block_time / 1_000 }}s </Text>
 		</Flex>
 
-		<template v-if="showMore">
+		<template v-if="showMore && block.height > 0">
 			<Flex align="center" :class="$style.item">
 				<Text size="13" weight="600" color="secondary" :class="$style.key">App Hash</Text>
 
@@ -185,7 +191,7 @@ const showMore = ref(false)
 		</template>
 	</Flex>
 
-	<Flex @click="showMore = !showMore" align="center" justify="end" gap="4" :class="$style.show_more">
+	<Flex v-if="block.height > 0" @click="showMore = !showMore" align="center" justify="end" gap="4" :class="$style.show_more">
 		<Icon size="12" name="chevron-double" color="brand" :rotate="showMore ? 180 : 0" />
 		<Text size="12" weight="600" color="brand">Show {{ showMore ? 'Less' : 'More' }}</Text>
 	</Flex>
