@@ -147,6 +147,12 @@ fetchUptime()
 	cursor: pointer;
 }
 
+@media (max-width: 900px) {
+	.uptime {
+		margin: 12px 0 12px 0;
+	}
+}
+
 @media (max-width: 650px) {
 	.item {
 		height: 54px;
@@ -161,6 +167,25 @@ fetchUptime()
 
 	.value {
 		width: 100%;
+	}
+
+	.uptime {
+		height: 72px;
+
+		flex-direction: column;
+		align-items: start;
+		justify-content: center;
+
+		margin: 8px 0 8px 0;
+	}
+
+}
+
+@media (max-width: 400px) {
+	.uptime {
+		height: 90px;
+
+		margin: 4px 0 4px 0;
 	}
 }
 </style>
