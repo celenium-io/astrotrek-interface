@@ -67,7 +67,14 @@ const debouncedSearch = useDebounceFn(async (e) => {
 	const { data } = await search(searchTerm.value?.trim())
 
 	if (data.value.length) {
-		results.value = data.value.filter((item) => ["tx", "rollup", "block"].includes(item.type))
+		results.value = data.value.map(item => {
+			let newItem = { ...item }
+			if (newItem.type === 'validator') {
+				newItem.body.hash = newItem.body.address
+			}
+
+			return newItem
+		})
 	} else {
 		notFound.value = true
 	}
@@ -109,8 +116,12 @@ const handleSaveToHistory = (target) => {
 
 const getResultPath = (result) => {
 	switch (result.type) {
+		case "address":
+			return `/account/${result.body.hash}`
 		case "block":
 			return `/block/${result.body.height}`
+		case "validator":
+			return `/validator/${result.body.id}`
 
 		default:
 			return `/${result.type}/${result.body.hash}`

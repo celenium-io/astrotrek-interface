@@ -3,7 +3,7 @@
 import { DateTime } from "luxon"
 
 /** Services */
-import { formatBytes, midHash, shortHash, space, spaces } from "@/services/utils"
+import { formatBytes, hexToBase64, midHash, shortHash, space, spaces } from "@/services/utils"
 
 /** UI */
 import Button from "@/components/ui/Button.vue"
@@ -35,9 +35,9 @@ const emit = defineEmits(["onClose"])
 
 					<Flex align="center" gap="8">
 						<Text size="16" weight="600" height="120" color="primary">
-							{{ midHash(rollup.hash) }}
+							{{ midHash(hexToBase64(rollup.hash)) }}
 						</Text>
-						<CopyButton :text="rollup.hash" />
+						<CopyButton :text="hexToBase64(rollup.hash)" />
 					</Flex>
 				</Flex>
 

@@ -33,6 +33,12 @@ export const strToHex = (str) => {
 	return hex
 }
 
+export const hexToBase64 = (hex) => {
+	let binary = hex.match(/.{1,2}/g).map(byte => String.fromCharCode(parseInt(byte, 16))).join('')
+
+	return btoa(binary)
+}
+
 export const shortHex = (hex) => {
 	if (hex.length > 16) {
 		return `${hex.slice(0, 4)} ••• ${hex.slice(-4)}`

@@ -6,7 +6,7 @@ import Tooltip from "@/components/ui/Tooltip.vue"
 import LinkToEntity from "@/components/shared/LinkToEntity.vue"
 
 /** Services */
-import { formatBytes, midHash, spaces } from "@/services/utils"
+import { formatBytes, hexToBase64, midHash, spaces } from "@/services/utils"
 
 /** Store */
 import { useSidebarsStore } from "@/store/sidebars"
@@ -49,7 +49,7 @@ const props = defineProps({
 				<Flex align="center" gap="6">
 					<Icon name="rollup" size="16" color="secondary" />
 
-					<LinkToEntity :entity="{ title: midHash(rollup.hash), type: 'rollup', id: rollup.hash}" color="primary" />
+					<LinkToEntity :entity="{ title: midHash(hexToBase64(rollup.hash)), type: 'rollup', id: rollup.hash}" color="primary" />
 				</Flex>
 
 				<Flex align="center" gap="8">
