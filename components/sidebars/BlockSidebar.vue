@@ -75,11 +75,17 @@ watch(
 					}}</Text>
 				</Flex>
 
-				<Flex direction="column" gap="8" :class="$style.proposer">
-					<Text size="12" weight="600" color="secondary">Proposer</Text>
-					<Text size="13" weight="600" color="primary"> {{ block.proposer?.name }}</Text>
-					<Text size="12" weight="600" color="tertiary">{{ block.proposer?.address }}</Text>
-				</Flex>
+				<NuxtLink @click="emit('onClose')" :to="`/validator/${block.proposer?.id}`">
+					<Flex justify="between" :class="$style.proposer">
+						<Flex direction="column" gap="8">
+							<Text size="12" weight="600" color="secondary">Proposer</Text>
+							<Text size="13" weight="600" color="primary"> {{ block.proposer?.name }}</Text>
+							<Text size="12" weight="600" color="tertiary">{{ block.proposer?.address }}</Text>
+						</Flex>
+						
+						<Icon name="arrow-narrow-up-right" size="12" color="secondary" />
+					</Flex>
+				</NuxtLink>
 
 				<div :class="$style.divider" />
 				<Flex align="center" justify="between">

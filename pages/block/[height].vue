@@ -128,9 +128,12 @@ await fetchTxs()
 			<Flex align="center" justify="between" wide>
 				<Flex align="center" gap="8">
 					<Icon name="block" size="14" color="primary" />
+
 					<Text size="14" weight="500" color="primary">
 						Block <Text weight="600">{{ spaces(block.height) }}</Text>
 					</Text>
+
+					<CopyButton :text="block.height" />
 				</Flex>
 
 				<RawDataView :entity="block" name="block" />

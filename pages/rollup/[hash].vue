@@ -1,6 +1,6 @@
 <script setup>
 /** Services */
-import { shortHash } from "~/services/utils"
+import { hexToBase64, shortHash } from "~/services/utils"
 
 /** Modules */
 import RollupMetadata from "~/components/modules/rollup/RollupMetadata.vue"
@@ -22,6 +22,7 @@ definePageMeta({
 const route = useRoute()
 
 const rollup = ref()
+const hashBase64 = ref("")
 const actions = ref([])
 const isLoading = ref(false)
 
@@ -32,6 +33,7 @@ if (!data.value) {
 	})
 } else {
 	rollup.value = data.value
+	hashBase64.value = hexToBase64(rollup.value.hash)
 }
 
 const limit = ref(15)
@@ -39,7 +41,7 @@ const fetchActions = async () => {
 	isLoading.value = true
 
 	const { data } = await fetchRollupActions({
-		hash: rollup.value?.hash,
+		hash: rollup.value.hash,
 		limit: limit.value,
 		offset: (page.value - 1) * limit.value,
 		sort: "desc",
@@ -63,7 +65,7 @@ const handlePrev = () => {
 }
 
 useHead({
-	title: `Rollup ${rollup.value?.hash.toUpperCase().slice(0, 4)} ••• ${rollup.value?.hash.toUpperCase().slice(-4)} - Astria Explorer`,
+	title: `Rollup ${hashBase64.value.toUpperCase().slice(0, 4)} ••• ${hashBase64.value.toUpperCase().slice(-4)} - Astria Explorer`,
 	link: [
 		{
 			rel: "canonical",
@@ -73,19 +75,19 @@ useHead({
 	meta: [
 		{
 			name: "description",
-			content: `Astria Rollup ${rollup.value?.hash.toUpperCase().slice(0, 4)} ••• ${rollup.value?.hash
+			content: `Astria Rollup ${hashBase64.value.toUpperCase().slice(0, 4)} ••• ${hashBase64.value
 				.toUpperCase()
 				.slice(-4)}. The hash, actions, metadata, size.`,
 		},
 		{
 			property: "og:title",
-			content: `Rollup ${rollup.value?.hash.toUpperCase().slice(0, 4)} ••• ${rollup.value?.hash
+			content: `Rollup ${hashBase64.value.toUpperCase().slice(0, 4)} ••• ${hashBase64.value
 				.toUpperCase()
 				.slice(-4)} - Astria Explorer`,
 		},
 		{
 			property: "og:description",
-			content: `Astria Rollup ${rollup.value?.hash.toUpperCase().slice(0, 4)} ••• ${rollup.value?.hash
+			content: `Astria Rollup ${hashBase64.value.toUpperCase().slice(0, 4)} ••• ${hashBase64.value
 				.toUpperCase()
 				.slice(-4)}. The hash, actions, metadata, size.`,
 		},
@@ -95,13 +97,13 @@ useHead({
 		},
 		{
 			name: "twitter:title",
-			content: `Rollup ${rollup.value?.hash.toUpperCase().slice(0, 4)} ••• ${rollup.value?.hash
+			content: `Rollup ${hashBase64.value.toUpperCase().slice(0, 4)} ••• ${hashBase64.value
 				.toUpperCase()
 				.slice(-4)} - Astria Explorer`,
 		},
 		{
 			name: "twitter:description",
-			content: `Astria Rollup ${rollup.value?.hash.toUpperCase().slice(0, 4)} ••• ${rollup.value?.hash
+			content: `Astria Rollup ${hashBase64.value.toUpperCase().slice(0, 4)} ••• ${hashBase64.value
 				.toUpperCase()
 				.slice(-4)}. The hash, actions, metadata, size.`,
 		},
@@ -138,7 +140,7 @@ watch(
 					<Icon name="rollup" size="14" color="primary" />
 
 					<Text size="14" weight="500" color="primary">
-						Rollup <Text weight="600">{{ shortHash(rollup.hash) }}</Text>
+						Rollup <Text weight="600">{{ shortHash(hashBase64) }}</Text>
 					</Text>
 				</Flex>
 

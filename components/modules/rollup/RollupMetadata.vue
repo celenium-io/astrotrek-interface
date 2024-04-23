@@ -1,6 +1,6 @@
 <script setup>
 /** Services */
-import { formatBytes, space, spaces } from "@/services/utils"
+import { hexToBase64, formatBytes, space, spaces } from "@/services/utils"
 
 /** UI */
 import Button from "@/components/ui/Button.vue"
@@ -20,8 +20,8 @@ const showMore = ref(false)
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Hash</Text>
 
 			<Flex align="center" gap="8" :class="$style.value">
-				<CopyButton :text="rollup.hash" />
-				<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ space(rollup.hash) }}</Text>
+				<CopyButton :text="hexToBase64(rollup.hash)" />
+				<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ space(hexToBase64(rollup.hash)) }}</Text>
 			</Flex>
 		</Flex>
 

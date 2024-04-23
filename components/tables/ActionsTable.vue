@@ -9,7 +9,7 @@ import Button from "@/components/ui/Button.vue"
 import { fetchTxByHash } from "~/services/api/tx"
 
 /** Services */
-import { spaces } from "@/services/utils"
+import { midHash, spaces } from "@/services/utils"
 import { getActionDataLength, getActionDescription, getActionRollupId, getActionTitle } from "@/services/utils/actions.js"
 
 /** Components */
@@ -61,9 +61,9 @@ const handleOpenTx = async (action) => {
 						</Text>
 					</Flex>
 
-					<Flex v-if="act.type === 'sequence'" :class="$style.description">
+					<Flex v-if="act.type === 'sequence'" gap="4" :class="$style.description">
 						<Text size="13" weight="500" color="secondary">
-							{{ `Pushed ${getActionDataLength(act)} to&nbsp` }}
+							{{ `Pushed ${getActionDataLength(act)} to` }}
 						</Text>
 
 						<LinkToEntity
@@ -74,13 +74,87 @@ const handleOpenTx = async (action) => {
 						/>
 					</Flex>
 
-					<Flex v-else-if="act.type === 'init_bridge_account'" :class="$style.description">
+					<Flex v-else-if="act.type === 'transfer'" gap="4" :class="$style.description">
 						<Text size="13" weight="500" color="secondary">
-							{{ `Bridge account was initialized for&nbsp` }}
+							{{ `Sent ${act.data.amount} nria to` }}
+						</Text>
+
+						<LinkToEntity
+							:entity="{ title: midHash(act.data.to), type: 'account', id: act.data.to }"
+							color="secondary"
+							size="13"
+							:class="$style.link"
+						/>
+					</Flex>
+
+					<Flex v-else-if="act.type === 'mint'" gap="4" :class="$style.description">
+						<Text size="13" weight="500" color="secondary">
+							{{ `Minted ${act.data.amount} nria to` }}
+						</Text>
+
+						<LinkToEntity
+							:entity="{ title: midHash(act.data.to), type: 'account', id: act.data.to }"
+							color="secondary"
+							size="13"
+							:class="$style.link"
+						/>
+					</Flex>
+
+					<Flex v-else-if="act.type === 'sudo_address_change'" gap="4" :class="$style.description">
+						<Text size="13" weight="500" color="secondary">Set</Text>
+
+						<LinkToEntity
+							:entity="{ title: midHash(act.data.new_address), type: 'account', id: act.data.new_address }"
+							color="secondary"
+							size="13"
+							:class="$style.link"
+						/>
+
+						<Text size="13" weight="500" color="secondary">as new sudo address</Text>
+					</Flex>
+
+					<Flex v-else-if="act.type === 'ics20_withdrawal'" gap="4" :class="$style.description">
+						<Text size="13" weight="500" color="secondary">
+							{{ `Withdraw ${act.data.amount} ${act.data.denom} to` }}
+						</Text>
+
+						<LinkToEntity
+							:entity="{ title: midHash(act.data.destination_chain_address), type: 'account', id: act.data.destination_chain_address }"
+							color="secondary"
+							size="13"
+							:class="$style.link"
+						/>
+					</Flex>
+
+					<Flex v-else-if="act.type === 'init_bridge_account'" gap="4" :class="$style.description">
+						<Text size="13" weight="500" color="secondary">
+							{{ `Bridge account was initialized for` }}
 						</Text>
 
 						<LinkToEntity
 							:entity="{ title: act.data.rollup_id, type: 'rollup', id: getActionRollupId(act) }"
+							color="secondary"
+							size="13"
+							:class="$style.link"
+						/>
+					</Flex>
+
+					<Flex v-else-if="act.type === 'bridge_lock'" gap="4" :class="$style.description">
+						<Text size="13" weight="500" color="secondary">
+							{{ `Transfer ${act.data.amount} from` }}
+						</Text>
+
+						<LinkToEntity
+							:entity="{ title: midHash(act.data.to), type: 'account', id: act.data.to }"
+							color="secondary"
+							size="13"
+							:class="$style.link"
+						/>
+
+						<Text size="13" weight="500" color="secondary">to</Text>
+
+						<LinkToEntity
+							:entity="{ title: midHash(act.data.destination_chain_address), type: 'account', id: act.data.destination_chain_address }"
 							color="secondary"
 							size="13"
 							:class="$style.link"

@@ -5,12 +5,6 @@ export const getActionTitle = (actionType) => {
 
 	let title = ""
 	switch (actionType) {
-		// case "sudo_address_change":
-		// 	title = "Sudo Address Change"
-		// 	break;
-		// case "validator_update":
-		// 	title = "Validator Update"
-		// 	break;
 		case "ibc_relay":
 			title = "IBC Relay"
 			break;
@@ -20,15 +14,6 @@ export const getActionTitle = (actionType) => {
 		case "ics20_withdrawal":
 			title = "ICS20 Withdrawal"
 			break;
-		// case "init_bridge_account":
-		// 	title = "Init Bridge Account"
-		// 	break;
-		// case "bridge_lock":
-		// 	title = "Bridge Lock"
-		// 	break;
-		// case "fee_asset_change":
-		// 	title = "Fee Asset Change"
-		// 	break;
 		default:
 			title = capitalizeAndReplaceUnderscore(actionType)
 			break;
