@@ -25,7 +25,11 @@ const props = defineProps({
 	recentTxs: {
 		type: Boolean,
 		default: false,
-	}
+	},
+	generalTxsList: {
+		type: Boolean,
+		default: false,
+	},
 })
 </script>
 
@@ -50,7 +54,7 @@ const props = defineProps({
 			@click="sidebarsStore.open('tx', t)"
 			justify="between"
 			align="center"
-			:class="[!recentTxs && $style.row, recentTxs && $style.row_recent_txs, isLoading && $style.disabled]"
+			:class="[!recentTxs && !generalTxsList && $style.row, recentTxs && $style.row_recent_txs, generalTxsList && $style.row_general_list, isLoading && $style.disabled]"
 		>
 			<Flex direction="column" gap="8">
 				<Flex align="center" gap="6">
@@ -153,6 +157,36 @@ const props = defineProps({
 
 	&:last-child {
 		border-bottom: 1px solid var(--op-5);
+	}
+
+	&.disabled {
+		pointer-events: none;
+		opacity: 0.2;
+	}
+}
+
+.row_general_list {
+	height: 60px;
+
+	border-top: 1px solid var(--op-5);
+
+	cursor: pointer;
+
+	padding: 0 16px;
+
+	transition: all 0.2s ease;
+
+	&:hover {
+		background: var(--op-5);
+	}
+	
+	&:last-child {
+		border-bottom-left-radius: 8px;
+		border-bottom-right-radius: 8px;
+	}
+
+	&:active {
+		background: var(--op-10);
 	}
 
 	&.disabled {

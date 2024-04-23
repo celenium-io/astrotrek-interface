@@ -119,7 +119,7 @@ watch(
 				</Flex>
 			</Flex>
 
-			<RollupsTable :rollups="rollups" :isLoading="isLoading" />
+			<RollupsTable :rollups="rollups" :isLoading="isLoading" generalRollupsList />
 		</Flex>
 	</Flex>
 </template>

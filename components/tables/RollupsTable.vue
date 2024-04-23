@@ -19,6 +19,10 @@ const props = defineProps({
 	isLoading: {
 		type: Boolean,
 	},
+	generalRollupsList: {
+		type: Boolean,
+		default: false,
+	},
 })
 </script>
 
@@ -43,7 +47,7 @@ const props = defineProps({
 			@click="sidebarsStore.open('rollup', rollup)"
 			justify="between"
 			align="center"
-			:class="[$style.row, isLoading && $style.disabled]"
+			:class="[!generalRollupsList && $style.row, generalRollupsList && $style.row_general_list, isLoading && $style.disabled]"
 		>
 			<Flex direction="column" gap="8">
 				<Flex align="center" gap="6">
@@ -108,10 +112,45 @@ const props = defineProps({
 		background: var(--op-5);
 	}
 
+	&:first-child {
+		border-top-left-radius: 8px;
+		border-top-right-radius: 8px;
+		border-top: none;
+	}
+
 	&:last-child {
 		border-bottom-left-radius: 8px;
 		border-bottom-right-radius: 8px;
-		border-bottom: 1px solid var(--op-5);
+	}
+
+	&:active {
+		background: var(--op-10);
+	}
+
+	&.disabled {
+		pointer-events: none;
+		opacity: 0.2;
+	}
+}
+
+.row_general_list {
+	height: 60px;
+
+	border-top: 1px solid var(--op-5);
+
+	cursor: pointer;
+
+	padding: 0 16px;
+
+	transition: all 0.2s ease;
+
+	&:hover {
+		background: var(--op-5);
+	}
+	
+	&:last-child {
+		border-bottom-left-radius: 8px;
+		border-bottom-right-radius: 8px;
 	}
 
 	&:active {

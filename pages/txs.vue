@@ -120,7 +120,7 @@ watch(
 				</Flex>
 			</Flex>
 
-			<TransactionsTable :txs="transactions" :isLoading="isLoading" />
+			<TransactionsTable :txs="transactions" :isLoading="isLoading" generalTxsList />
 		</Flex>
 	</Flex>
 </template>
