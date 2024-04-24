@@ -50,12 +50,12 @@ const appConfig = useAppConfig()
 					<NuxtLink to="/txs">
 						<Text size="13" weight="600" color="secondary">Transactions</Text>
 					</NuxtLink>
-					<!-- <NuxtLink to="/accounts">
-						<Text size="13" weight="600" color="secondary">Addresses</Text>
+					<NuxtLink to="/accounts">
+						<Text size="13" weight="600" color="secondary">Accounts</Text>
 					</NuxtLink>
 					<NuxtLink to="/validators">
 						<Text size="13" weight="600" color="secondary">Validators</Text>
-					</NuxtLink> -->
+					</NuxtLink>
 					<NuxtLink to="/rollups">
 						<Text size="13" weight="600" color="secondary">Rollups</Text>
 					</NuxtLink>

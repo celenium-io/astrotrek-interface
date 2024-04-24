@@ -29,13 +29,13 @@ export const getActionDescription = (action) => {
 	let data = action.data
 	switch (action.type) {
 		case "sequence":
-			description = `Pushed ${formatBytes(base64Decode(data.data).length)} to ${midHash(strToHex(base64Decode(data.rollup_id)))}`
+			description = `Pushed ${formatBytes(base64Decode(data.data).length)} to ${midHash(data.rollup_id)}`
 			break;
 		case "transfer":
-			description = `Sent ${data.amount} nria to ${midHash(data.to)}`
+			description = `Sent ${data.amount} NRIA to ${midHash(data.to)}`
 			break;
 		case "mint":
-			description = `Minted ${data.amount} nria to ${midHash(data.to)}`
+			description = `Minted ${data.amount} NRIA to ${midHash(data.to)}`
 			break;
 		case "sudo_address_change":
 			description = `Set ${midHash(data.new_address)} as new sudo address`

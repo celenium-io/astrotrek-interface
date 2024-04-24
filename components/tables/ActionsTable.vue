@@ -76,7 +76,7 @@ const handleOpenTx = async (action) => {
 
 					<Flex v-else-if="act.type === 'transfer'" gap="4" :class="$style.description">
 						<Text size="13" weight="500" color="secondary">
-							{{ `Sent ${act.data.amount} nria to` }}
+							{{ `Sent ${act.data.amount} NRIA to` }}
 						</Text>
 
 						<LinkToEntity
@@ -89,7 +89,7 @@ const handleOpenTx = async (action) => {
 
 					<Flex v-else-if="act.type === 'mint'" gap="4" :class="$style.description">
 						<Text size="13" weight="500" color="secondary">
-							{{ `Minted ${act.data.amount} nria to` }}
+							{{ `Minted ${act.data.amount} NRIA to` }}
 						</Text>
 
 						<LinkToEntity
