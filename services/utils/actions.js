@@ -1,4 +1,4 @@
-import { base64Decode, capitalize, capitalizeAndReplaceUnderscore, formatBytes, strToHex } from "./index.js";
+import { base64Decode, capitalize, capitalizeAndReplaceUnderscore, formatBytes, midHash, strToHex } from "./index.js";
 
 export const getActionTitle = (actionType) => {
 	if (!actionType) return "Action"
@@ -29,16 +29,16 @@ export const getActionDescription = (action) => {
 	let data = action.data
 	switch (action.type) {
 		case "sequence":
-			description = `Pushed ${formatBytes(base64Decode(data.data).length)} to ${strToHex(base64Decode(data.rollup_id))}`
+			description = `Pushed ${formatBytes(base64Decode(data.data).length)} to ${midHash(strToHex(base64Decode(data.rollup_id)))}`
 			break;
 		case "transfer":
-			description = `Sent ${data.amount} nria to ${data.to}`
+			description = `Sent ${data.amount} nria to ${midHash(data.to)}`
 			break;
 		case "mint":
-			description = `Minted ${data.amount} nria to ${data.to}`
+			description = `Minted ${data.amount} nria to ${midHash(data.to)}`
 			break;
 		case "sudo_address_change":
-			description = `Set ${data.new_address} as new sudo address`
+			description = `Set ${midHash(data.new_address)} as new sudo address`
 			break;
 		case "validator_update":
 			description = `Now validator ${strToHex(base64Decode(data.pub_key))} has power ${data.power}`
@@ -48,25 +48,25 @@ export const getActionDescription = (action) => {
 			break;
 		case "ibc_relayer_change":
 			if (data.addition) {
-				description = `${data.addition} was added as IBC relayer`
+				description = `${midHash(data.addition)} was added as IBC relayer`
 			} else if (data.removal) {
-				description = `${data.removal} was removed as IBC relayer`
+				description = `${midHash(data.removal)} was removed as IBC relayer`
 			}
 			break;
 		case "ics20_withdrawal":
-			description = `Withdraw ${data.amount} ${data.denom} to ${data.destination_chain_address}`
+			description = `Withdraw ${data.amount} ${data.denom} to ${midHash(data.destination_chain_address)}`
 			break;
 		case "init_bridge_account":
-			description = `Bridge account was initialized for ${strToHex(base64Decode(data.rollup_id))}`
+			description = `Bridge account was initialized for ${midHash(data.rollup_id)}`
 			break;
 		case "bridge_lock":
-			description = `Transfer ${data.amount} from ${data.to} to ${data.destination_chain_address}`
+			description = `Transfer ${data.amount} from ${midHash(data.to)} to ${midHash(data.destination_chain_address)}`
 			break;
 		case "fee_asset_change":
 			if (data.addition) {
-				description = `${strToHex(base64Decode(data.addition))} was added for fee payments`
+				description = `${midHash(data.addition)} was added for fee payments`
 			} else if (data.removal) {
-				description = `${strToHex(base64Decode(data.removal))} was removed for fee payments`
+				description = `${midHash(data.removal)} was removed for fee payments`
 			}
 			break;
 		default:

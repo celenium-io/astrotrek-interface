@@ -67,7 +67,7 @@ const handleOpenTx = async (action) => {
 						</Text>
 
 						<LinkToEntity
-							:entity="{ title: act.data.rollup_id, type: 'rollup', id: getActionRollupId(act) }"
+							:entity="{ title: midHash(act.data.rollup_id), type: 'rollup', id: getActionRollupId(act) }"
 							color="secondary"
 							size="13"
 							:class="$style.link"
@@ -113,6 +113,30 @@ const handleOpenTx = async (action) => {
 						<Text size="13" weight="500" color="secondary">as new sudo address</Text>
 					</Flex>
 
+					<Flex v-else-if="act.type === 'ibc_relayer_change'">
+						<Flex v-if="act.data.addition" gap="4" :class="$style.description">
+							<LinkToEntity
+								:entity="{ title: midHash(act.data.addition), type: 'account', id: act.data.addition }"
+								color="secondary"
+								size="13"
+								:class="$style.link"
+							/>
+
+							<Text size="13" weight="500" color="secondary">was added as IBC relayer</Text>
+						</Flex>
+
+						<Flex v-else="act.data.removal" gap="4" :class="$style.description">
+							<LinkToEntity
+								:entity="{ title: midHash(act.data.removal), type: 'account', id: act.data.removal }"
+								color="secondary"
+								size="13"
+								:class="$style.link"
+							/>
+
+							<Text size="13" weight="500" color="secondary">was removed as IBC relayer</Text>
+						</Flex>
+					</Flex>
+
 					<Flex v-else-if="act.type === 'ics20_withdrawal'" gap="4" :class="$style.description">
 						<Text size="13" weight="500" color="secondary">
 							{{ `Withdraw ${act.data.amount} ${act.data.denom} to` }}
@@ -132,7 +156,7 @@ const handleOpenTx = async (action) => {
 						</Text>
 
 						<LinkToEntity
-							:entity="{ title: act.data.rollup_id, type: 'rollup', id: getActionRollupId(act) }"
+							:entity="{ title: midHash(act.data.rollup_id), type: 'rollup', id: getActionRollupId(act) }"
 							color="secondary"
 							size="13"
 							:class="$style.link"
