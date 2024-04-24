@@ -91,6 +91,10 @@ watch(
 
 						<CopyButton :text="validator.address" />
 					</Flex>
+
+					<Text size="16" weight="600" height="120" color="primary">
+						{{ validator.name }}
+					</Text>
 				</Flex>
 
 				<!-- <NuxtLink @click="emit('onClose')" :to="`/block/${account.first_height}`">
