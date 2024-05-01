@@ -3,6 +3,7 @@
 import { DateTime } from "luxon"
 
 /** API */
+import { fetchValidators } from "@/services/api/validator"
 import { fetchValidatorUptime } from "@/services/api/validator.js"
 
 /** Services */
@@ -10,7 +11,7 @@ import { space, spaces } from "@/services/utils"
 
 /** UI */
 import ValidatorUptime from "@/components/modules/validator/ValidatorUptime.vue"
-import Button from "@/components/ui/Button.vue"
+import Tooltip from "@/components/ui/Tooltip.vue"
 import { capitalize } from "vue";
 
 const props = defineProps({
@@ -37,8 +38,23 @@ const fetchUptime = async () => {
 	isLoadingUptime.value = false
 }
 
+const totalPower = ref(props.validator.power)
+const validatorShare = computed(() => parseInt(parseFloat(props.validator.power) / totalPower.value * 100))
+const getValidators = async () => {
+	const { data } = await fetchValidators({
+		limit: 100,
+	})
+	if (data.value) {
+		totalPower.value = 0
+		data.value.forEach(v => {
+			totalPower.value += parseFloat(v.power)
+		})
+	}
+}
+
 // const showMore = ref(false)
 
+getValidators()
 fetchUptime()
 </script>
 
@@ -59,6 +75,43 @@ fetchUptime()
 			<Flex align="center" gap="8" :class="$style.value">
 				<CopyButton :text="validator.address" />
 				<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ space(validator.address) }}</Text>
+			</Flex>
+		</Flex>
+
+		<Flex align="center" :class="$style.item">
+			<Text size="13" weight="600" color="secondary" :class="$style.key">Voting Power</Text>
+
+			
+			<Flex align="center" gap="8" :class="$style.value">
+				<Tooltip>
+					<Flex align="center" gap="6">
+						<Text size="13" weight="600" color="primary" mono>{{ validator.power }}</Text>
+
+						<Text size="13" weight="500" color="tertiary" mono>({{ validatorShare }}%)</Text>
+					</Flex>
+
+					<template #content>
+						<Flex direction="column" gap="8" :style="{width: '150px'}">
+							<Flex align="center" justify="between">
+								<Text size="12" weight="500" color="tertiary"> Validator Power </Text>
+
+								<Text size="13" weight="600" color="primary"> {{ validator.power }} </Text>
+							</Flex>
+
+							<Flex align="center" justify="between">
+								<Text size="12" weight="500" color="tertiary">Total Power</Text>
+
+								<Text size="13" weight="600" color="primary"> {{ totalPower }} </Text>
+							</Flex>
+
+							<Flex align="center" justify="between">
+								<Text size="12" weight="500" color="tertiary">Validator Share</Text>
+
+								<Text size="13" weight="600" color="primary"> {{ validatorShare }}% </Text>
+							</Flex>
+						</Flex>
+					</template>
+				</Tooltip>
 			</Flex>
 		</Flex>
 

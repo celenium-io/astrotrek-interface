@@ -1,6 +1,7 @@
 <script setup>
 /** Components */
 import LinkToEntity from "@/components/shared/LinkToEntity.vue"
+import Tooltip from "@/components/ui/Tooltip.vue";
 
 /** Services */
 import { midHash, spaces } from "@/services/utils"
@@ -17,6 +18,27 @@ const props = defineProps({
 		type: Boolean,
 	},
 })
+
+const totalPower = computed(() => {
+	let res = 0
+
+	if (props.validators) {
+		props.validators.forEach(v => {
+			res += parseFloat(v.power)
+		})
+	}
+
+	return res
+})
+
+const getSharePower = (validator) => {
+	let share = 0
+	if (totalPower.value && validator.power) {
+		share = parseInt(parseFloat(validator.power) / totalPower.value * 100)
+	}
+
+	return share
+}
 </script>
 
 <template>
@@ -54,6 +76,43 @@ const props = defineProps({
 					{{ v.name }}
 				</Text>
 			</Flex>
+
+			<Tooltip>
+				<Flex direction="column" align="end" gap="12">
+					<Text size="13" weight="600" color="primary"> {{ v.power }} </Text>
+
+					<Flex :class="$style.power_wrapper">
+						<div
+							:style="{
+								width: `${getSharePower(v)}%`,
+								background: 'var(--brand)',
+							}"
+						/>
+					</Flex>
+				</Flex>
+
+				<template #content>
+					<Flex direction="column" gap="8" :style="{width: '150px'}">
+						<Flex align="center" justify="between">
+							<Text size="12" weight="500" color="tertiary"> Voting Power </Text>
+
+							<Text size="13" weight="600" color="primary"> {{ v.power }} </Text>
+						</Flex>
+
+						<Flex align="center" justify="between">
+							<Text size="12" weight="500" color="tertiary">Total Power</Text>
+
+							<Text size="13" weight="600" color="primary"> {{ totalPower }} </Text>
+						</Flex>
+
+						<Flex align="center" justify="between">
+							<Text size="12" weight="500" color="tertiary">Validator Share</Text>
+
+							<Text size="13" weight="600" color="primary"> {{ getSharePower(v) }}% </Text>
+						</Flex>
+					</Flex>
+				</template>
+			</Tooltip>
 		</Flex>
 	</Flex>
 </template>
@@ -109,6 +168,19 @@ const props = defineProps({
 
 	border-radius: 50%;
 	background: var(--op-10);
+}
+
+.power_wrapper {
+	width: 40px;
+	height: 4px;
+
+	border-radius: 50px;
+	background: var(--op-10);
+	overflow: hidden;
+
+	& div {
+		height: 4px;
+	}
 }
 
 </style>

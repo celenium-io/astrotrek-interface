@@ -36,10 +36,17 @@ const showMore = ref(false)
 
 			<Flex v-if="block.proposer" align="center" gap="8" :class="$style.value">
 				<CopyButton :text="block.proposer.address" />
-				<Text size="13" weight="600" color="primary" mono :class="$style.overflow">
-					{{ block.proposer.name }}
-					<Text color="tertiary">{{ space(block.proposer?.address) }} </Text>
-				</Text>
+
+				<NuxtLink :to="`/validator/${block.proposer.id}`">
+					<Flex align="center" gap="4">
+						<Text size="13" weight="600" color="primary" mono :class="$style.overflow">
+							{{ block.proposer.name }}
+							<Text color="tertiary">{{ space(block.proposer?.address) }} </Text>
+						</Text>
+
+						<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
+					</Flex>
+				</NuxtLink>
 			</Flex>
 			<Flex v-else align="center" gap="8" :class="$style.value">
 				<Text size="13" weight="600" color="primary" mono> Genesis </Text>
