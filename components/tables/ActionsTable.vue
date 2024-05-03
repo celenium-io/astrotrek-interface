@@ -67,7 +67,7 @@ const handleOpenTx = async (action) => {
 						</Text>
 
 						<LinkToEntity
-							:entity="{ title: act.data.rollup_id.inner, type: 'rollup', id: getActionRollupId(act) }"
+							:entity="{ title: act.data.rollup_id, type: 'rollup', id: getActionRollupId(act) }"
 							color="secondary"
 							size="13"
 							:class="$style.link"

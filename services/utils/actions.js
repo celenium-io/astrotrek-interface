@@ -29,7 +29,7 @@ export const getActionDescription = (action) => {
 	let data = action.data
 	switch (action.type) {
 		case "sequence":
-			description = `Pushed ${formatBytes(base64Decode(data.data).length)} to ${data.rollup_id.inner}`
+			description = `Pushed ${formatBytes(base64Decode(data.data).length)} to ${data.rollup_id}`
 			break;
 		case "transfer":
 			description = `Sent ${data.amount} NRIA to ${midHash(data.to)}`
@@ -85,9 +85,5 @@ export const getActionDataLength = (action) => {
 export const getActionRollupId = (action) => {
 	if (!action) return
 
-	if (action.data.rollup_id.inner) {
-		return strToHex(base64Decode(action.data.rollup_id.inner))
-	} else {
-		return strToHex(base64Decode(action.data.rollup_id))
-	}
+	return strToHex(base64Decode(action.data.rollup_id))
 }
