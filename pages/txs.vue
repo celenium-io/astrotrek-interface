@@ -5,6 +5,9 @@ import Button from "~/components/ui/Button.vue"
 /** Components */
 import TransactionsTable from "@/components/tables/TransactionsTable.vue"
 
+/** Services */
+import { ActionTypes } from "@/services/constants/actionTypes";
+
 /** API */
 import { fetchTransactions } from "@/services/api/tx"
 
@@ -92,6 +95,17 @@ const handlePrev = () => {
 	if (page.value === 1) return
 	page.value -= 1
 }
+
+/** Filters */
+const filters = reactive({
+	status: {
+		success: false,
+		failed: false,
+	},
+	action_type: ActionTypes.reduce((a, b) => ({ ...a, [b]: false }), {}),
+})
+console.log(filters.value);
+
 
 getTransactions()
 
