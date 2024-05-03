@@ -11,7 +11,7 @@ const props = defineProps({
 
 <template>
 	<Flex direction="column" gap="6">
-		<Flex v-for="act in actions.slice(0, Math.min(actions.length, 5))" justify="between" align="center" gap="8" wide :class="$style.action">
+		<Flex v-for="act in actions.slice(0, Math.min(actions.length, 5))" direction="column" align="center" gap="4" wide :class="$style.action">
 			<Flex align="center" gap="8" :class="$style.title_wrapper">
 				<Icon name="action" size="12" color="secondary" />
 
@@ -34,13 +34,15 @@ const props = defineProps({
 .action {
 	max-width: 380px;
 
+	align-items: start;
+
 	padding: 2px 0;
 
 	transition: all 0.2s ease;
 }
 
 .title_wrapper {
-	max-width: 40%;
+	max-width: 100%;
 }
 
 .title {
@@ -52,12 +54,10 @@ const props = defineProps({
 }
 
 .description_wrapper {
-	max-width: 60%
+	max-width: 100%
 }
 .description {
 	width: 100%;
-
-	padding-left: 8px;
 
 	overflow: hidden;
 	text-overflow: ellipsis;

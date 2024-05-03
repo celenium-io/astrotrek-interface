@@ -29,7 +29,7 @@ export const getActionDescription = (action) => {
 	let data = action.data
 	switch (action.type) {
 		case "sequence":
-			description = `Pushed ${formatBytes(base64Decode(data.data).length)} to ${midHash(data.rollup_id)}`
+			description = `Pushed ${formatBytes(base64Decode(data.data).length)} to ${data.rollup_id.inner}`
 			break;
 		case "transfer":
 			description = `Sent ${data.amount} NRIA to ${midHash(data.to)}`
@@ -57,7 +57,7 @@ export const getActionDescription = (action) => {
 			description = `Withdraw ${data.amount} ${data.denom} to ${midHash(data.destination_chain_address)}`
 			break;
 		case "init_bridge_account":
-			description = `Bridge account was initialized for ${midHash(data.rollup_id)}`
+			description = `Bridge account was initialized for ${data.rollup_id}`
 			break;
 		case "bridge_lock":
 			description = `Transfer ${data.amount} from ${midHash(data.to)} to ${midHash(data.destination_chain_address)}`
@@ -84,6 +84,10 @@ export const getActionDataLength = (action) => {
 
 export const getActionRollupId = (action) => {
 	if (!action) return
-	
-	return strToHex(base64Decode(action.data.rollup_id))
+
+	if (action.data.rollup_id.inner) {
+		return strToHex(base64Decode(action.data.rollup_id.inner))
+	} else {
+		return strToHex(base64Decode(action.data.rollup_id))
+	}
 }

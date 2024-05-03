@@ -21,7 +21,7 @@ const showMore = ref(false)
 
 			<Flex align="center" gap="8" :class="$style.value">
 				<CopyButton :text="hexToBase64(rollup.hash)" />
-				<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ space(hexToBase64(rollup.hash)) }}</Text>
+				<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ hexToBase64(rollup.hash) }}</Text>
 			</Flex>
 		</Flex>
 

@@ -38,6 +38,12 @@ const handleClick = (event) => {
 </template>
 
 <style module>
+.link {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
 .link:hover {
 	color: var(--brand);
     text-decoration: underline;

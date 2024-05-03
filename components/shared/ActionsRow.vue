@@ -26,14 +26,6 @@ defineProps({
 	},
 })
 
-// const getActionTitle = (actionType) => {
-// 	console.log(actionType.split('_'));
-// 	let title
-// 	actionType.split('_').forEach((el) => title+=)
-
-// 	return actionType
-// }
-
 </script>
 
 <template>

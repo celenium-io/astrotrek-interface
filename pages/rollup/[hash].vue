@@ -140,7 +140,7 @@ watch(
 					<Icon name="rollup" size="14" color="primary" />
 
 					<Text size="14" weight="500" color="primary">
-						Rollup <Text weight="600">{{ shortHash(hashBase64) }}</Text>
+						Rollup <Text weight="600">{{ hashBase64 }}</Text>
 					</Text>
 				</Flex>
 
