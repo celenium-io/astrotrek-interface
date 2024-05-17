@@ -7,6 +7,7 @@ import LinkToEntity from "@/components/shared/LinkToEntity.vue"
 
 /** Services */
 import { formatBytes, hexToBase64, midHash, spaces } from "@/services/utils"
+import { getRollupHashSafeURL } from "~/services/utils/rollups"
 
 /** Store */
 import { useSidebarsStore } from "@/store/sidebars"
@@ -53,7 +54,7 @@ const props = defineProps({
 				<Flex align="center" gap="6">
 					<Icon name="rollup" size="16" color="secondary" />
 
-					<LinkToEntity :entity="{ title: rollup.hash, type: 'rollup', id: rollup.hash}" color="primary" />
+					<LinkToEntity :entity="{ title: rollup.hash, type: 'rollup', id: getRollupHashSafeURL(rollup.hash)}" color="primary" />
 				</Flex>
 
 				<Flex align="center" gap="8">

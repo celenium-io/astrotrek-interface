@@ -11,6 +11,7 @@ import { fetchTxByHash } from "~/services/api/tx"
 /** Services */
 import { midHash, spaces } from "@/services/utils"
 import { getActionDataLength, getActionDescription, getActionTitle } from "@/services/utils/actions.js"
+import { getRollupHashSafeURL } from "~/services/utils/rollups"
 
 /** Components */
 import LinkToEntity from "@/components/shared/LinkToEntity.vue"
@@ -67,7 +68,7 @@ const handleOpenTx = async (action) => {
 						</Text>
 
 						<LinkToEntity
-							:entity="{ title: act.data.rollup_id, type: 'rollup', id: act.data.rollup_id }"
+							:entity="{ title: act.data.rollup_id, type: 'rollup', id: getRollupHashSafeURL(act.data.rollup_id) }"
 							color="secondary"
 							size="13"
 							:class="$style.link"
@@ -156,7 +157,7 @@ const handleOpenTx = async (action) => {
 						</Text>
 
 						<LinkToEntity
-							:entity="{ title: act.data.rollup_id, type: 'rollup', id: act.data.rollup_id }"
+							:entity="{ title: act.data.rollup_id, type: 'rollup', id: getRollupHashSafeURL(act.data.rollup_id) }"
 							color="secondary"
 							size="13"
 							:class="$style.link"

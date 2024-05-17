@@ -1,8 +1,4 @@
 <script setup>
-/** Services */
-import { hexToBase64, shortHash } from "~/services/utils"
-import { getRollupHashSafeURL } from "~/services/utils/rollups";
-
 /** Modules */
 import RollupMetadata from "~/components/modules/rollup/RollupMetadata.vue"
 import RollupActions from "~/components/modules/rollup/RollupActions.vue"
@@ -23,10 +19,9 @@ definePageMeta({
 const route = useRoute()
 
 const rollup = ref()
-const hashBase64 = ref("")
 const actions = ref([])
 const isLoading = ref(false)
-const rollupHashSafeURL = ref(getRollupHashSafeURL(route.params.hash))
+const rollupHashSafeURL = ref(route.params.hash)
 
 const { data } = await fetchRollupByHash(rollupHashSafeURL.value)
 if (!data.value) {
