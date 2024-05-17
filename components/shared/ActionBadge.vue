@@ -3,7 +3,7 @@
 import Badge from "@/components/ui/Badge.vue"
 
 /** Services */
-import { ActionIconMap } from "@/services/constants/actions"
+import { ActionIconMap } from "@/services/constants"
 import { capitalize } from "@/services/utils"
 
 defineProps({
@@ -56,3 +56,4 @@ defineProps({
 	overflow: hidden;
 }
 </style>
+~/services/constants

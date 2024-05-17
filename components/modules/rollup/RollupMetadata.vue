@@ -1,6 +1,7 @@
 <script setup>
 /** Services */
 import { hexToBase64, formatBytes, space, spaces } from "@/services/utils"
+import { getCeleniumLink } from "@/services/constants";
 
 /** UI */
 import Button from "@/components/ui/Button.vue"
@@ -12,6 +13,14 @@ const props = defineProps({
 })
 
 const showMore = ref(false)
+
+const namespaceID = computed(() => props.rollup.hash.slice(0, 20))
+
+const namespaceLink = computed(() => {
+	let link = getCeleniumLink("mocha")
+
+	return `${link}namespace/000000000000000000000000000000000000${namespaceID.value}`
+})
 </script>
 
 <template>
@@ -31,7 +40,6 @@ const showMore = ref(false)
 			<Text size="13" weight="600" color="primary" mono :class="$style.value"> {{ rollup.actions_count }} </Text>
 		</Flex>
 
-		
 		<Flex align="center" :class="$style.item">
 			<Text size="13" weight="600" color="secondary" :class="$style.key">First Height</Text>
 			
@@ -43,7 +51,19 @@ const showMore = ref(false)
 			</NuxtLink>
 		</Flex>
 		
+		<Flex align="center" :class="$style.item">
+			<Text size="13" weight="600" color="secondary" :class="$style.key">Celestia Namespace ID</Text>
+			
+			<Flex align="center" gap="4" :class="$style.value">
+				<CopyButton :text="namespaceID" />
 
+				<NuxtLink :to="namespaceLink" target="_blank">
+					<Text size="13" weight="600" color="primary" mono>{{ space(namespaceID) }}</Text>
+					<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
+				</NuxtLink>
+			</Flex>
+		</Flex>
+		
 		<Flex align="center" :class="$style.item">
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Size</Text>
 
