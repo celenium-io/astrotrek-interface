@@ -81,9 +81,3 @@ export const getActionDataLength = (action) => {
 	
 	return formatBytes(base64Decode(action.data.data).length)
 }
-
-export const getActionRollupId = (action) => {
-	if (!action) return
-
-	return strToHex(base64Decode(action.data.rollup_id))
-}

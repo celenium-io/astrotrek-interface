@@ -35,9 +35,9 @@ const emit = defineEmits(["onClose"])
 
 					<Flex align="center" gap="8">
 						<Text size="16" weight="600" height="120" color="primary">
-							{{ midHash(hexToBase64(rollup.hash)) }}
+							{{ midHash(rollup.hash) }}
 						</Text>
-						<CopyButton :text="hexToBase64(rollup.hash)" />
+						<CopyButton :text="rollup.hash" />
 					</Flex>
 				</Flex>
 

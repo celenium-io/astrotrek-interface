@@ -53,7 +53,7 @@ const props = defineProps({
 				<Flex align="center" gap="6">
 					<Icon name="rollup" size="16" color="secondary" />
 
-					<LinkToEntity :entity="{ title: hexToBase64(rollup.hash), type: 'rollup', id: rollup.hash}" color="primary" />
+					<LinkToEntity :entity="{ title: rollup.hash, type: 'rollup', id: rollup.hash}" color="primary" />
 				</Flex>
 
 				<Flex align="center" gap="8">

@@ -1,7 +1,7 @@
 <script setup>
 /** Services */
-import { hexToBase64, formatBytes, space, spaces } from "@/services/utils"
-import { getCeleniumLink } from "@/services/constants";
+import { formatBytes, space, spaces } from "@/services/utils"
+import { getNamespaceID, getNamespaceLink } from "@/services/utils/rollups"
 
 /** UI */
 import Button from "@/components/ui/Button.vue"
@@ -12,15 +12,10 @@ const props = defineProps({
 	},
 })
 
+const namespaceID = getNamespaceID(props.rollup)
+const namespaceLink = getNamespaceLink("mocha", namespaceID)
+
 const showMore = ref(false)
-
-const namespaceID = computed(() => props.rollup.hash.slice(0, 20))
-
-const namespaceLink = computed(() => {
-	let link = getCeleniumLink("mocha")
-
-	return `${link}namespace/000000000000000000000000000000000000${namespaceID.value}`
-})
 </script>
 
 <template>
@@ -29,8 +24,8 @@ const namespaceLink = computed(() => {
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Hash</Text>
 
 			<Flex align="center" gap="8" :class="$style.value">
-				<CopyButton :text="hexToBase64(rollup.hash)" />
-				<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ hexToBase64(rollup.hash) }}</Text>
+				<CopyButton :text="rollup.hash" />
+				<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ rollup.hash }}</Text>
 			</Flex>
 		</Flex>
 
