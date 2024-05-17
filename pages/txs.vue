@@ -1,12 +1,14 @@
 <script setup>
 /** UI */
 import Button from "~/components/ui/Button.vue"
+import CheckBox from "~/components/ui/CheckBox.vue"
+import Popover from "~/components/ui/Popover.vue"
 
 /** Components */
 import TransactionsTable from "@/components/tables/TransactionsTable.vue"
 
 /** Services */
-import { ActionTypes } from "@/services/constants/actionTypes";
+import { ActionTypes } from "@/services/constants/actionTypes"
 
 /** API */
 import { fetchTransactions } from "@/services/api/tx"
@@ -104,7 +106,18 @@ const filters = reactive({
 	},
 	action_type: ActionTypes.reduce((a, b) => ({ ...a, [b]: false }), {}),
 })
-console.log(filters.value);
+const keysWithTrueValue = Object.keys(filters.action_type).filter(type => filters.action_type[type] === true).join(",")
+console.log(keysWithTrueValue);
+
+const isStatusPopoverOpen = ref(false)
+const handleOpenStatusPopover = () => {
+	isStatusPopoverOpen.value = true
+
+}
+const onStatusPopoverClose = () => {
+	isStatusPopoverOpen.value = false
+
+}
 
 
 getTransactions()
@@ -123,14 +136,26 @@ watch(
 			<Flex justify="between" align="start" wide :class="$style.top">
 				<Text size="16" weight="600" color="primary">Transactions</Text>
 
-				<Flex align="center" gap="6">
-					<Button @click="handlePrev" size="mini" type="secondary" :disabled="page === 1 || isLoading">
-						<Icon name="chevron" size="14" color="primary" style="transform: rotate(90deg)" />
-					</Button>
-					<Button size="mini" type="secondary">Page {{ page }}</Button>
-					<Button @click="handleNext" size="mini" type="secondary" :disabled="isLoading || handleNextCondition">
-						<Icon name="chevron" size="14" color="primary" style="transform: rotate(-90deg)" />
-					</Button>
+				<Flex align="center" gap="16">
+					<Popover :open="isStatusPopoverOpen" @on-close="isStatusPopoverOpen = false" width="200" height="200">
+						<Button @click="isStatusPopoverOpen = true" size="mini" type="tertiary" :class="$style.extBtn">
+							<Icon name="filter" size="24" color="brand" />
+						</Button>
+
+						<template #content>
+								<Text size="12" weight="500" color="secondary">Filter by Status</Text>
+						</template>
+					</Popover>
+
+					<Flex align="center" gap="6">
+						<Button @click="handlePrev" size="mini" type="secondary" :disabled="page === 1 || isLoading">
+							<Icon name="chevron" size="14" color="primary" style="transform: rotate(90deg)" />
+						</Button>
+						<Button size="mini" type="secondary">Page {{ page }}</Button>
+						<Button @click="handleNext" size="mini" type="secondary" :disabled="isLoading || handleNextCondition">
+							<Icon name="chevron" size="14" color="primary" style="transform: rotate(-90deg)" />
+						</Button>
+					</Flex>
 				</Flex>
 			</Flex>
 
@@ -159,6 +184,26 @@ watch(
 	padding: 0 16px;
 
 	margin-bottom: 20px;
+}
+
+.extBtn {
+	border-radius: 6px;
+	cursor: pointer;
+	background: var(--op-5);
+	border: 1px solid transparent;
+
+	padding: 6px 8px;
+
+	transition: all 0.2s ease;
+
+	&:hover {
+		color: var(--brand);
+	}
+
+	&.active {
+		color: var(--brand);
+		border: 1px solid var(--brand);
+	}
 }
 
 @media (max-width: 500px) {
