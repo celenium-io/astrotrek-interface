@@ -15,6 +15,7 @@ import Sidebar from "@/components/ui/Sidebar.vue"
 
 /** Components */
 import ActionsList from "@/components/tables/ActionsList.vue"
+import LinkToEntity from "@/components/shared/LinkToEntity.vue"
 
 /** Store */
 import { useCacheStore } from "@/store/cache"
@@ -82,9 +83,16 @@ watch(
 					</Flex>
 
 					<Flex align="center" gap="8">
-						<Text size="16" weight="600" height="120" color="primary">
-							{{ midHash(tx.hash) }}
-						</Text>
+						<LinkToEntity
+							@click="emit('onClose')"
+							:entity="{ title: midHash(tx.hash), type: 'tx', id: tx.hash}"
+							mode="sidebar"
+							color="primary"
+							size="16"
+							weight="600"
+							height="120"
+						/>
+
 						<CopyButton :text="tx.hash" />
 					</Flex>
 				</Flex>

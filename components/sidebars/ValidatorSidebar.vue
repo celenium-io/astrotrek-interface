@@ -8,6 +8,9 @@ import { fetchValidatorBlocks, fetchValidatorUptime } from "@/services/api/valid
 /** Services */
 import { midHash, shortHash, spaces } from "@/services/utils"
 
+/** Components */
+import LinkToEntity from "@/components/shared/LinkToEntity.vue"
+
 /** UI */
 import Button from "@/components/ui/Button.vue"
 import Sidebar from "@/components/ui/Sidebar.vue"
@@ -85,9 +88,15 @@ watch(
 					</Flex>
 
 					<Flex align="center" gap="8">
-						<Text size="16" weight="600" height="120" color="primary">
-							{{ midHash(validator.address) }}
-						</Text>
+						<LinkToEntity
+							@click="emit('onClose')"
+							:entity="{ title: midHash(validator.address), type: 'validator', id: validator.id}"
+							mode="sidebar"
+							color="primary"
+							size="16"
+							weight="600"
+							height="120"
+						/>
 
 						<CopyButton :text="validator.address" />
 					</Flex>

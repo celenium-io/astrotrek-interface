@@ -4,6 +4,10 @@ import { DateTime } from "luxon"
 
 /** Services */
 import { formatBytes, hexToBase64, midHash, shortHash, space, spaces } from "@/services/utils"
+import { getRollupHashSafeURL } from "@/services/utils/rollups"
+
+/** Components */
+import LinkToEntity from "@/components/shared/LinkToEntity.vue"
 
 /** UI */
 import Button from "@/components/ui/Button.vue"
@@ -34,9 +38,16 @@ const emit = defineEmits(["onClose"])
 					</Flex>
 
 					<Flex align="center" gap="8">
-						<Text size="16" weight="600" height="120" color="primary">
-							{{ midHash(rollup.hash) }}
-						</Text>
+						<LinkToEntity
+							@click="emit('onClose')"
+							:entity="{ title: midHash(rollup.hash), type: 'rollup', id: getRollupHashSafeURL(rollup.hash)}"
+							mode="sidebar"
+							color="primary"
+							size="16"
+							weight="600"
+							height="120"
+						/>
+
 						<CopyButton :text="rollup.hash" />
 					</Flex>
 				</Flex>

@@ -8,7 +8,7 @@ export const getCeleniumLink = (network) => {
 		case "mainnet":
 			return "https://celenium.io/"
 		case "mocha":
-			return "https://mocha-4.celenium.io/"
+			return "https://mocha.celenium.io/"
 		case "arabica":
 			return "https://arabica.celenium.io/"
 		default:

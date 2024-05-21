@@ -4,6 +4,10 @@ const props = defineProps({
 		type: Object,
 		required: true,
 	},
+	mode: {
+		type: String,
+		default: "row",
+	},
 	size: {
 		type: String,
 		default: "12",
@@ -15,7 +19,11 @@ const props = defineProps({
 	weight: {
 		type: String,
 		default: "500",
-	}
+	},
+	height: {
+		type: String,
+		default: "100",
+	},
 })
 
 const router = useRouter()
@@ -33,7 +41,8 @@ const handleClick = (event) => {
 
 <template>
 	<Flex align="center">
-		<Text @click.prevent.stop="handleClick" :size="size" :color="color" :weight="weight" :class="$style.link"> {{ entity.title }} </Text>
+		<Text v-if="mode === 'row'" @click.prevent.stop="handleClick" :size="size" :color="color" :weight="weight" :height="height" :class="$style.link"> {{ entity.title }} </Text>
+		<Text v-else-if="mode === 'sidebar'" @click="handleClick" :size="size" :color="color" :weight="weight" :height="height" :class="$style.link"> {{ entity.title }} </Text>
 	</Flex>
 </template>
 
@@ -42,6 +51,7 @@ const handleClick = (event) => {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+	cursor: pointer;
 }
 
 .link:hover {

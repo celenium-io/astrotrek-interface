@@ -8,6 +8,9 @@ import { fetchTransactionsByBlock } from "@/services/api/tx"
 /** Services */
 import { formatBytes, shortHash, spaces } from "@/services/utils"
 
+/** Components */
+import LinkToEntity from "@/components/shared/LinkToEntity.vue"
+
 /** UI */
 import Button from "@/components/ui/Button.vue"
 import Sidebar from "@/components/ui/Sidebar.vue"
@@ -64,7 +67,19 @@ watch(
 						<Text size="13" weight="500" color="secondary"> Block </Text>
 					</Flex>
 
-					<Text size="16" weight="600" height="120" color="primary"> {{ spaces(block.height) }} </Text>
+					<Flex align="center" gap="8">
+						<LinkToEntity
+							@click="emit('onClose')"
+							:entity="{ title: spaces(block.height), type: 'block', id: block.height}"
+							mode="sidebar"
+							color="primary"
+							size="16"
+							weight="600"
+							height="120"
+						/>
+
+						<CopyButton :text="block.height" />
+					</Flex>
 				</Flex>
 
 				<Flex align="center" justify="between">

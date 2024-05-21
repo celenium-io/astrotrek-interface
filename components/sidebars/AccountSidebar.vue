@@ -8,6 +8,9 @@ import { fetchAccountTransactions } from "@/services/api/account.js"
 /** Services */
 import { formatBytes, midHash, shortHash, spaces } from "@/services/utils"
 
+/** Components */
+import LinkToEntity from "@/components/shared/LinkToEntity.vue"
+
 /** UI */
 import Button from "@/components/ui/Button.vue"
 import Sidebar from "@/components/ui/Sidebar.vue"
@@ -70,9 +73,15 @@ watch(
 					</Flex>
 
 					<Flex align="center" gap="8">
-						<Text size="16" weight="600" height="120" color="primary">
-							{{ midHash(account.hash) }}
-						</Text>
+						<LinkToEntity
+							@click="emit('onClose')"
+							:entity="{ title: midHash(account.hash), type: 'account', id: account.hash}"
+							mode="sidebar"
+							color="primary"
+							size="16"
+							weight="600"
+							height="120"
+						/>
 
 						<CopyButton :text="account.hash" />
 					</Flex>

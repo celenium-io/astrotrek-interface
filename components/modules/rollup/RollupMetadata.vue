@@ -41,6 +41,7 @@ const showMore = ref(false)
 			<NuxtLink :to="`/block/${rollup.first_height}`">
 				<Flex align="center" gap="4" :class="$style.value">
 					<Text size="13" weight="600" color="primary" mono>{{ spaces(rollup.first_height) }}</Text>
+
 					<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
 				</Flex>
 			</NuxtLink>
@@ -53,8 +54,11 @@ const showMore = ref(false)
 				<CopyButton :text="namespaceID" />
 
 				<NuxtLink :to="namespaceLink" target="_blank">
-					<Text size="13" weight="600" color="primary" mono>{{ space(namespaceID) }}</Text>
-					<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
+					<Flex align="center" gap="4">
+						<Text size="13" weight="600" color="primary" mono>{{ space(namespaceID) }}</Text>
+
+						<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
+					</Flex>
 				</NuxtLink>
 			</Flex>
 		</Flex>
