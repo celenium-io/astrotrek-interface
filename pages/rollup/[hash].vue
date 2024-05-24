@@ -2,12 +2,14 @@
 /** Modules */
 import RollupMetadata from "~/components/modules/rollup/RollupMetadata.vue"
 import RollupActions from "~/components/modules/rollup/RollupActions.vue"
+import RollupCharts from "~/components/modules/rollup/RollupCharts.vue";
 
 /** Components */
 import RawDataView from "@/components/shared/RawDataView.vue"
 
 /** UI */
 import Button from "~/components/ui/Button.vue"
+import { Dropdown, DropdownItem } from "@/components/ui/Dropdown"
 
 /** API */
 import { fetchRollupActions, fetchRollupByHash } from "~/services/api/rollup"
@@ -106,8 +108,28 @@ useHead({
 	],
 })
 
-const tabs = ref([{ name: "Actions" }])
+const tabs = ref([{ name: "Actions" }, { name: "Analytics" }])
 const activeTab = ref(tabs.value[0].name)
+
+const periods = ref([
+	{
+		title: "Last 24 hours",
+		value: 24,
+		timeframe: "hour",
+	},
+	{
+		title: "Last 7 days",
+		value: 7,
+		timeframe: "day",
+	},
+	{
+		title: "Last 31 days",
+		value: 31,
+		timeframe: "day",
+	},
+])
+const selectedPeriodIdx = ref(1)
+const selectedPeriod = computed(() => periods.value[selectedPeriodIdx.value])
 
 await fetchActions()
 
@@ -161,7 +183,7 @@ watch(
 					</Text>
 				</Flex>
 
-				<Flex align="center" gap="6" :class="$style.pagination">
+				<Flex v-if="activeTab !== 'Analytics'" align="center" gap="6" :class="$style.pagination">
 					<Button @click="handlePrev" size="mini" type="secondary" :disabled="page === 1 || isLoading">
 						<Icon name="chevron" size="14" color="primary" style="transform: rotate(90deg)" />
 					</Button>
@@ -170,9 +192,28 @@ watch(
 						<Icon name="chevron" size="14" color="primary" style="transform: rotate(-90deg)" />
 					</Button>
 				</Flex>
+				<Flex v-else align="center" gap="6" :class="$style.pagination">
+					<Dropdown>
+						<Button size="mini" type="secondary">
+							{{ selectedPeriod.title }}
+							<Icon name="chevron" size="14" color="secondary" />
+						</Button>
+
+						<template #popup>
+							<DropdownItem v-for="(period, idx) in periods" @click="selectedPeriodIdx = idx">
+								<Flex align="center" gap="8">
+									<Icon :name="idx === selectedPeriodIdx ? 'check' : ''" size="12" color="secondary" />
+									{{ period.title }}
+								</Flex>
+							</DropdownItem>
+						</template>
+					</Dropdown>
+				</Flex>
 			</Flex>
 
 			<RollupActions v-if="activeTab === 'Actions'" :actions="actions" :isLoading="isLoading" />
+
+			<RollupCharts v-if="activeTab === 'Analytics'" :rollup="rollup" :period="selectedPeriod" />
 		</Flex>
 	</Flex>
 </template>
