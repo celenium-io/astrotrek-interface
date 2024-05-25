@@ -28,8 +28,8 @@ const avgBlockTime = ref(2.4)
 
 const getAvgBlockTime = async () => {
 	const data = await fetchSeries({
-		table: "block_time",
-		period: "hour",
+		name: "block_time",
+		timeframe: "hour",
 		from: parseInt(DateTime.now().minus({ hours: 3 }).ts / 1_000),
 	})
 

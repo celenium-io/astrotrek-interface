@@ -18,8 +18,8 @@ const test = ref()
 
 const getTxsSeries = async ({ from, to }) => {
 	const data = await fetchSeries({
-		table: "tx_count",
-		period: "hour",
+		name: "tx_count",
+		timeframe: "hour",
 		from,
 		to,
 	})

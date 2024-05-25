@@ -192,6 +192,7 @@ watch(
 						<Icon name="chevron" size="14" color="primary" style="transform: rotate(-90deg)" />
 					</Button>
 				</Flex>
+				
 				<Flex v-else align="center" gap="6" :class="$style.pagination">
 					<Dropdown>
 						<Button size="mini" type="secondary">
