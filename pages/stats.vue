@@ -4,12 +4,15 @@ import { DateTime } from "luxon"
 
 /** UI */
 import Button from "~/components/ui/Button.vue"
+import { Dropdown, DropdownItem } from "@/components/ui/Dropdown"
 
 /** Components */
-import SmallLineChart from "~/components/modules/stats/SmallLineChart.vue";
+import SmallLineChart from "~/components/modules/stats/SmallLineChart.vue"
+import LineChart from "@/components/ui/Charts/LineChart.vue"
 
 /** API */
 import { fetchSeries } from "@/services/api/stats"
+import { onBeforeMount } from "vue"
 
 definePageMeta({
 	layout: "default",
@@ -66,88 +69,183 @@ useHead({
 	],
 })
 
-const period = 	ref({
-	title: "Last 24 hours",
-	value: 24,
-	timeframe: "hour",
+const series = ref([
+	{
+		name: 'data_size',
+		title: 'Data Usage',
+		data: [],
+		units: 'bytes',
+		tooltip: 'Usage',
+	},
+	{
+		name: 'tps',
+		title: 'Txs/sec',
+		data: [],
+		tooltip: 'Txs',
+	},
+	{
+		name: 'bps',
+		title: 'Bytes/sec',
+		data: [],
+		units: 'bytes',
+		tooltip: 'Bytes',
+	},
+	{
+		name: 'tx_count',
+		title: 'Txs Count',
+		data: [],
+		tooltip: 'Txs',
+	},
+	{
+		name: 'bytes_in_block',
+		title: 'Bytes In Block',
+		data: [],
+		units: 'bytes',
+		tooltip: 'Bytes',
+	},
+])
+const selectedChart = ref({})
+
+const periods = ref([
+	{
+		title: "Last 24 hours",
+		value: 24,
+		timeframe: "hour",
+	},
+	{
+		title: "Last 7 days",
+		value: 7,
+		timeframe: "day",
+	},
+	{
+		title: "Last 31 days",
+		value: 31,
+		timeframe: "day",
+	},
+])
+const selectedPeriodIdx = ref(1)
+const selectedPeriod = computed(() => periods.value[selectedPeriodIdx.value])
+
+const initialPeriod = ref({
+	title: "Last 7 days",
+	value: 7,
+	timeframe: "day",
 })
 
-const timeframe = ref('hour')
-const from = ref(parseInt(DateTime.now().minus({ hours: 24 }).ts / 1_000))
-const series = ['data_size', 'tps', 'bps', 'tx_count']
-const data = ref({})
+const isLoading = ref(true)
 
 const loadData = async () => {
-	series.forEach(async (s) => {
-		let rawData = await fetchSeries({
-			name: s,
-			timeframe: timeframe.value,
-			from: from.value,
-		})
-		
-		let resultData = []
-		let seriesMap = {}
-		rawData.forEach((item) => {
-			seriesMap[DateTime.fromISO(item.time).toFormat("y-LL-dd-HH")] =
-				item.value
-		})
+	isLoading.value = true
 
-		for (let i = 1; i < 24 + 1; i++) {
-			const dt = DateTime.now().minus({
-				hours: 24 - i,
-			})
-			resultData.push({
-				date: dt.toJSDate(),
-				value: parseInt(seriesMap[dt.toFormat("y-LL-dd-HH")]) || 0,
-			})
-		}
-
-
-		data.value[s] = resultData
-		
+	series.value.forEach(async (s) => {
+		s.data = await loadSeries(s, initialPeriod.value)
+		s.period = initialPeriod.value
 	})
 
-	console.log('data.value', data.value);
+	selectedChart.value = series.value[0]
+
+	isLoading.value = false
+}
+
+const loadSeries = async (s, period) => {
+	let rawData = await fetchSeries({
+		name: s.name,
+		timeframe: period.timeframe,
+		from: parseInt(
+			DateTime.now().minus({
+				days: period.timeframe === "day" ? period.value : 0,
+				hours: period.timeframe === "hour" ? period.value : 0,
+			}).ts / 1_000,
+		),
+	})
+
+	let resultData = []
+	let seriesMap = {}
+	rawData.forEach((item) => {
+		seriesMap[DateTime.fromISO(item.time).toFormat(period.timeframe === "day" ? "y-LL-dd" : "y-LL-dd-HH")] =
+			item.value
+	})
+
+	for (let i = 1; i < period.value + 1; i++) {
+		const dt = DateTime.now().minus({
+			days: period.timeframe === "day" ? period.value - i : 0,
+			hours: period.timeframe === "hour" ? period.value - i : 0,
+		})
+		resultData.push({
+			date: dt.toJSDate(),
+			value: parseInt(seriesMap[dt.toFormat(period.timeframe === "day" ? "y-LL-dd" : "y-LL-dd-HH")]) || 0,
+		})
+	}
+
+	return resultData
+}
+
+const selectChart = async (s) => {
+	// JSON.parse(JSON.stringify(s))
+	selectedChart.value = s
+
+	if (s.period !== selectedPeriod.value) {
+		selectedChart.value.period = selectedPeriod.value
+		selectedChart.value.data = await loadSeries(selectedChart.value, selectedPeriod.value)
+	}
 }
 
 await loadData()
 
-// watch(
-// 	() => page.value,
-// 	() => {
-// 		getValidators()
-// 	},
-// )
+watch(
+	() => selectedPeriod.value,
+	async () => {
+		selectedChart.value.period = selectedPeriod.value
+		selectedChart.value.data = await loadSeries(selectedChart.value, selectedPeriod.value)
+	},
+)
 </script>
 
 <template>
-	<Flex direction="column" wide :class="$style.wrapper">
-		<Flex align="center" gap="12" :class="$style.small_charts_wrapper">
-			<SmallLineChart
-				v-for="d in Object.keys(data)"
-				:data="data[d]"
-				:title="d"
-				:period="period"
-				:class="$style.small_chart"
+	<Flex direction="column" gap="12" wide :class="$style.wrapper">
+		<Flex align="center" justify="between">
+			<Text color="primary"> {{ selectedChart.title }} </Text>
+
+			<Flex align="center" gap="6" :class="$style.pagination">
+				<Dropdown>
+					<Button size="mini" type="secondary">
+						{{ selectedPeriod.title }}
+						<Icon name="chevron" size="14" color="secondary" />
+					</Button>
+
+					<template #popup>
+						<DropdownItem v-for="(period, idx) in periods" @click="selectedPeriodIdx = idx">
+							<Flex align="center" gap="8">
+								<Icon :name="idx === selectedPeriodIdx ? 'check' : ''" size="12" color="secondary" />
+								{{ period.title }}
+							</Flex>
+						</DropdownItem>
+					</template>
+				</Dropdown>
+			</Flex>
+		</Flex>
+		<Flex align="center" :class="$style.selected_chart">
+			<LineChart
+				:data="selectedChart.data"
+				:period="selectedChart.period || selectedPeriod"
+				:units="selectedChart.units"
+				:tooltip="selectedChart.tooltip"
+				height="380"
+				:class="$style.selected_chart"
 			/>
 		</Flex>
-		<!-- <Flex direction="column" :class="$style.card">
-			<Flex justify="between" align="start" wide :class="$style.top">
-				<Text size="16" weight="600" color="primary">Validators</Text>
 
-				<Flex align="center" gap="6">
-					<Button @click="handlePrev" size="mini" type="secondary" :disabled="page === 1 || isLoading">
-						<Icon name="chevron" size="14" color="primary" style="transform: rotate(90deg)" />
-					</Button>
-					<Button size="mini" type="secondary">Page {{ page }}</Button>
-					<Button @click="handleNext" size="mini" type="secondary" :disabled="isLoading || handleNextCondition">
-						<Icon name="chevron" size="14" color="primary" style="transform: rotate(-90deg)" />
-					</Button>
-				</Flex>
-			</Flex>
-
-			<ValidatorsTable :validators="validators" :isLoading="isLoading" />
-		</Flex> -->
+		<Flex align="center" gap="10" :class="$style.small_charts_wrapper">
+			<SmallLineChart
+				v-for="s in series"
+				@click="selectChart(s)"
+				:data="s.data"
+				:title="s.title"
+				:period="initialPeriod"
+				:units="s.units"
+				:class="[$style.small_chart, selectedChart === s && $style.small_chart_selected]"
+			/>
+		</Flex>
 	</Flex>
 </template>
 
@@ -160,24 +258,42 @@ await loadData()
 	margin-bottom: 120px;
 }
 
+.selected_chart {
+	min-width: 100%;
+
+	position: relative;
+	border-radius: 8px 8px 8px 8px;
+	background: rgba(255, 255, 255, 1%);
+}
+
 .small_charts_wrapper {
 	width: 100%;
+	min-height: 380px;
+
+	overflow-x: auto;
 }
 
 .small_chart {
-	width: 25%;
-	background: var(--op-3)
+	min-width: 250px;
+
+	background: rgba(255, 255, 255, 1%);
+	border-radius: 8px 8px 8px 8px;
+
+	cursor: pointer;
+
+	&:hover {
+		background: rgba(255, 255, 255, 2%);
+	}
+
+	&:active {
+		transform: scale(101%);
+		transition: all 0.3s ease;
+	}
 }
 
-.card {
-	border-radius: 8px;
-	background: var(--op-3);
-
-	padding: 16px 0 0 0;
-}
-
-.top {
-	padding: 0 16px;
+.small_chart_selected {
+	box-shadow: inset 0 0 0 1px var(--op-5);
+	background: rgba(255, 255, 255, 2%);
 }
 
 @media (max-width: 500px) {

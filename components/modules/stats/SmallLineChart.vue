@@ -82,7 +82,7 @@ const buildChart = (chart, data, onEnter, onLeave) => {
 		tooltipXOffset.value = x(data[idx].date)
 		tooltipYDataOffset.value = y(data[idx].value)
 		tooltipYOffset.value = event.layerY
-		tooltipText.value = data[idx].value
+		// tooltipText.value = data[idx].value
 
 		if (tooltipEl.value) {
 			if (idx > parseInt(props.period.value / 2)) {
@@ -161,8 +161,8 @@ const buildChart = (chart, data, onEnter, onLeave) => {
 		.attr("d", line(data.slice(data.length - 2, data.length)))
 
 	svg.append("circle")
-		.attr("cx", x(data[data.length - 1].date))
-		.attr("cy", y(data[data.length - 1].value))
+		.attr("cx", x(data[data.length - 1]?.date))
+		.attr("cy", y(data[data.length - 1]?.value))
 		.attr("fill", "var(--brand)")
 		.attr("r", 3)
 
