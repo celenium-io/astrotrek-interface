@@ -17,7 +17,7 @@ RUN pnpm install
 COPY . .
 
 # Build app
-RUN npm run build
+RUN pnpm run build
 
 # Run app
-CMD ["npm", "run", "start"]
+CMD ["pnpm", "run", "start"]
