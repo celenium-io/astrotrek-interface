@@ -82,7 +82,7 @@ const buildChart = (chart, data, onEnter, onLeave) => {
 		tooltipXOffset.value = x(data[idx].date)
 		tooltipYDataOffset.value = y(data[idx].value)
 		tooltipYOffset.value = event.layerY
-		// tooltipText.value = data[idx].value
+		tooltipText.value = data[idx].value
 
 		if (tooltipEl.value) {
 			if (idx > parseInt(props.period.value / 2)) {

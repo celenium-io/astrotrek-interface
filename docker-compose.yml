@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  astrotrek-interface:
+    container_name: astrotrek-interface
+    build:
+      context: .
+      # dockerfile: DockerFile
+    ports:
+      - "3000:3000"
