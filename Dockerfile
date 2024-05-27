@@ -1,21 +1,23 @@
-# Используем официальный образ Node.js в качестве базового
-FROM node:16
+# Node.js
+FROM node:20
 
-# Устанавливаем рабочую директорию в контейнере
+# Work directory
 WORKDIR /app
 
-# Копируем package.json и package-lock.json в рабочую директорию
-COPY package.json ./
-COPY pnpm-lock.yaml ./
+# Install pnpm
+RUN npm install -g pnpm
 
-# Устанавливаем зависимости
-RUN npm install
+# Copy package.json, pnpm-lock.yaml to workdir
+COPY package.json pnpm-lock.yaml ./
 
-# Копируем весь проект в контейнер
+# Install dependencies
+RUN pnpm install
+
+# Copy the project
 COPY . .
 
-# Сборка приложения
+# Build app
 RUN npm run build
 
-# Указываем команду для запуска приложения
+# Run app
 CMD ["npm", "run", "start"]
