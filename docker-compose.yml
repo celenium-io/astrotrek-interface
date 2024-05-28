@@ -1,12 +1,12 @@
-version: '3.8'
+version: "3.8"
 services:
-  nuxt-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    environment:
-      - API_DEV=https://api-dusk-5.astrotrek.io/v1
-      - WSS_DEV=wss://api-dusk-5.astrotrek.io/v1/ws
-    command: npm run start
+    nuxt-app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - "3000:3000"
+        environment:
+            - NUXT_PUBLIC_API_DEV=https://api-dusk-5.astrotrek.io/v1
+            - NUXT_PUBLIC_WSS_DEV=wss://api-dusk-5.astrotrek.io/v1/ws
+        command: npm run start
