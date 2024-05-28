@@ -1,11 +1,11 @@
 export const Server = {
 	API: {
 		mainnet: "https://api-dusk.astrotrek.io/v1",
-		dev: "https://api-dusk.astrotrek.io/v1",
+		dev: process.env.API_DEV || "https://api-dusk.astrotrek.io/v1",
 	},
 	WSS: {
 		mainnet: "wss://api-dusk.astrotrek.io/v1/ws",
-		dev: "wss://api-dusk.astrotrek.io/v1/ws",
+		dev: process.env.WSS_DEV || "wss://api-dusk.astrotrek.io/v1/ws",
 	},
 }
 

@@ -6,4 +6,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
+    environment:
+      - API_DEV=https://api-dusk-5.astrotrek.io/v1
+      - WSS_DEV=wss://api-dusk-5.astrotrek.io/v1/ws
     command: npm run start

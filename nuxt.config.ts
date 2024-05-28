@@ -41,4 +41,16 @@ export default defineNuxtConfig({
 	css: ["@/assets/styles/base.scss", "@/assets/styles/flex.scss", "@/assets/styles/text.scss"],
 
 	devtools: { enabled: true },
+
+	runtimeConfig: {
+		API_DEV: process.env.API_DEV,
+		WSS_DEV: process.env.WSS_DEV,
+	},
+	
+	hooks: {
+		'build:before': () => {
+			console.log('API_DEV:', process.env.API_DEV);
+			console.log('WSS_DEV:', process.env.WSS_DEV);
+		}
+	}
 })
