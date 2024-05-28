@@ -41,4 +41,11 @@ export default defineNuxtConfig({
 	css: ["@/assets/styles/base.scss", "@/assets/styles/flex.scss", "@/assets/styles/text.scss"],
 
 	devtools: { enabled: true },
+
+	runtimeConfig: {
+		public: {
+			API_DEV: process.env.API_DEV,
+			WSS_DEV: process.env.WSS_DEV,
+		},
+	},
 })

@@ -18,7 +18,7 @@ const props = defineProps({
 	},
 	title: {
 		type: String,
-		default: '',
+		required: true,
 	},
 	period: {
 		type: Object,
@@ -32,10 +32,6 @@ const props = defineProps({
 		type: String,
 		default: '',
 	},
-	height: {
-		type: Number,
-		default: 180,
-	}
 })
 
 /** Charts */
@@ -57,7 +53,7 @@ const badgeOffset = ref(0)
 
 const buildChart = (chart, data, onEnter, onLeave) => {
 	const width = chartWrapperEl.value.wrapper.getBoundingClientRect().width
-	const height = props.height
+	const height = 180
 	const marginTop = 0
 	const marginRight = 0
 	const marginBottom = 24
@@ -213,7 +209,7 @@ watch(
 			<Flex direction="column" gap="20" wide>
 				<Text size="13" weight="600" color="primary"> {{ title }} </Text>
 
-				<Flex ref="chartWrapperEl" direction="column" :class="$style.chart_wrapper" :style="{ height: height + 'px' }">
+				<Flex ref="chartWrapperEl" direction="column" :class="$style.chart_wrapper">
 					<Flex direction="column" justify="between" :class="[$style.axis, $style.y]">
 						<Text
 							v-if="data.length"
@@ -306,13 +302,15 @@ watch(
 <style module>
 .data {
 	border-radius: 4px 4px 8px 8px;
-	background: var(--chart-background);
+	background: var(--op-1);
 
 	padding: 16px;
 }
 
 .chart_wrapper {
 	position: relative;
+
+	height: 180px;
 }
 
 .chart {

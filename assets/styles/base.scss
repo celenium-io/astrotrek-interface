@@ -64,6 +64,9 @@ $grayscale: (
 	--block-progress-fill-background: #33a853;
 	--logo-name: var(--txt-primary);
 	--bar-fill: rgb(243, 147, 45);
+
+	/** Charts */
+	--chart-background: rgba(255, 255, 255, 0%);
 }
 
 @font-face {

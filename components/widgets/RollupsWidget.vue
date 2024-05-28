@@ -25,8 +25,8 @@ const marginBar = computed(() => (chartWidth.value - barWidth * 24) / 23)
 const dataSizeSeries = ref([])
 const getDataSizeSeries = async () => {
 	const data = await fetchSeries({
-		table: "data_size",
-		period: "hour",
+		name: "data_size",
+		timeframe: "hour",
 		from: parseInt(DateTime.now().minus({ days: 1 }).ts / 1_000),
 	})
 	if (data) {
