@@ -9,6 +9,7 @@ import { Dropdown, DropdownItem } from "@/components/ui/Dropdown"
 /** Components */
 import SmallLineChart from "~/components/modules/stats/SmallLineChart.vue"
 import LineChart from "@/components/ui/Charts/LineChart.vue"
+import BarChart from "@/components/ui/Charts/BarChart.vue"
 
 /** API */
 import { fetchSeries } from "@/services/api/stats"
@@ -226,6 +227,17 @@ watch(
 		</Flex>
 		<Flex align="center" :class="$style.selected_chart">
 			<LineChart
+				:data="selectedChart.data"
+				:period="selectedChart.period || selectedPeriod"
+				:units="selectedChart.units"
+				:tooltip="selectedChart.tooltip"
+				height="380"
+				:class="$style.selected_chart"
+			/>
+		</Flex>
+
+		<Flex>
+			<BarChart
 				:data="selectedChart.data"
 				:period="selectedChart.period || selectedPeriod"
 				:units="selectedChart.units"
