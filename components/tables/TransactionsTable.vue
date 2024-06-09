@@ -31,8 +31,6 @@ const props = defineProps({
 		default: false,
 	},
 })
-
-console.log('txs', props.txs);
 </script>
 
 <template>

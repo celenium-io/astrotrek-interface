@@ -13,7 +13,7 @@ const props = defineProps({
 </script>
 
 <template>
-	<Flex direction="column" gap="6">
+	<Flex direction="column" gap="8">
 		<NuxtLink v-for="t in txs.slice(0, Math.min(txs.length, 5))" :to="`/tx/${t.hash}`" :class="$style.tx">
 			<Flex justify="between" align="center" wide>
 				<Flex align="center" gap="8">
