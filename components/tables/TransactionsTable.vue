@@ -31,6 +31,8 @@ const props = defineProps({
 		default: false,
 	},
 })
+
+console.log('txs', props.txs);
 </script>
 
 <template>
@@ -77,6 +79,11 @@ const props = defineProps({
 					<Text size="12" weight="500" color="tertiary">Signer</Text>
 
 					<LinkToEntity :entity="{ title: splitAddress(t.signer, 4), type: 'account', id: t.signer}" color="secondary" />
+
+					<div :class="$style.dot" />
+
+					<Text size="12" weight="500" color="tertiary">Actions</Text>
+					<Text size="12" weight="500" color="secondary"> {{ t.actions_count }} </Text>
 				</Flex>
 			</Flex>
 

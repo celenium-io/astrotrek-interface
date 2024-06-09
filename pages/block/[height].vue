@@ -2,6 +2,9 @@
 /** Services */
 import { spaces } from "~/services/utils"
 
+/** UI */
+import Button from "~/components/ui/Button.vue"
+
 /** Modules */
 import BlockMetadata from "@/components/modules/block/BlockMetadata.vue"
 import BlockTransactions from "@/components/modules/block/BlockTransactions.vue"
@@ -38,8 +41,13 @@ const fetchTxs = async () => {
 
 	isLoading.value = true
 
-	const { data } = await fetchBlockTxs({ height: block.value.height })
+	const { data } = await fetchBlockTxs({
+		height: block.value.height,
+		limit: limit.value,
+		offset: (page.value - 1) * limit.value,
+	})
 	txs.value = data.value
+	handleNextCondition.value = txs.value.length < limit.value
 
 	isLoading.value = false
 }
@@ -49,8 +57,13 @@ const fetchActions = async () => {
 
 	isLoading.value = true
 
-	const { data } = await fetchBlockActions({ height: block.value.height })
+	const { data } = await fetchBlockActions({
+		height: block.value.height,
+		limit: limit.value,
+		offset: (page.value - 1) * limit.value,
+	})
 	actions.value = data.value
+	handleNextCondition.value = actions.value.length < limit.value
 
 	isLoading.value = false
 }
@@ -94,18 +107,44 @@ useHead({
 const tabs = ref([{ name: "Transactions" }, { name: "Actions" }])
 const activeTab = ref(tabs.value[0].name)
 
+const limit = ref(15)
+
+/** Pagination */
+const page = ref(1)
+const handleNextCondition = ref(true)
+
+const handleNext = () => {
+	page.value += 1
+}
+const handlePrev = () => {
+	if (page.value === 1) return
+	page.value -= 1
+}
+
 watch(
 	() => activeTab.value,
 	async () => {
-		if (activeTab.value === "Transactions") {
-			if (txs.value.length > 0) return
-
-			fetchTxs()
+		switch (activeTab.value) {
+			case "Transactions":
+				page.value === 1 ? fetchTxs() : page.value = 1
+				break
+			case "Actions":
+				page.value === 1 ? fetchActions() : page.value = 1
+				break
 		}
-		if (activeTab.value === "Actions") {
-			if (actions.value.length > 0) return
+	},
+)
 
-			fetchActions()
+watch(
+	() => page.value,
+	async () => {
+		switch (activeTab.value) {
+			case "Transactions":
+				fetchTxs()
+				break
+			case "Actions":
+				fetchActions()
+				break
 		}
 	},
 )
@@ -143,17 +182,29 @@ await fetchTxs()
 		<BlockMetadata :block="block" />
 
 		<Flex direction="column" gap="12">
-			<Flex align="center" gap="8">
-				<Text
-					v-for="tab in tabs"
-					@click="activeTab = tab.name"
-					size="13"
-					weight="600"
-					color="secondary"
-					:class="[$style.tab, activeTab === tab.name && $style.active]"
-				>
-					{{ tab.name }}
-				</Text>
+			<Flex align="center" justify="between">
+				<Flex align="center" gap="8">
+					<Text
+						v-for="tab in tabs"
+						@click="activeTab = tab.name"
+						size="13"
+						weight="600"
+						color="secondary"
+						:class="[$style.tab, activeTab === tab.name && $style.active]"
+					>
+						{{ tab.name }}
+					</Text>
+				</Flex>
+
+				<Flex align="center" gap="6" :class="$style.pagination">
+					<Button @click="handlePrev" size="mini" type="secondary" :disabled="page === 1 || isLoading">
+						<Icon name="chevron" size="14" color="primary" style="transform: rotate(90deg)" />
+					</Button>
+					<Button size="mini" type="secondary">Page {{ page }}</Button>
+					<Button @click="handleNext" size="mini" type="secondary" :disabled="isLoading || handleNextCondition">
+						<Icon name="chevron" size="14" color="primary" style="transform: rotate(-90deg)" />
+					</Button>
+				</Flex>
 			</Flex>
 
 			<BlockTransactions v-if="activeTab === 'Transactions'" :txs="txs" :isLoading="isLoading" />
@@ -190,5 +241,9 @@ await fetchTxs()
 		color: var(--brand);
 		border: 1px solid var(--brand);
 	}
+}
+
+.pagination {
+	padding-bottom: 6px;
 }
 </style>

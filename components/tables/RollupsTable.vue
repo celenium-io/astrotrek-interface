@@ -6,7 +6,7 @@ import Tooltip from "@/components/ui/Tooltip.vue"
 import LinkToEntity from "@/components/shared/LinkToEntity.vue"
 
 /** Services */
-import { formatBytes, hexToBase64, midHash, spaces } from "@/services/utils"
+import { formatBytes, spaces } from "@/services/utils"
 import { getRollupHashSafeURL } from "~/services/utils/rollups"
 
 /** Store */
@@ -73,7 +73,7 @@ const props = defineProps({
 
 			<Tooltip>
 				<Flex align="center" gap="4">
-					<Text size="13" weight="600" color="primary"> {{ rollup.actions_count }} </Text>
+					<Text size="13" weight="600" color="primary"> {{ spaces(rollup.actions_count) }} </Text>
 					
 					<Icon name="action" size="13" color="tertiary" />
 				</Flex>
