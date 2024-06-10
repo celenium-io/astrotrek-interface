@@ -101,34 +101,38 @@ const series = ref([
 		tooltip: 'Bytes',
 	},
 ])
-const selectedChart = ref({})
+
+const selectedChart = ref(series.value[0])
+// const selectedChartIdx = ref(0)
+// const selectedChart = computed(() => series.value[selectedChartIdx.value])
+
 
 const periods = ref([
 {
-		title: "31d",
+		title: '31d',
 		value: 31,
-		timeframe: "day",
+		timeframe: 'day',
 	},
 	{
-		title: "7d",
+		title: '7d',
 		value: 7,
-		timeframe: "day",
+		timeframe: 'day',
 	},
 	{
-		title: "24h",
+		title: '24h',
 		value: 24,
-		timeframe: "hour",
+		timeframe: 'hour',
 	},
 ])
-const selectedHighlightPeriodIdx = ref(1)
+
+const selectedHighlightPeriodIdx = ref(0)
 const selectedHighlightPeriod = computed(() => periods.value[selectedHighlightPeriodIdx.value])
 
-const selectedChartPeriodIdx = ref(1)
+const selectedChartPeriodIdx = ref(2)
 const selectedChartPeriod = computed(() => periods.value[selectedChartPeriodIdx.value])
 
-const selectChart = async (s) => {
-	selectedChart.value = s
-}
+const chartViews = ref(['line-chart', 'bar-chart'])
+const selectedChartView = ref(chartViews.value[0])
 </script>
 
 <template>
@@ -136,7 +140,7 @@ const selectChart = async (s) => {
 		<Flex align="center" gap="8">
 			<Text v-for="(p, idx) in periods"
 				@click="selectedHighlightPeriodIdx = idx"
-				size="13"
+				size="15"
 				color="tertiary"
 				:class="[$style.period, selectedHighlightPeriod.title === p.title && $style.active_period]"
 			>
@@ -146,7 +150,7 @@ const selectChart = async (s) => {
 
 		<Flex align="center" gap="10" :class="$style.small_charts_wrapper">
 			<HighlightCard v-for="s in series"
-				@click="selectChart(s)"
+				@click="selectedChart = s"
 				:active="s.name === selectedChart.name"
 				:series="s"
 				:period="selectedHighlightPeriod"
@@ -178,15 +182,27 @@ const selectChart = async (s) => {
 		<Flex align="center" justify="between" style="margin: 20px 0px 10px 0px">
 			<Text size="16" weight="600" color="primary"> {{ selectedChart.title }} </Text>
 
-			<Flex align="center" gap="8">
-				<Text v-for="(p, idx) in periods"
-					@click="selectedChartPeriodIdx = idx"
-					size="13"
-					color="tertiary"
-					:class="[$style.period, selectedChartPeriod.title === p.title && $style.active_period]"
-				>
-					{{ p.title }}
-				</Text>
+			<Flex align="center" gap="16">
+				<Flex align="center" gap="8">
+					<Icon v-for="v in chartViews"
+						@click="selectedChartView = v"
+						:name="v"
+						size="16"
+						color="tertiary"
+						:class="[$style.period, selectedChartView === v && $style.active_period]"
+					/>
+				</Flex>
+
+				<Flex align="center" gap="8">
+					<Text v-for="(p, idx) in periods"
+						@click="selectedChartPeriodIdx = idx"
+						size="13"
+						color="tertiary"
+						:class="[$style.period, selectedChartPeriod.title === p.title && $style.active_period]"
+					>
+						{{ p.title }}
+					</Text>
+				</Flex>
 			</Flex>
 		</Flex>
 
@@ -249,6 +265,10 @@ const selectChart = async (s) => {
 	overflow-x: auto;
 }
 
+::-webkit-scrollbar {
+    height: 2px;
+}
+
 .small_chart {
 	min-width: 250px;
 
@@ -279,6 +299,7 @@ const selectChart = async (s) => {
 }
 .active_period {
 	color: var(--txt-primary);
+	fill: var(--txt-primary);
 
 	border-bottom: 1px solid var(--txt-primary);
 }

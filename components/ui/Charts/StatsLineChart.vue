@@ -232,6 +232,8 @@ const debouncedRedraw = useDebounceFn((e) => {
 
 onMounted(async () => {
 	window.addEventListener("resize", debouncedRedraw)
+
+	await drawChart()
 })
 
 onBeforeUnmount(() => {
