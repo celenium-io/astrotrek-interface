@@ -8,17 +8,16 @@ import { useDebounceFn } from "@vueuse/core"
 import Button from "@/components/ui/Button.vue"
 import { Dropdown, DropdownItem } from "@/components/ui/Dropdown"
 
+/** API */
+import { fetchSeries } from "@/services/api/stats"
+
 /** Services */
-import { formatBytes, spaces } from "@/services/utils"
+import { formatBytes } from "@/services/utils"
 
 const props = defineProps({
-	data: {
-		type: Array,
+	series: {
+		type: Object,
 		required: true,
-	},
-	title: {
-		type: String,
-		default: '',
 	},
 	period: {
 		type: Object,
@@ -37,6 +36,47 @@ const props = defineProps({
 		default: 180,
 	}
 })
+
+const isLoading = ref(false)
+
+const loadSeries = async (period) => {
+	isLoading.value = true
+
+	let rawData = await fetchSeries({
+		name: props.series.name,
+		timeframe: period.timeframe,
+		from: parseInt(
+			DateTime.now().minus({
+				days: period.timeframe === "day" ? period.value : 0,
+				hours: period.timeframe === "hour" ? period.value : 0,
+			}).ts / 1_000
+		),
+	})
+
+	let resultData = []
+	let seriesMap = {}
+	rawData.forEach((item) => {
+		seriesMap[DateTime.fromISO(item.time).toFormat(period.timeframe === "day" ? "y-LL-dd" : "y-LL-dd-HH")] =
+			item.value
+	})
+
+	for (let i = 1; i < period.value + 1; i++) {
+		const dt = DateTime.now().minus({
+			days: period.timeframe === "day" ? period.value - i : 0,
+			hours: period.timeframe === "hour" ? period.value - i : 0,
+		})
+		resultData.push({
+			date: dt.toJSDate(),
+			value: parseInt(seriesMap[dt.toFormat(period.timeframe === "day" ? "y-LL-dd" : "y-LL-dd-HH")]) || 0,
+		})
+	}
+
+	isLoading.value = false
+
+	return resultData
+}
+
+const data = ref([])
 
 /** Charts */
 const chartWrapperEl = ref()
@@ -61,15 +101,14 @@ const buildChart = (chart, data, onEnter, onLeave) => {
 	const marginTop = 0
 	const marginRight = 0
 	const marginBottom = 24
-	const marginLeft = 60
-	const barWidth = Math.round((width - marginLeft - marginRight) / (data.length) - 10)
+	const marginLeft = 40
 
 	const MAX_VALUE = d3.max(data, (d) => d.value) ? d3.max(data, (d) => d.value) : 1
 
 	/** Scale */
 	const x = d3.scaleUtc(
 		d3.extent(data, (d) => d.date),
-		[marginLeft, width - marginRight - barWidth],
+		[marginLeft, width - marginRight],
 	)
 	const y = d3.scaleLinear([0, MAX_VALUE], [height - marginBottom - 6, marginTop])
 	const line = d3
@@ -84,7 +123,7 @@ const buildChart = (chart, data, onEnter, onLeave) => {
 
 		const idx = bisect(data, x.invert(d3.pointer(event)[0]))
 
-		tooltipXOffset.value = x(data[idx].date) + barWidth / 2
+		tooltipXOffset.value = x(data[idx].date)
 		tooltipYDataOffset.value = y(data[idx].value)
 		tooltipYOffset.value = event.layerY
 		tooltipText.value = data[idx].value
@@ -129,6 +168,18 @@ const buildChart = (chart, data, onEnter, onLeave) => {
 		.on("pointerleave", onPointerleft)
 		.on("touchstart", (event) => event.preventDefault())
 
+	/** Vertical Lines */
+	svg.append("path")
+		.attr("fill", "none")
+		.attr("stroke", "var(--op-10)")
+		.attr("stroke-width", 2)
+		.attr("d", `M${marginLeft},${height - marginBottom + 2} L${marginLeft},${height - marginBottom - 5}`)
+	svg.append("path")
+		.attr("fill", "none")
+		.attr("stroke", "var(--op-10)")
+		.attr("stroke-width", 2)
+		.attr("d", `M${width - 1},${height - marginBottom + 2} L${width - 1},${height - marginBottom - 5}`)
+
 	/** Default Horizontal Line  */
 	svg.append("path")
 		.attr("fill", "none")
@@ -136,40 +187,40 @@ const buildChart = (chart, data, onEnter, onLeave) => {
 		.attr("stroke-width", 2)
 		.attr("d", `M${0},${height - marginBottom - 6} L${width},${height - marginBottom - 6}`)
 
-	svg.selectAll(".bar")
-		.data(data)
-		.enter().append("rect")
-		.attr("class", "bar")
-		.attr("x", d => x(new Date(d.date)))
-		.attr("y", d => y(d.value))
-		.attr("width", barWidth)
-		.attr("height", d => height - marginBottom - 5 - y(d.value))
+	/** Chart Line */
+	svg.append("path")
+		.attr("fill", "none")
+		.attr("stroke", "var(--brand)")
+		.attr("stroke-width", 2)
+		.attr("stroke-linecap", "round")
+		.attr("stroke-linejoin", "round")
+		.attr("d", line(data.slice(0, data.length - 1)))
+	svg.append("path")
+		.attr("fill", "none")
+		.attr("stroke", "var(--brand)")
+		.attr("stroke-width", 2)
+		.attr("stroke-linecap", "round")
+		.attr("stroke-linejoin", "round")
+		.attr("stroke-dasharray", "8")
+		.attr("d", line(data.slice(data.length - 2, data.length)))
 
-	// /** Chart Line */
-	// svg.append("path")
-	// 	.attr("fill", "none")
-	// 	.attr("stroke", "var(--brand)")
-	// 	.attr("stroke-width", 2)
-	// 	.attr("stroke-linecap", "round")
-	// 	.attr("stroke-linejoin", "round")
-	// 	.attr("d", line(data.slice(0, data.length - 1)))
-	// svg.append("path")
-	// 	.attr("fill", "none")
-	// 	.attr("stroke", "var(--brand)")
-	// 	.attr("stroke-width", 2)
-	// 	.attr("stroke-linecap", "round")
-	// 	.attr("stroke-linejoin", "round")
-	// 	.attr("stroke-dasharray", "8")
-	// 	.attr("d", line(data.slice(data.length - 2, data.length)))
+	svg.append("circle")
+		.attr("cx", x(data[data.length - 1]?.date))
+		.attr("cy", y(data[data.length - 1]?.value))
+		.attr("fill", "var(--brand)")
+		.attr("r", 3)
 
 	if (chart.children[0]) chart.children[0].remove()
 	chart.append(svg.node())
 }
 
-const drawChart = () => {
+const drawChart = async () => {
+	data.value = await loadSeries(props.period)
+	console.log('data.value', data.value);
+
 	buildChart(
 		chartEl.value.wrapper,
-		props.data,
+		data.value,
 		() => (showSeriesTooltip.value = true),
 		() => (showSeriesTooltip.value = false),
 	)
@@ -182,7 +233,7 @@ const debouncedRedraw = useDebounceFn((e) => {
 onMounted(async () => {
 	window.addEventListener("resize", debouncedRedraw)
 
-	drawChart()
+	await drawChart()
 })
 
 onBeforeUnmount(() => {
@@ -190,9 +241,9 @@ onBeforeUnmount(() => {
 })
 
 watch(
-	() => props.data,
-	() => {
-		drawChart()
+	() => [props.series, props.period],
+	async () => {
+		await drawChart()
 	},
 )
 
@@ -214,7 +265,7 @@ watch(
 							color="tertiary"
 							:style="{ opacity: Math.max(...data.map((d) => d.value)) ? 1 : 0 }"
 						>
-							{{ units === 'bytes' ? formatBytes(Math.max(...data.map((d) => d.value)), 0) : spaces(Math.max(...data.map((d) => d.value))) }}
+							{{ units === 'bytes' ? formatBytes(Math.max(...data.map((d) => d.value)), 0) : Math.max(...data.map((d) => d.value)) }}
 						</Text>
 						<Skeleton v-else-if="!data.length" w="32" h="12" />
 
@@ -231,7 +282,7 @@ watch(
 										: 0,
 							}"
 						>
-							{{ units === 'bytes' ? formatBytes(Math.round(Math.max(...data.map((d) => d.value)) / 2), 0) : spaces(Math.round(Math.max(...data.map((d) => d.value)) / 2)) }}
+							{{ units === 'bytes' ? formatBytes(Math.round(Math.max(...data.map((d) => d.value)) / 2), 0) : Math.round(Math.max(...data.map((d) => d.value)) / 2) }}
 						</Text>
 						<Skeleton v-else-if="!data.length" w="24" h="12" />
 
