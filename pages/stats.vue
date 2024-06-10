@@ -7,13 +7,9 @@ import Button from "~/components/ui/Button.vue"
 import { Dropdown, DropdownItem } from "@/components/ui/Dropdown"
 
 /** Components */
-import SmallLineChart from "~/components/modules/stats/SmallLineChart.vue"
-import LineChart from "@/components/ui/Charts/LineChart.vue"
 import BarChart from "@/components/ui/Charts/BarChart.vue"
-
-/** API */
-import { fetchSeries } from "@/services/api/stats"
-import { onBeforeMount } from "vue"
+import HighlightCard from "@/components/ui/Charts/HighlightCard.vue"
+import StatsLineChart from "@/components/ui/Charts/StatsLineChart.vue"
 
 definePageMeta({
 	layout: "default",
@@ -108,103 +104,56 @@ const series = ref([
 const selectedChart = ref({})
 
 const periods = ref([
-	{
-		title: "Last 24 hours",
-		value: 24,
-		timeframe: "hour",
+{
+		title: "31d",
+		value: 31,
+		timeframe: "day",
 	},
 	{
-		title: "Last 7 days",
+		title: "7d",
 		value: 7,
 		timeframe: "day",
 	},
 	{
-		title: "Last 31 days",
-		value: 31,
-		timeframe: "day",
+		title: "24h",
+		value: 24,
+		timeframe: "hour",
 	},
 ])
-const selectedPeriodIdx = ref(1)
-const selectedPeriod = computed(() => periods.value[selectedPeriodIdx.value])
+const selectedHighlightPeriodIdx = ref(1)
+const selectedHighlightPeriod = computed(() => periods.value[selectedHighlightPeriodIdx.value])
 
-const initialPeriod = ref({
-	title: "Last 7 days",
-	value: 7,
-	timeframe: "day",
-})
-
-const isLoading = ref(true)
-
-const loadData = async () => {
-	isLoading.value = true
-
-	series.value.forEach(async (s) => {
-		s.data = await loadSeries(s, initialPeriod.value)
-		s.period = initialPeriod.value
-	})
-
-	selectedChart.value = series.value[0]
-
-	isLoading.value = false
-}
-
-const loadSeries = async (s, period) => {
-	let rawData = await fetchSeries({
-		name: s.name,
-		timeframe: period.timeframe,
-		from: parseInt(
-			DateTime.now().minus({
-				days: period.timeframe === "day" ? period.value : 0,
-				hours: period.timeframe === "hour" ? period.value : 0,
-			}).ts / 1_000,
-		),
-	})
-
-	let resultData = []
-	let seriesMap = {}
-	rawData.forEach((item) => {
-		seriesMap[DateTime.fromISO(item.time).toFormat(period.timeframe === "day" ? "y-LL-dd" : "y-LL-dd-HH")] =
-			item.value
-	})
-
-	for (let i = 1; i < period.value + 1; i++) {
-		const dt = DateTime.now().minus({
-			days: period.timeframe === "day" ? period.value - i : 0,
-			hours: period.timeframe === "hour" ? period.value - i : 0,
-		})
-		resultData.push({
-			date: dt.toJSDate(),
-			value: parseInt(seriesMap[dt.toFormat(period.timeframe === "day" ? "y-LL-dd" : "y-LL-dd-HH")]) || 0,
-		})
-	}
-
-	return resultData
-}
+const selectedChartPeriodIdx = ref(1)
+const selectedChartPeriod = computed(() => periods.value[selectedChartPeriodIdx.value])
 
 const selectChart = async (s) => {
-	// JSON.parse(JSON.stringify(s))
 	selectedChart.value = s
-
-	if (s.period !== selectedPeriod.value) {
-		selectedChart.value.period = selectedPeriod.value
-		selectedChart.value.data = await loadSeries(selectedChart.value, selectedPeriod.value)
-	}
 }
-
-await loadData()
-
-watch(
-	() => selectedPeriod.value,
-	async () => {
-		selectedChart.value.period = selectedPeriod.value
-		selectedChart.value.data = await loadSeries(selectedChart.value, selectedPeriod.value)
-	},
-)
 </script>
 
 <template>
 	<Flex direction="column" gap="12" wide :class="$style.wrapper">
-		<Flex align="center" justify="between">
+		<Flex align="center" gap="8">
+			<Text v-for="(p, idx) in periods"
+				@click="selectedHighlightPeriodIdx = idx"
+				size="13"
+				color="tertiary"
+				:class="[$style.period, selectedHighlightPeriod.title === p.title && $style.active_period]"
+			>
+				{{ p.title }}
+			</Text>
+		</Flex>
+
+		<Flex align="center" gap="10" :class="$style.small_charts_wrapper">
+			<HighlightCard v-for="s in series"
+				@click="selectChart(s)"
+				:active="s.name === selectedChart.name"
+				:series="s"
+				:period="selectedHighlightPeriod"
+			/>
+		</Flex>
+		
+		<!-- <Flex align="center" justify="between">
 			<Text color="primary"> {{ selectedChart.title }} </Text>
 
 			<Flex align="center" gap="6" :class="$style.pagination">
@@ -224,11 +173,27 @@ watch(
 					</template>
 				</Dropdown>
 			</Flex>
+		</Flex> -->
+
+		<Flex align="center" justify="between" style="margin: 20px 0px 10px 0px">
+			<Text size="16" weight="600" color="primary"> {{ selectedChart.title }} </Text>
+
+			<Flex align="center" gap="8">
+				<Text v-for="(p, idx) in periods"
+					@click="selectedChartPeriodIdx = idx"
+					size="13"
+					color="tertiary"
+					:class="[$style.period, selectedChartPeriod.title === p.title && $style.active_period]"
+				>
+					{{ p.title }}
+				</Text>
+			</Flex>
 		</Flex>
+
 		<Flex align="center" :class="$style.selected_chart">
-			<LineChart
-				:data="selectedChart.data"
-				:period="selectedChart.period || selectedPeriod"
+			<StatsLineChart
+				:series="selectedChart"
+				:period="selectedChartPeriod"
 				:units="selectedChart.units"
 				:tooltip="selectedChart.tooltip"
 				height="380"
@@ -236,7 +201,7 @@ watch(
 			/>
 		</Flex>
 
-		<Flex>
+		<!-- <Flex>
 			<BarChart
 				:data="selectedChart.data"
 				:period="selectedChart.period || selectedPeriod"
@@ -245,9 +210,9 @@ watch(
 				height="380"
 				:class="$style.selected_chart"
 			/>
-		</Flex>
+		</Flex> -->
 
-		<Flex align="center" gap="10" :class="$style.small_charts_wrapper">
+		<!-- <Flex align="center" gap="10" :class="$style.small_charts_wrapper">
 			<SmallLineChart
 				v-for="s in series"
 				@click="selectChart(s)"
@@ -257,7 +222,7 @@ watch(
 				:units="s.units"
 				:class="[$style.small_chart, selectedChart === s && $style.small_chart_selected]"
 			/>
-		</Flex>
+		</Flex> -->
 	</Flex>
 </template>
 
@@ -280,7 +245,6 @@ watch(
 
 .small_charts_wrapper {
 	width: 100%;
-	min-height: 380px;
 
 	overflow-x: auto;
 }
@@ -306,6 +270,17 @@ watch(
 .small_chart_selected {
 	box-shadow: inset 0 0 0 1px var(--op-5);
 	background: rgba(255, 255, 255, 2%);
+}
+
+.period {
+	cursor: pointer;
+
+	padding-bottom: 2px;
+}
+.active_period {
+	color: var(--txt-primary);
+
+	border-bottom: 1px solid var(--txt-primary);
 }
 
 @media (max-width: 500px) {

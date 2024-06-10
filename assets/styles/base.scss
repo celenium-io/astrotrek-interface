@@ -213,3 +213,11 @@ body {
 	transform: translateX(100px);
 	transform-origin: right;
 }
+
+.bar {
+	fill: var(--brand);
+
+	&:hover {
+		filter: brightness(80%);
+	}
+}

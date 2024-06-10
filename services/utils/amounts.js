@@ -24,3 +24,11 @@ export const spaces = (num) => {
 	
 	return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 }
+
+export const abbreviate = (n, h = 1) => {
+	if (n < 1e3) return n
+	if (n >= 1e3 && n < 1e6) return +(n / 1e3).toFixed(h) + "K"
+	if (n >= 1e6 && n < 1e9) return +(n / 1e6).toFixed(h) + "M"
+	if (n >= 1e9 && n < 1e12) return +(n / 1e9).toFixed(h) + "B"
+	if (n >= 1e12) return +(n / 1e12).toFixed(h) + "T"
+}
