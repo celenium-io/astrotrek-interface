@@ -132,7 +132,7 @@ watch(
 					<Text size="13" weight="600" color="primary">{{ tx.actions_count }}</Text>
 				</Flex>
 
-				<ActionsList v-if="actions.length" :actions="actions" />
+				<ActionsList v-if="actions.length" :actions="actions" :number="tx.actions_count" />
 				<Text v-else-if="isLoadingActions" size="12" weight="500" color="tertiary">Loading actions...</Text>
 				<Text v-else size="12" weight="500" color="tertiary">There is no actions in the transaction</Text>
 

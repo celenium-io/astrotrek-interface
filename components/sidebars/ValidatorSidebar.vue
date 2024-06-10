@@ -106,25 +106,9 @@ watch(
 					</Text>
 				</Flex>
 
-				<!-- <NuxtLink @click="emit('onClose')" :to="`/block/${account.first_height}`">
-					<Flex justify="between" :class="$style.card">
-						<Flex direction="column" gap="8">
-							<Text size="12" weight="600" color="secondary">First Height</Text>
-
-							<Text size="12" weight="600" color="tertiary">{{ spaces(account.first_height) }}</Text>
-						</Flex>
-
-						<Icon name="arrow-narrow-up-right" size="12" color="secondary" />
-					</Flex>
-				</NuxtLink> -->
-
 				<div :class="$style.divider" />
 
-				<Flex align="center" justify="between">
-					<Text size="13" weight="600" color="primary">Validated blocks</Text>
-<!-- 
-					<Text size="13" weight="600" color="primary">{{ account.signed_tx_count }}</Text> -->
-				</Flex>
+				<Text size="13" weight="600" color="primary">Validated blocks</Text>
 
 				<BlocksList v-if="blocks.length" :blocks="blocks.slice(0, 5)" />
 				<Text v-else-if="isLoadingBlocks" size="12" weight="500" color="tertiary">Loading blocks...</Text>
@@ -147,28 +131,6 @@ watch(
 					<ValidatorUptime v-if="uptime.blocks?.length" :blocks="uptime.blocks" />
 					<Text v-else-if="isLoadingUptime" size="12" weight="500" color="tertiary">Loading validator uptime...</Text>
 				</Flex>
-
-				<!-- <Flex direction="column" gap="16"> -->
-					<!-- <Text size="12" weight="600" color="primary">Details</Text> -->
-
-					<!-- <Flex align="center" justify="between">
-						<Text size="13" weight="600" color="tertiary">Balance</Text>
-
-						<Text size="13" weight="600" color="primary" tabular> {{ `${spaces(account.balance.value)} ${account.balance.currency.toUpperCase()}` }} </Text>
-					</Flex>
-
-					<Flex align="center" justify="between">
-						<Text size="13" weight="600" color="tertiary">Actions Count</Text>
-
-						<Text size="13" weight="600" color="primary" tabular> {{ account.actions_count }} </Text>
-					</Flex>
-
-					<Flex align="center" justify="between">
-						<Text size="13" weight="600" color="tertiary">Nonce</Text>
-
-						<Text size="13" weight="600" color="primary" tabular> {{ account.nonce }} </Text>
-					</Flex> -->
-				<!-- </Flex> -->
 			</Flex>
 
 			<Button @click="emit('onClose')" :link="`/validator/${validator.id}`" type="secondary" size="medium">Open Validator</Button>

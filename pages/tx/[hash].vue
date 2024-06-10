@@ -11,6 +11,7 @@ import RawDataView from "@/components/shared/RawDataView.vue"
 
 /** UI */
 import Tooltip from "~/components/ui/Tooltip.vue"
+import Button from "~/components/ui/Button.vue"
 
 /** API */
 import { fetchTxActions, fetchTxByHash } from "~/services/api/tx"
@@ -34,11 +35,17 @@ if (!data.value) {
 	tx.value = data.value
 }
 
+const limit = ref(15)
 const fetchActions = async () => {
 	isLoading.value = true
 
-	const { data } = await fetchTxActions({ hash: tx.value?.hash })
+	const { data } = await fetchTxActions({
+		hash: tx.value?.hash,
+		limit: limit.value,
+		offset: (page.value - 1) * limit.value,
+	})
 	actions.value = data.value
+	handleNextCondition.value = actions.value.length < limit.value
 
 	isLoading.value = false
 }
@@ -92,6 +99,25 @@ useHead({
 const tabs = ref([{ name: "Actions" }])
 const activeTab = ref(tabs.value[0].name)
 
+/** Pagination */
+const page = ref(1)
+const handleNextCondition = ref(true)
+
+const handleNext = () => {
+	page.value += 1
+}
+const handlePrev = () => {
+	if (page.value === 1) return
+	page.value -= 1
+}
+
+watch(
+	() => page.value,
+	async () => {
+		await fetchActions()
+	},
+)
+
 await fetchActions()
 </script>
 
@@ -129,17 +155,29 @@ await fetchActions()
 		<TxMetadata :tx="tx" />
 
 		<Flex direction="column" gap="12">
-			<Flex align="center" gap="8">
-				<Text
-					v-for="tab in tabs"
-					@click="activeTab = tab.name"
-					size="13"
-					weight="600"
-					color="secondary"
-					:class="[$style.tab, activeTab === tab.name && $style.active]"
-				>
-					{{ tab.name }}
-				</Text>
+			<Flex align="center" justify="between">
+				<Flex align="center" gap="8">
+					<Text
+						v-for="tab in tabs"
+						@click="activeTab = tab.name"
+						size="13"
+						weight="600"
+						color="secondary"
+						:class="[$style.tab, activeTab === tab.name && $style.active]"
+					>
+						{{ tab.name }}
+					</Text>
+				</Flex>
+
+				<Flex align="center" gap="6" :class="$style.pagination">
+					<Button @click="handlePrev" size="mini" type="secondary" :disabled="page === 1 || isLoading">
+						<Icon name="chevron" size="14" color="primary" style="transform: rotate(90deg)" />
+					</Button>
+					<Button size="mini" type="secondary">Page {{ page }}</Button>
+					<Button @click="handleNext" size="mini" type="secondary" :disabled="isLoading || handleNextCondition">
+						<Icon name="chevron" size="14" color="primary" style="transform: rotate(-90deg)" />
+					</Button>
+				</Flex>
 			</Flex>
 
 			<TxActions v-if="activeTab === 'Actions'" :actions="actions" :isLoading="isLoading" />
@@ -175,5 +213,9 @@ await fetchActions()
 		color: var(--brand);
 		border: 1px solid var(--brand);
 	}
+}
+
+.pagination {
+	padding-bottom: 6px;
 }
 </style>
