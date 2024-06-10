@@ -140,7 +140,7 @@ const selectedChartView = ref(chartViews.value[0])
 		<Flex align="center" gap="8">
 			<Text v-for="(p, idx) in periods"
 				@click="selectedHighlightPeriodIdx = idx"
-				size="15"
+				size="13"
 				color="tertiary"
 				:class="[$style.period, selectedHighlightPeriod.title === p.title && $style.active_period]"
 			>
