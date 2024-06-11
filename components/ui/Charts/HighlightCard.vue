@@ -9,7 +9,7 @@ import Button from "@/components/ui/Button.vue"
 import { Dropdown, DropdownItem } from "@/components/ui/Dropdown"
 
 /** Services */
-import { abbreviate, formatBytes, spaces } from "@/services/utils"
+import { abbreviate, formatBytes } from "@/services/utils"
 
 /** API */
 import { fetchSeries } from "@/services/api/stats"
@@ -188,7 +188,7 @@ watch(
 			<Flex align="start" justify="between" wide>
 				<Text size="12" color="secondary"> {{ series.title }} </Text>
 
-				<Flex align="center" gap="2" :style="{ color: totalDiff.side === 'rise' ? 'var(--green)' : totalDiff.side === 'fall' ? 'var(--red)' : 'var(--txt-primary)' }">
+				<Flex align="center" gap="2" :style="{ color: 'var(--txt-secondary)' }">
 					<Text size="12"> {{ totalDiff.side === 'rise' ? '+' : totalDiff.side === 'fall' ? '-' : '' }} </Text>
 					<Text size="12"> {{ totalDiff.diff > 999 ? '999' : totalDiff.diff }} </Text>
 					<Text size="12">%</Text>
@@ -217,7 +217,7 @@ watch(
 }
 
 .card {
-	min-height: 100px;
+	min-height: 120px;
 	width: 250px;
 
 	cursor: pointer;
@@ -246,7 +246,7 @@ watch(
 
 .card_active {
 	background: var(--card-background);
-	box-shadow: inset 0 0 0 1px var(--brand);
+	/* box-shadow: inset 0 0 0 1px var(--brand); */
 }
 
 .diff {

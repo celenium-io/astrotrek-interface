@@ -12,7 +12,7 @@ import { Dropdown, DropdownItem } from "@/components/ui/Dropdown"
 import { fetchSeries } from "@/services/api/stats"
 
 /** Services */
-import { formatBytes } from "@/services/utils"
+import { abbreviate, formatBytes, spaces } from "@/services/utils"
 
 const props = defineProps({
 	series: {
@@ -265,7 +265,7 @@ watch(
 							color="tertiary"
 							:style="{ opacity: Math.max(...data.map((d) => d.value)) ? 1 : 0 }"
 						>
-							{{ units === 'bytes' ? formatBytes(Math.max(...data.map((d) => d.value)), 0) : Math.max(...data.map((d) => d.value)) }}
+							{{ units === 'bytes' ? formatBytes(Math.max(...data.map((d) => d.value)), 0) : abbreviate(Math.max(...data.map((d) => d.value))) }}
 						</Text>
 						<Skeleton v-else-if="!data.length" w="32" h="12" />
 
@@ -282,7 +282,7 @@ watch(
 										: 0,
 							}"
 						>
-							{{ units === 'bytes' ? formatBytes(Math.round(Math.max(...data.map((d) => d.value)) / 2), 0) : Math.round(Math.max(...data.map((d) => d.value)) / 2) }}
+							{{ units === 'bytes' ? formatBytes(Math.round(Math.max(...data.map((d) => d.value)) / 2), 0) : abbreviate(Math.round(Math.max(...data.map((d) => d.value)) / 2)) }}
 						</Text>
 						<Skeleton v-else-if="!data.length" w="24" h="12" />
 
@@ -333,7 +333,7 @@ watch(
 							>
 								<Flex align="center" gap="16">
 									<Text size="12" weight="600" color="secondary"> {{ tooltip }} </Text>
-									<Text size="12" weight="600" color="primary"> {{ units === 'bytes' ? formatBytes(tooltipText) : tooltipText }} </Text>
+									<Text size="12" weight="600" color="primary"> {{ units === 'bytes' ? formatBytes(tooltipText) : spaces(tooltipText) }} </Text>
 								</Flex>
 							</Flex>
 						</div>
