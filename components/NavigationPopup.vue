@@ -48,16 +48,29 @@
 			</NuxtLink>
 		</Flex>
 
-		<NuxtLink to="/txs">
-			<Flex gap="12" :class="$style.item">
-				<Icon name="tx" color="primary" size="20" :class="$style.item_icon" />
+		<Flex direction="column" gap="8">
+			<NuxtLink to="/txs">
+				<Flex gap="12" :class="$style.item">
+					<Icon name="tx" color="primary" size="20" :class="$style.item_icon" />
 
-				<Flex direction="column" gap="6">
-					<Text size="14" weight="600" color="primary">Transactions</Text>
-					<Text size="13" weight="500" color="tertiary">Transactions that change state</Text>
+					<Flex direction="column" gap="6">
+						<Text size="14" weight="600" color="primary">Transactions</Text>
+						<Text size="13" weight="500" color="tertiary">Transactions that change state</Text>
+					</Flex>
 				</Flex>
-			</Flex>
-		</NuxtLink>
+			</NuxtLink>
+
+			<NuxtLink to="/stats">
+				<Flex gap="12" :class="$style.item">
+					<Icon name="bar-chart" color="primary" size="20" :class="$style.item_icon" />
+
+					<Flex direction="column" gap="6">
+						<Text size="14" weight="600" color="primary">Statistics</Text>
+						<Text size="13" weight="500" color="tertiary">Key blockchain metrics</Text>
+					</Flex>
+				</Flex>
+			</NuxtLink>
+		</Flex>
 	</Flex>
 </template>
 

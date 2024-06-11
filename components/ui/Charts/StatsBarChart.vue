@@ -8,24 +8,20 @@ import { useDebounceFn } from "@vueuse/core"
 import Button from "@/components/ui/Button.vue"
 import { Dropdown, DropdownItem } from "@/components/ui/Dropdown"
 
+/** Services */
+import { formatBytes, spaces } from "@/services/utils"
+
 /** API */
 import { fetchSeries } from "@/services/api/stats"
 
-/** Services */
-import { abbreviate, formatBytes, spaces } from "@/services/utils"
-
 const props = defineProps({
 	series: {
-		type: Object,
+		type: Array,
 		required: true,
 	},
 	period: {
 		type: Object,
 		required: true,
-	},
-	tooltip: {
-		type: String,
-		default: '',
 	},
 	height: {
 		type: Number,
@@ -84,7 +80,6 @@ const tooltipEl = ref()
 const tooltipXOffset = ref(0)
 const tooltipYOffset = ref(0)
 const tooltipYDataOffset = ref(0)
-const tooltipDynamicXPosition = ref(0)
 const tooltipText = ref("")
 
 const badgeEl = ref()
@@ -97,40 +92,40 @@ const buildChart = (chart, data, onEnter, onLeave) => {
 	const marginTop = 0
 	const marginRight = 0
 	const marginBottom = 24
-	const marginLeft = 40
+	const marginLeft = 60
+	const barWidth = Math.round((width - marginLeft - marginRight) / (data.length) - 10)
 
 	const MAX_VALUE = d3.max(data, (d) => d.value) ? d3.max(data, (d) => d.value) : 1
 
 	/** Scale */
 	const x = d3.scaleUtc(
 		d3.extent(data, (d) => d.date),
-		[marginLeft, width - marginRight],
+		[marginLeft, width - marginRight - barWidth],
 	)
 	const y = d3.scaleLinear([0, MAX_VALUE], [height - marginBottom - 6, marginTop])
-	const line = d3
-		.line()
-		.x((d) => x(d.date))
-		.y((d) => y(d.value))
 
 	/** Tooltip */
 	const bisect = d3.bisector((d) => d.date).center
+
+
+	let prevIdx = -1
+
 	const onPointermoved = (event) => {
 		onEnter()
 
-		const idx = bisect(data, x.invert(d3.pointer(event)[0]))
+		const idx = bisect(data, x.invert(d3.pointer(event)[0] - barWidth / 2))
+
+		if (prevIdx !== idx) {
+			chart.children[0].children[idx + 1].classList.add('bar_hover')
+			chart.children[0].children[prevIdx + 1].classList.remove('bar_hover')
+
+			prevIdx = idx
+		}
 
 		tooltipXOffset.value = x(data[idx].date)
 		tooltipYDataOffset.value = y(data[idx].value)
 		tooltipYOffset.value = event.layerY
 		tooltipText.value = data[idx].value
-
-		if (tooltipEl.value) {
-			if (idx > parseInt(props.period.value / 2)) {
-				tooltipDynamicXPosition.value = tooltipXOffset.value - tooltipEl.value.wrapper.getBoundingClientRect().width - 16
-			} else {
-				tooltipDynamicXPosition.value = tooltipXOffset.value + 16
-			}
-		}
 
 		badgeText.value =
 			props.period.timeframe === "day"
@@ -138,16 +133,29 @@ const buildChart = (chart, data, onEnter, onLeave) => {
 				: DateTime.fromJSDate(data[idx].date).set({ minutes: 0 }).toFormat("hh:mm a")
 
 		if (!badgeEl.value) return
-		if (idx < 2) {
-			badgeOffset.value = 0
-		} else if (idx > props.period.value - 3) {
-			badgeOffset.value = badgeEl.value.getBoundingClientRect().width
+		if (idx === 0) {
+			if (props.period.timeframe === "day") {
+				badgeOffset.value = badgeEl.value.getBoundingClientRect().width - 20
+			} else {
+				badgeOffset.value = badgeEl.value.getBoundingClientRect().width - barWidth - 7
+			}
+		} else if (idx === props.period.value - 1) {
+			if (props.period.timeframe === "day") {
+				badgeOffset.value = badgeEl.value.getBoundingClientRect().width / 2 - barWidth + 17
+			} else {
+				badgeOffset.value = badgeEl.value.getBoundingClientRect().width / 2
+			}
 		} else {
-			badgeOffset.value = badgeEl.value.getBoundingClientRect().width / 2
+			badgeOffset.value = badgeEl.value.getBoundingClientRect().width / 2 - barWidth / 2
 		}
 	}
-	const onPointerleft = () => {
+
+	const onPointerleft = (event) => {
 		onLeave()
+
+		chart.children[0].children[prevIdx + 1].classList.remove('bar_hover')
+		prevIdx = -1
+
 		badgeText.value = ""
 	}
 
@@ -164,18 +172,6 @@ const buildChart = (chart, data, onEnter, onLeave) => {
 		.on("pointerleave", onPointerleft)
 		.on("touchstart", (event) => event.preventDefault())
 
-	/** Vertical Lines */
-	svg.append("path")
-		.attr("fill", "none")
-		.attr("stroke", "var(--op-10)")
-		.attr("stroke-width", 2)
-		.attr("d", `M${marginLeft},${height - marginBottom + 2} L${marginLeft},${height - marginBottom - 5}`)
-	svg.append("path")
-		.attr("fill", "none")
-		.attr("stroke", "var(--op-10)")
-		.attr("stroke-width", 2)
-		.attr("d", `M${width - 1},${height - marginBottom + 2} L${width - 1},${height - marginBottom - 5}`)
-
 	/** Default Horizontal Line  */
 	svg.append("path")
 		.attr("fill", "none")
@@ -183,28 +179,14 @@ const buildChart = (chart, data, onEnter, onLeave) => {
 		.attr("stroke-width", 2)
 		.attr("d", `M${0},${height - marginBottom - 6} L${width},${height - marginBottom - 6}`)
 
-	/** Chart Line */
-	svg.append("path")
-		.attr("fill", "none")
-		.attr("stroke", "var(--brand)")
-		.attr("stroke-width", 2)
-		.attr("stroke-linecap", "round")
-		.attr("stroke-linejoin", "round")
-		.attr("d", line(data.slice(0, data.length - 1)))
-	svg.append("path")
-		.attr("fill", "none")
-		.attr("stroke", "var(--brand)")
-		.attr("stroke-width", 2)
-		.attr("stroke-linecap", "round")
-		.attr("stroke-linejoin", "round")
-		.attr("stroke-dasharray", "8")
-		.attr("d", line(data.slice(data.length - 2, data.length)))
-
-	svg.append("circle")
-		.attr("cx", x(data[data.length - 1]?.date))
-		.attr("cy", y(data[data.length - 1]?.value))
-		.attr("fill", "var(--brand)")
-		.attr("r", 3)
+	svg.selectAll(".bar")
+		.data(data)
+		.enter().append("rect")
+		.attr("class", "bar")
+		.attr("x", d => x(new Date(d.date)))
+		.attr("y", d => y(d.value))
+		.attr("width", barWidth)
+		.attr("height", d => height - marginBottom - 5 - y(d.value))
 
 	if (chart.children[0]) chart.children[0].remove()
 	chart.append(svg.node())
@@ -258,7 +240,7 @@ watch(
 							color="tertiary"
 							:style="{ opacity: Math.max(...data.map((d) => d.value)) ? 1 : 0 }"
 						>
-							{{ series.units === 'bytes' ? formatBytes(Math.max(...data.map((d) => d.value)), 0) : abbreviate(Math.max(...data.map((d) => d.value))) }}
+							{{ series.units === 'bytes' ? formatBytes(Math.max(...data.map((d) => d.value)), 0) : spaces(Math.max(...data.map((d) => d.value))) }}
 						</Text>
 						<Skeleton v-else-if="!data.length" w="32" h="12" />
 
@@ -275,7 +257,7 @@ watch(
 										: 0,
 							}"
 						>
-							{{ series.units === 'bytes' ? formatBytes(Math.round(Math.max(...data.map((d) => d.value)) / 2), 0) : abbreviate(Math.round(Math.max(...data.map((d) => d.value)) / 2)) }}
+							{{ series.units === 'bytes' ? formatBytes(Math.round(Math.max(...data.map((d) => d.value)) / 2), 0) : spaces(Math.round(Math.max(...data.map((d) => d.value)) / 2)) }}
 						</Text>
 						<Skeleton v-else-if="!data.length" w="24" h="12" />
 
@@ -303,11 +285,6 @@ watch(
 					<Transition name="fastfade">
 						<div v-if="showSeriesTooltip" :class="$style.tooltip_wrapper">
 							<div
-								:style="{ transform: `translate(${tooltipXOffset - 3}px, ${tooltipYDataOffset - 4}px)` }"
-								:class="$style.dot"
-							/>
-							<div :style="{ transform: `translateX(${tooltipXOffset}px)` }" :class="$style.line" />
-							<div
 								ref="badgeEl"
 								:style="{ transform: `translateX(${tooltipXOffset - badgeOffset}px)` }"
 								:class="$style.badge"
@@ -319,14 +296,14 @@ watch(
 							<Flex
 								v-if="series.tooltip"
 								ref="tooltipEl"
-								:style="{ transform: `translate(${tooltipDynamicXPosition}px, ${tooltipYDataOffset - 40}px)` }"
+								:style="{ transform: `translate(${tooltipXOffset}px, ${tooltipYDataOffset - 40}px)` }"
 								direction="column"
 								gap="8"
 								:class="$style.tooltip"
 							>
 								<Flex align="center" gap="16">
 									<Text size="12" weight="600" color="secondary"> {{ series.tooltip }} </Text>
-									<Text size="12" weight="600" color="primary"> {{ series.units === 'bytes' ? formatBytes(tooltipText) : spaces(tooltipText) }} </Text>
+									<Text size="12" weight="600" color="primary"> {{ series.units === 'bytes' ? formatBytes(tooltipText) : tooltipText }} </Text>
 								</Flex>
 							</Flex>
 						</div>
