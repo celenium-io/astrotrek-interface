@@ -216,8 +216,12 @@ body {
 
 .bar {
 	fill: var(--brand);
+	rx: 4;
 
 	&:hover {
 		filter: brightness(80%);
 	}
+}
+.bar_hover {
+	filter: brightness(80%);
 }

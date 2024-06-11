@@ -7,7 +7,7 @@ import Button from "~/components/ui/Button.vue"
 import { Dropdown, DropdownItem } from "@/components/ui/Dropdown"
 
 /** Components */
-import BarChart from "@/components/ui/Charts/BarChart.vue"
+import StatsBarChart from "@/components/ui/Charts/StatsBarChart.vue"
 import HighlightCard from "@/components/ui/Charts/HighlightCard.vue"
 import StatsLineChart from "@/components/ui/Charts/StatsLineChart.vue"
 
@@ -44,7 +44,7 @@ useHead({
 		},
 		{
 			property: "og:image",
-			content: "/img/seo/validators.png",
+			content: "/img/seo/statistics.png",
 		},
 		{
 			name: "twitter:title",
@@ -61,7 +61,7 @@ useHead({
 		},
 		{
 			name: "twitter:image",
-			content: "https://astrotrek.io/img/seo/validators.png",
+			content: "https://astrotrek.io/img/seo/statistics.png",
 		},
 	],
 })
@@ -103,9 +103,6 @@ const series = ref([
 ])
 
 const selectedChart = ref(series.value[0])
-// const selectedChartIdx = ref(0)
-// const selectedChart = computed(() => series.value[selectedChartIdx.value])
-
 
 const periods = ref([
 {
@@ -156,28 +153,6 @@ const selectedChartView = ref(chartViews.value[0])
 				:period="selectedHighlightPeriod"
 			/>
 		</Flex>
-		
-		<!-- <Flex align="center" justify="between">
-			<Text color="primary"> {{ selectedChart.title }} </Text>
-
-			<Flex align="center" gap="6" :class="$style.pagination">
-				<Dropdown>
-					<Button size="mini" type="secondary">
-						{{ selectedPeriod.title }}
-						<Icon name="chevron" size="14" color="secondary" />
-					</Button>
-
-					<template #popup>
-						<DropdownItem v-for="(period, idx) in periods" @click="selectedPeriodIdx = idx">
-							<Flex align="center" gap="8">
-								<Icon :name="idx === selectedPeriodIdx ? 'check' : ''" size="12" color="secondary" />
-								{{ period.title }}
-							</Flex>
-						</DropdownItem>
-					</template>
-				</Dropdown>
-			</Flex>
-		</Flex> -->
 
 		<Flex align="center" justify="between" style="margin: 20px 0px 10px 0px">
 			<Text size="16" weight="600" color="primary"> {{ selectedChart.title }} </Text>
@@ -207,38 +182,20 @@ const selectedChartView = ref(chartViews.value[0])
 		</Flex>
 
 		<Flex align="center" :class="$style.selected_chart">
-			<StatsLineChart
+			<StatsLineChart v-if="selectedChartView === 'line-chart'"
 				:series="selectedChart"
 				:period="selectedChartPeriod"
-				:units="selectedChart.units"
-				:tooltip="selectedChart.tooltip"
+				height="380"
+				:class="$style.selected_chart"
+			/>
+
+			<StatsBarChart v-else-if="selectedChartView === 'bar-chart'"
+				:series="selectedChart"
+				:period="selectedChartPeriod"
 				height="380"
 				:class="$style.selected_chart"
 			/>
 		</Flex>
-
-		<!-- <Flex>
-			<BarChart
-				:data="selectedChart.data"
-				:period="selectedChart.period || selectedPeriod"
-				:units="selectedChart.units"
-				:tooltip="selectedChart.tooltip"
-				height="380"
-				:class="$style.selected_chart"
-			/>
-		</Flex> -->
-
-		<!-- <Flex align="center" gap="10" :class="$style.small_charts_wrapper">
-			<SmallLineChart
-				v-for="s in series"
-				@click="selectChart(s)"
-				:data="s.data"
-				:title="s.title"
-				:period="initialPeriod"
-				:units="s.units"
-				:class="[$style.small_chart, selectedChart === s && $style.small_chart_selected]"
-			/>
-		</Flex> -->
 	</Flex>
 </template>
 

@@ -106,7 +106,14 @@ watch(
 </script>
 
 <template>
-	<Flex direction="column" wide :class="$style.wrapper">
+	<Flex direction="column" gap="40" wide :class="$style.wrapper">
+		<Breadcrumbs
+			:items="[
+				{ link: '/', name: 'Explore' },
+				{ link: '/validators', name: 'Validators' },
+			]"
+		/>
+
 		<Flex direction="column" :class="$style.card">
 			<Flex justify="between" align="start" wide :class="$style.top">
 				<Text size="16" weight="600" color="primary">Validators</Text>
@@ -132,7 +139,7 @@ watch(
 	max-width: calc(var(--base-width) + 48px);
 
 	padding: 0 24px;
-	margin-top: 60px;
+	margin-top: 24px;
 	margin-bottom: 120px;
 }
 
