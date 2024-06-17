@@ -11,6 +11,9 @@ import StatsBarChart from "@/components/ui/Charts/StatsBarChart.vue"
 import HighlightCard from "@/components/ui/Charts/HighlightCard.vue"
 import StatsLineChart from "@/components/ui/Charts/StatsLineChart.vue"
 
+/** Services */
+import { fetchLastSeries, fetchSeriesSummary } from "@/services/api/stats.js"
+
 definePageMeta({
 	layout: "default",
 })
@@ -71,6 +74,7 @@ const series = ref([
 		name: 'data_size',
 		title: 'Data Usage',
 		data: [],
+		summary: {},
 		units: 'bytes',
 		tooltip: 'Usage',
 	},
@@ -78,12 +82,14 @@ const series = ref([
 		name: 'tps',
 		title: 'Txs/sec',
 		data: [],
+		summary: {},
 		tooltip: 'Txs',
 	},
 	{
 		name: 'bps',
 		title: 'Bytes/sec',
 		data: [],
+		summary: {},
 		units: 'bytes',
 		tooltip: 'Bytes',
 	},
@@ -91,34 +97,42 @@ const series = ref([
 		name: 'tx_count',
 		title: 'Txs Count',
 		data: [],
+		summary: {},
 		tooltip: 'Txs',
 	},
 	{
 		name: 'bytes_in_block',
 		title: 'Bytes In Block',
 		data: [],
+		summary: {},
 		units: 'bytes',
 		tooltip: 'Bytes',
 	},
 ])
 
 const selectedChart = ref(series.value[0])
+const selectChart = (name) => {
+	selectedChart.value = series.value.find(s => s.name === name)
+}
 
 const periods = ref([
 {
 		title: '31d',
 		value: 31,
 		timeframe: 'day',
+		period: 'month',
 	},
 	{
 		title: '7d',
 		value: 7,
 		timeframe: 'day',
+		period: 'week',
 	},
 	{
 		title: '24h',
 		value: 24,
 		timeframe: 'hour',
+		period: 'day',
 	},
 ])
 
@@ -130,6 +144,67 @@ const selectedChartPeriod = computed(() => periods.value[selectedChartPeriodIdx.
 
 const chartViews = ref(['line-chart', 'bar-chart'])
 const selectedChartView = ref(chartViews.value[0])
+
+const lastSeriesRaw = ref()
+const lastSeries = computed(() => {
+	let ls = series.value
+	ls.forEach(s => {
+		s.data = lastSeriesRaw.value[selectedHighlightPeriod.value.title][s.name] 
+	})
+
+	return ls
+})
+
+const getLastSeries = async () => {
+	let ls = await fetchLastSeries()
+
+	Object.keys(ls).forEach(k => {
+		Object.keys(ls[k]).forEach(s => {
+
+			let resultData = []
+			let seriesMap = {}
+
+			ls[k][s].forEach((item) => {
+				seriesMap[DateTime.fromISO(item.time).toFormat(k !== "24h" ? "y-LL-dd" : "y-LL-dd-HH")] =
+					item.value
+			})
+
+			for (let i = 1; i < parseInt(k) + 1; i++) {
+				const dt = DateTime.now().minus({
+					days: k !== "24h" ? parseInt(k) - i : 0,
+					hours: k === "24h" ? parseInt(k) - i : 0,
+				})
+				resultData.push({
+					date: dt.toJSDate(),
+					value: parseInt(seriesMap[dt.toFormat(k !== "24h" ? "y-LL-dd" : "y-LL-dd-HH")]) || 0,
+				})
+			}
+
+			ls[k][s] = resultData
+		})
+	})
+
+	lastSeriesRaw.value = ls
+}
+
+const fillSeriesSummary = async () => {
+	let summary = await fetchSeriesSummary(selectedHighlightPeriod.value.period)
+	series.value.forEach(s => {
+		s.summary.total = summary[s.name]
+		s.summary.diff = summary[`${s.name}_pct`]
+	})
+}
+
+await getLastSeries()
+await fillSeriesSummary()
+
+watch(
+	() => selectedHighlightPeriod.value,
+	async () => {
+		await fillSeriesSummary()
+	},
+)
+
 </script>
 
 <template>
@@ -146,11 +221,10 @@ const selectedChartView = ref(chartViews.value[0])
 		</Flex>
 
 		<Flex align="center" gap="10" :class="$style.small_charts_wrapper">
-			<HighlightCard v-for="s in series"
-				@click="selectedChart = s"
-				:active="s.name === selectedChart.name"
-				:series="s"
-				:period="selectedHighlightPeriod"
+			<HighlightCard v-for="key in Object.keys(lastSeries)"
+				@click="selectChart(lastSeries[key].name)"
+				:series="lastSeries[key]"
+				:active="lastSeries[key].name === selectedChart.name"
 			/>
 		</Flex>
 

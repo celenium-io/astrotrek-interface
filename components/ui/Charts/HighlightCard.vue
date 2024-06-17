@@ -19,10 +19,6 @@ const props = defineProps({
 		type: Object,
 		required: true,
 	},
-	period: {
-		type: Object,
-		required: true,
-	},
 	active: {
 		type: Boolean,
 		default: false,
@@ -30,61 +26,6 @@ const props = defineProps({
 })
 
 const isLoading = ref(false)
-
-const loadSeries = async (period, previous) => {
-	isLoading.value = true
-
-	let rawData = await fetchSeries({
-		name: props.series.name,
-		timeframe: period.timeframe,
-		from: parseInt(
-			previous
-			? DateTime.now().minus({
-				days: period.timeframe === "day" ? period.value * 2 : 0,
-				hours: period.timeframe === "hour" ? period.value * 2 : 0,
-			}).ts / 1_000
-			: DateTime.now().minus({
-				days: period.timeframe === "day" ? period.value : 0,
-				hours: period.timeframe === "hour" ? period.value : 0,
-			}).ts / 1_000
-		),
-		to: parseInt(
-			previous
-			? DateTime.now().minus({
-				days: period.timeframe === "day" ? period.value : 0,
-				hours: period.timeframe === "hour" ? period.value : 0,
-			}).ts / 1_000
-			: ''
-		),
-	})
-
-	let resultData = []
-	let seriesMap = {}
-	rawData.forEach((item) => {
-		seriesMap[DateTime.fromISO(item.time).toFormat(period.timeframe === "day" ? "y-LL-dd" : "y-LL-dd-HH")] =
-			item.value
-	})
-
-	for (let i = 1; i < period.value + 1; i++) {
-		const dt = previous
-			? DateTime.now().minus({
-				days: period.timeframe === "day" ? period.value * 2 - i : 0,
-				hours: period.timeframe === "hour" ? period.value * 2 - i : 0,
-			})
-			: DateTime.now().minus({
-				days: period.timeframe === "day" ? period.value - i : 0,
-				hours: period.timeframe === "hour" ? period.value - i : 0,
-			})
-		resultData.push({
-			date: dt.toJSDate(),
-			value: parseInt(seriesMap[dt.toFormat(period.timeframe === "day" ? "y-LL-dd" : "y-LL-dd-HH")]) || 0,
-		})
-	}
-
-	isLoading.value = false
-
-	return resultData
-}
 
 const currentTotal = computed(() => currentData.value?.reduce((sum, item) => sum + item.value, 0))
 const previousTotal = computed(() => previousData.value?.reduce((sum, item) => sum + item.value, 0))
@@ -150,12 +91,9 @@ const buildChart = (chart, data) => {
 }
 
 const drawChart = async () => {
-	currentData.value = await loadSeries(props.period, false)
-	previousData.value = await loadSeries(props.period, true)
-
 	buildChart(
 		chartEl.value.wrapper,
-		currentData.value,
+		props.series.data,
 	)
 }
 
@@ -175,11 +113,12 @@ onBeforeUnmount(() => {
 
 
 watch(
-	() => props.period,
+	() => props.series,
 	() => {
 		drawChart()
 	},
 )
+
 </script>
 
 <template>
@@ -189,15 +128,15 @@ watch(
 				<Text size="12" color="secondary"> {{ series.title }} </Text>
 
 				<Flex align="center" gap="2" :style="{ color: 'var(--txt-secondary)' }">
-					<Text size="12"> {{ totalDiff.side === 'rise' ? '+' : totalDiff.side === 'fall' ? '-' : '' }} </Text>
-					<Text size="12"> {{ totalDiff.diff > 999 ? '999' : totalDiff.diff }} </Text>
+					<Text size="12"> {{ series.summary.diff > 0 ? '+' : series.summary.diff < 0 ? '-' : '' }} </Text>
+					<Text size="12"> {{ abbreviate(Math.abs(series.summary.diff), 0) }} </Text>
 					<Text size="12">%</Text>
 				</Flex>
 			</Flex>
 
 			<Flex align="center" justify="between" wide>
 				<Text size="20" weight="600" color="primary" :class="$style.diff">
-					{{ series.units === 'bytes' ? formatBytes(currentTotal) : abbreviate(currentTotal) }}
+					{{ series.units === 'bytes' ? formatBytes(series.summary.total) : abbreviate(series.summary.total) }}
 				</Text>
 
 				<Flex ref="chartWrapperEl" direction="column" :class="$style.chart_wrapper">
@@ -222,7 +161,6 @@ watch(
 
 	cursor: pointer;
 
-	/* background: var(--card-background); */
 	border-radius: 12px;
 	overflow: hidden;
 
@@ -230,12 +168,8 @@ watch(
 
 	transition: all 0.2s ease;
 
-	/* box-shadow: inset 0 0 0 1px var(--op-5); */
-
 	&:hover {
-		/* opacity: 0.75; */
 		filter: brightness(80%);
-		/* box-shadow: inset 0 0 0 1px var(--brand); */
 		background: var(--card-background);
 	}
 
@@ -246,103 +180,19 @@ watch(
 
 .card_active {
 	background: var(--card-background);
-	/* box-shadow: inset 0 0 0 1px var(--brand); */
 }
 
 .diff {
 	padding: 0px 0px 8px 2px;
 }
-.data {
-	border-radius: 4px 4px 8px 8px;
-	background: var(--chart-background);
-
-	padding: 16px;
-}
 
 .chart_wrapper {
-	width: 100px;
-	/* position: relative; */
+	width: 90px;
 }
 
 .chart {
-	/* position: absolute; */
-
 	& svg {
 		overflow: visible;
-	}
-}
-
-.axis {
-	position: absolute;
-	top: 0;
-	right: 0;
-
-	&.x {
-		bottom: 6px;
-		left: 40px;
-	}
-
-	&.y {
-		bottom: 34px;
-		left: 0;
-	}
-}
-
-.tooltip_wrapper {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-
-	& .dot {
-		width: 6px;
-		height: 6px;
-		border-radius: 50px;
-		background: var(--brand);
-
-		box-shadow: 0 0 0 4px rgba(222, 116, 10, 0.27);
-
-		transition: all 0.15s ease;
-	}
-
-	& .line {
-		position: absolute;
-		top: 0;
-		bottom: 32px;
-
-		border-left: 1px dashed var(--op-10);
-
-		transition: all 0.15s ease;
-	}
-
-	& .badge {
-		position: absolute;
-		bottom: 4px;
-
-		background: var(--op-3);
-
-		transition: all 0.15s ease;
-	}
-
-	& .tooltip {
-		pointer-events: none;
-		position: absolute;
-		z-index: 10;
-
-		background: var(--op-3);
-		border-radius: 6px;
-		box-shadow: inset 0 0 0 1px var(--op-5), 0 14px 34px rgba(0, 0, 0, 15%), 0 4px 14px rgba(0, 0, 0, 5%);
-
-		padding: 8px;
-
-		transition: all 0.2s ease;
-	}
-}
-
-@media (max-width: 800px) {
-	.data {
-		flex-direction: column;
 	}
 }
 </style>
