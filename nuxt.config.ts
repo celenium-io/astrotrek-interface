@@ -1,4 +1,6 @@
 export default defineNuxtConfig({
+	buildDir: 'dist',
+
 	modules: ["@pinia/nuxt"],
 
 	app: {
@@ -39,15 +41,6 @@ export default defineNuxtConfig({
 	},
 
 	css: ["@/assets/styles/base.scss", "@/assets/styles/flex.scss", "@/assets/styles/text.scss"],
-
-	// nitro: {
-	// 	storage: {
-	// 		db: {
-	// 			driver: 'fs',
-	// 			base: './storage/db'
-	// 		}
-	// 	}
-	// },
 
 	devtools: { enabled: true },
 
