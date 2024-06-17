@@ -31,25 +31,6 @@ async function fetchStatsSeries() {
                 }).ts / 1_000),
         })
     
-        // let resultData = []
-        // let seriesMap = {}
-
-        // rawData.forEach((item) => {
-        //     seriesMap[DateTime.fromISO(item.time).toFormat(period.timeframe === "day" ? "y-LL-dd" : "y-LL-dd-HH")] =
-        //         item.value
-        // })
-    
-        // for (let i = 1; i < period.value + 1; i++) {
-        //     const dt = DateTime.now().minus({
-        //         days: period.timeframe === "day" ? period.value - i : 0,
-        //         hours: period.timeframe === "hour" ? period.value - i : 0,
-        //     })
-        //     resultData.push({
-        //         date: dt.toJSDate(),
-        //         value: parseInt(seriesMap[dt.toFormat(period.timeframe === "day" ? "y-LL-dd" : "y-LL-dd-HH")]) || 0,
-        //     })
-        // }
-
         return rawData
     }
 
