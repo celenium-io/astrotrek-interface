@@ -41,6 +41,7 @@ export default defineNuxtConfig({
 	css: ["@/assets/styles/base.scss", "@/assets/styles/flex.scss", "@/assets/styles/text.scss"],
 
 	nitro: {
+		preset: "cloudflare-pages",
 		storage: {
 			db: {
 				driver: 'fs',
