@@ -4,9 +4,13 @@ import { ref } from "vue"
 
 /** Services */
 import { Server } from "../../services/config.js";
+import { timestamp } from "@vueuse/core";
 
 const CACHE_DURATION = 3_600_000
-const series = ref({})
+const series = ref({
+    data: {},
+    timestamp: 0,
+})
 
 async function fetchSeries({ hostname, name, timeframe, from, to }) {
     let host = ""
@@ -80,13 +84,13 @@ async function fetchStatsSeries(hostname) {
 }
 
 export default defineEventHandler(async (event) => {
-    if (!series.value?.data || DateTime.now().minus(series.value?.timestamp).ts > CACHE_DURATION) {
+    if (!series.value.data || DateTime.now().minus(series.value.timestamp).ts > CACHE_DURATION) {
         const data = await fetchStatsSeries(event.node.req.headers.host)
 
-        data.timestamp = DateTime.now().ts
+        series.value.timestamp = DateTime.now().ts
         
-        series.value = data
+        series.value.data = data
     }
 
-    return series.value
+    return series.value.data
 })
