@@ -15,6 +15,17 @@ export const fetchSeries = async ({ name, timeframe, from, to }) => {
 	}
 }
 
+export const fetchSeriesSummary = async (timeframe) => {
+	try {
+		const url = new URL(`${useServerURL()}/stats/summary/${timeframe}`)
+
+		const data = await $fetch(url.href)
+		return data
+	} catch (error) {
+		console.error(error)
+	}
+}
+
 export const fetchRollupSeries = async ({ id, name, timeframe, from, to }) => {
 	try {
 		const url = new URL(`${useServerURL()}/stats/rollup/series/${id}/${name}/${timeframe}`)
@@ -23,6 +34,18 @@ export const fetchRollupSeries = async ({ id, name, timeframe, from, to }) => {
 		if (to) url.searchParams.append("from", to)
 
 		const data = await $fetch(url.href)
+		return data
+	} catch (error) {
+		console.error(error)
+	}
+}
+
+export const fetchLastSeries = async () => {
+	try {
+		const url = new URL(`${useRequestURL().origin}/api/series`)
+
+		const data = await $fetch(url.href)
+
 		return data
 	} catch (error) {
 		console.error(error)
