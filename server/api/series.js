@@ -88,6 +88,5 @@ export default defineEventHandler(async (event) => {
         series.value = data
     }
 
-    console.log('series.value', series.value);
     return series.value
 })
