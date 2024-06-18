@@ -1,13 +1,16 @@
 /** Vendor */
 import { DateTime } from "luxon"
-import { ref } from "vue";
+import { ref } from "vue"
+
+/** Services */
+import { useServerURL } from "../../services/config.js";
 
 const CACHE_DURATION = 3_600_000
-const cacheKey = 'lastSeries'
+const series = ref({})
 
-async function fetchSeries({ name, timeframe, from, to }) {
+async function fetchSeries({ hostname, name, timeframe, from, to }) {
 	try {
-		const url = new URL(`https://api-dusk.astrotrek.io/v1/stats/series/${name}/${timeframe}`)
+		const url = new URL(`${useServerURL(hostname)}/stats/series/${name}/${timeframe}`)
 
 		if (from) url.searchParams.append("from", from)
 		if (to) url.searchParams.append("to", to)
@@ -19,10 +22,11 @@ async function fetchSeries({ name, timeframe, from, to }) {
 	}
 }
 
-async function fetchStatsSeries() {
+async function fetchStatsSeries(hostname) {
 
     const loadSeries = async (name, period) => {
         let rawData = await fetchSeries({
+            hostname: hostname,
             name: name,
             timeframe: period.timeframe,
             from: Math.round(DateTime.now().minus({
@@ -34,7 +38,7 @@ async function fetchStatsSeries() {
         return rawData
     }
 
-    const series = ref(['data_size', 'tps', 'bps', 'tx_count', 'bytes_in_block'])
+    const seriesList = ref(['data_size', 'tps', 'bps', 'tx_count', 'bytes_in_block'])
 
     const periods = ref([
         {
@@ -58,7 +62,7 @@ async function fetchStatsSeries() {
 
     for (let p of periods.value) {
         let periodData = {}
-        for (let s of series.value) {
+        for (let s of seriesList.value) {
             periodData[s] = await loadSeries(s, p)
         }
 
@@ -69,17 +73,13 @@ async function fetchStatsSeries() {
 }
 
 export default defineEventHandler(async (event) => {
-    let series = await useStorage('db').getItem(cacheKey)
-
-    if (!series || DateTime.now().minus(series?.timestamp).ts > CACHE_DURATION) {
-        const data = await fetchStatsSeries()
+    if (!series.value?.data || DateTime.now().minus(series.value?.timestamp).ts > CACHE_DURATION) {
+        const data = await fetchStatsSeries(event.node.req.headers.host)
 
         data.timestamp = DateTime.now().ts
         
-        await useStorage('db').setItem(cacheKey, data)
-        
-        series = data
+        series.value = data
     }
 
-    return series
+    return series.value
 })

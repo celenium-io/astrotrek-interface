@@ -9,11 +9,11 @@ export const Server = {
 	},
 }
 
-export const useServerURL = () => {
+export const useServerURL = (hostname) => {
 	const requestURL = useRequestURL()
 	const runtimeConfig = useRuntimeConfig()
 
-	switch (requestURL.hostname) {
+	switch (hostname || requestURL.hostname) {
 		case "astrotrek.io":
 			return Server.API.mainnet
 
@@ -22,11 +22,11 @@ export const useServerURL = () => {
 	}
 }
 
-export const useSocketURL = () => {
+export const useSocketURL = (hostname) => {
 	const requestURL = useRequestURL()
 	const runtimeConfig = useRuntimeConfig()
 
-	switch (requestURL.hostname) {
+	switch (hostname || requestURL.hostname) {
 		case "astrotrek.io":
 			return Server.WSS.mainnet
 

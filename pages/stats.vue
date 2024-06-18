@@ -163,7 +163,6 @@ const getLastSeries = async () => {
 
 			let resultData = []
 			let seriesMap = {}
-
 			ls[k][s].forEach((item) => {
 				seriesMap[DateTime.fromISO(item.time).toFormat(k !== "24h" ? "y-LL-dd" : "y-LL-dd-HH")] =
 					item.value

@@ -113,7 +113,7 @@ onBeforeUnmount(() => {
 
 
 watch(
-	() => props.series,
+	() => props.series.data,
 	() => {
 		drawChart()
 	},
@@ -136,7 +136,7 @@ watch(
 
 			<Flex align="center" justify="between" wide>
 				<Text size="20" weight="600" color="primary" :class="$style.diff">
-					{{ series.units === 'bytes' ? formatBytes(series.summary.total) : abbreviate(series.summary.total) }}
+					{{ series.units === 'bytes' ? formatBytes(series.summary.total) : abbreviate(series.summary.total, 2) }}
 				</Text>
 
 				<Flex ref="chartWrapperEl" direction="column" :class="$style.chart_wrapper">
