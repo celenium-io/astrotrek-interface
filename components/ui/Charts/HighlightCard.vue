@@ -115,6 +115,7 @@ onBeforeUnmount(() => {
 watch(
 	() => props.series.data,
 	() => {
+		console.log(`${props.series.title} last item:`, props.series.data[props.series.data.length - 1]);
 		drawChart()
 	},
 )

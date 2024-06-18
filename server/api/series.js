@@ -4,15 +4,15 @@ import { ref } from "vue"
 
 /** Services */
 import { Server } from "../../services/config.js";
-import { timestamp } from "@vueuse/core";
 
-const CACHE_DURATION = 3_600_000
+// const CACHE_DURATION = 3_600_000
+const CACHE_DURATION = 60_000
 const series = ref({
     data: {},
     timestamp: 0,
 })
 
-async function fetchSeries({ hostname, name, timeframe, from, to }) {
+async function fetchSeries({ hostname, name, timeframe, from }) {
     let host = ""
     if (hostname.includes("astrotrek.io")) {
         host = Server.API.mainnet
@@ -22,11 +22,10 @@ async function fetchSeries({ hostname, name, timeframe, from, to }) {
 
 	try {
 		const url = new URL(`${host}/stats/series/${name}/${timeframe}`)
-
+        
 		if (from) url.searchParams.append("from", from)
-		if (to) url.searchParams.append("to", to)
-
-		const data = await $fetch(url.href)
+        
+        const data = await $fetch(url.href)
 		return data
 	} catch (error) {
 		console.error(error)
@@ -84,7 +83,9 @@ async function fetchStatsSeries(hostname) {
 }
 
 export default defineEventHandler(async (event) => {
+    // console.log(DateTime.now().minus(series.value.timestamp).ts);
     if (!series.value.data || DateTime.now().minus(series.value.timestamp).ts > CACHE_DURATION) {
+        console.log('fetch series');
         const data = await fetchStatsSeries(event.node.req.headers.host)
 
         series.value.timestamp = DateTime.now().ts
@@ -92,5 +93,6 @@ export default defineEventHandler(async (event) => {
         series.value.data = data
     }
 
+    // console.log(series.value.data['24h']['tx_count'][0].value);
     return series.value.data
 })
