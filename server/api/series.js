@@ -3,14 +3,21 @@ import { DateTime } from "luxon"
 import { ref } from "vue"
 
 /** Services */
-import { useServerURL } from "../../services/config.js";
+import { Server } from "../../services/config.js";
 
 const CACHE_DURATION = 3_600_000
 const series = ref({})
 
 async function fetchSeries({ hostname, name, timeframe, from, to }) {
+    let host = ""
+    if (hostname.includes("astrotrek.io")) {
+        host = Server.API.mainnet
+    } else {
+        host = useRuntimeConfig().public.API_DEV || Server.API.dev
+    }
+
 	try {
-		const url = new URL(`${useServerURL(hostname)}/stats/series/${name}/${timeframe}`)
+		const url = new URL(`${host}/stats/series/${name}/${timeframe}`)
 
 		if (from) url.searchParams.append("from", from)
 		if (to) url.searchParams.append("to", to)
@@ -81,5 +88,6 @@ export default defineEventHandler(async (event) => {
         series.value = data
     }
 
+    console.log('series.value', series.value);
     return series.value
 })
