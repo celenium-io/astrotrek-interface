@@ -62,7 +62,7 @@ const loadSeries = async (period, previous) => {
 	let seriesMap = {}
 	rawData.forEach((item) => {
 		seriesMap[DateTime.fromISO(item.time).toFormat(period.timeframe === "day" ? "y-LL-dd" : "y-LL-dd-HH")] =
-			item.value
+		props.series.name === 'tps' ? item.value * 3600 : item.value
 	})
 
 	for (let i = 1; i < period.value + 1; i++) {
@@ -82,12 +82,21 @@ const loadSeries = async (period, previous) => {
 	}
 
 	isLoading.value = false
-
 	return resultData
 }
 
-const currentTotal = computed(() => currentData.value?.reduce((sum, item) => sum + item.value, 0))
-const previousTotal = computed(() => previousData.value?.reduce((sum, item) => sum + item.value, 0))
+const currentTotal = computed(() => {
+	if (props.series.name === 'tps' || props.series.name === 'bps') {
+		return currentData.value?.reduce((max, item) => (item.value > max ? item.value : max), -Infinity)
+	}
+	return currentData.value?.reduce((sum, item) => sum + item.value, 0)
+})
+const previousTotal = computed(() => {
+	if (props.series.name === 'tps' || props.series.name === 'bps') {
+		return previousData.value?.reduce((max, item) => (item.value > max ? item.value : max), -Infinity)
+	}
+	return previousData.value?.reduce((sum, item) => sum + item.value, 0)
+})
 const totalDiff = computed(() => {
 	let diff = currentTotal.value - previousTotal.value
 	let side = diff > 0 ? 'rise' : diff < 0 ? 'fall' : 'stay'
@@ -190,7 +199,7 @@ watch(
 
 				<Flex align="center" gap="2" :style="{ color: 'var(--txt-secondary)' }">
 					<Text size="12"> {{ totalDiff.side === 'rise' ? '+' : totalDiff.side === 'fall' ? '-' : '' }} </Text>
-					<Text size="12"> {{ totalDiff.diff > 999 ? '999' : totalDiff.diff }} </Text>
+					<Text size="12"> {{ abbreviate(Math.abs(totalDiff.diff), 0) }} </Text>
 					<Text size="12">%</Text>
 				</Flex>
 			</Flex>
@@ -260,7 +269,7 @@ watch(
 }
 
 .chart_wrapper {
-	width: 100px;
+	width: 90px;
 	/* position: relative; */
 }
 

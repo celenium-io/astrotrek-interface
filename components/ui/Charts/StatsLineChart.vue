@@ -53,7 +53,7 @@ const loadSeries = async (period) => {
 	let seriesMap = {}
 	rawData.forEach((item) => {
 		seriesMap[DateTime.fromISO(item.time).toFormat(period.timeframe === "day" ? "y-LL-dd" : "y-LL-dd-HH")] =
-			item.value
+			props.series.name === 'tps' ? item.value * 3600 : item.value
 	})
 
 	for (let i = 1; i < period.value + 1; i++) {
