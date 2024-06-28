@@ -76,7 +76,7 @@ const series = ref([
 	},
 	{
 		name: 'tps',
-		title: 'Txs/sec',
+		title: 'Txs/hour',
 		data: [],
 		tooltip: 'Txs',
 	},
@@ -125,11 +125,11 @@ const periods = ref([
 const selectedHighlightPeriodIdx = ref(0)
 const selectedHighlightPeriod = computed(() => periods.value[selectedHighlightPeriodIdx.value])
 
-const selectedChartPeriodIdx = ref(2)
+const selectedChartPeriodIdx = ref(1)
 const selectedChartPeriod = computed(() => periods.value[selectedChartPeriodIdx.value])
 
 const chartViews = ref(['line-chart', 'bar-chart'])
-const selectedChartView = ref(chartViews.value[0])
+const selectedChartView = ref(chartViews.value[1])
 </script>
 
 <template>
@@ -185,14 +185,14 @@ const selectedChartView = ref(chartViews.value[0])
 			<StatsLineChart v-if="selectedChartView === 'line-chart'"
 				:series="selectedChart"
 				:period="selectedChartPeriod"
-				height="380"
+				:height=380
 				:class="$style.selected_chart"
 			/>
 
 			<StatsBarChart v-else-if="selectedChartView === 'bar-chart'"
 				:series="selectedChart"
 				:period="selectedChartPeriod"
-				height="380"
+				:height=380
 				:class="$style.selected_chart"
 			/>
 		</Flex>
