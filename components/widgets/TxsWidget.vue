@@ -29,12 +29,12 @@ const getTxsSeries = async ({ from, to }) => {
 const prepareTxsSeries = async () => {
 	const data = (
 		await getTxsSeries({
-			from: parseInt(DateTime.now().minus({ days: 1 }).set({ hours: 0, minutes: 0, seconds: 0 }).ts / 1_000),
+			from: parseInt(DateTime.now().minus({ hours: 48 }).set({ hours: 0, minutes: 0, seconds: 0 }).ts / 1_000),
 		})
 	).reverse()
 	prevDaySeries.value = data.slice(0, 25).map((s) => ({ date: DateTime.fromISO(s.time).toJSDate(), value: parseFloat(s.value) }))
 	series.value = data.slice(25, data.length).map((s) => ({ date: DateTime.fromISO(s.time).toJSDate(), value: parseFloat(s.value) }))
-
+	
 	while (series.value.length < 24) {
 		series.value.push({
 			date: DateTime.fromJSDate(series.value[series.value.length - 1].date)
