@@ -74,11 +74,11 @@ export const getActionDescription = (action) => {
 				actions.push(`Withdrawer address for ${shortHash(data.bridge)} was changed to ${shortHash(data.withdrawer)}`)
 			}
 			if (data.fee_asset) {
-				actions.push(`Fee asset address for ${shortHash(data.bridge)} was changed to ${shortHash(data.fee_asset)}`)
+				actions.push(`Fee asset address for ${shortHash(data.bridge)} was changed to ${data.fee_asset}`)
 			}
 
-			for (let i = 0; actions.length - 1; i++) {
-				description = (i !== 0 ? '' : ' | ') + actions[i]
+			for (let i = 0; i < actions.length; i++) {
+				description = description + (i === 0 ? '' : ' | ') + actions[i]
 			}
 			break;
 		case "fee_change":
