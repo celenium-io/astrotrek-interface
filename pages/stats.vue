@@ -68,24 +68,17 @@ useHead({
 
 const series = ref([
 	{
-		name: 'data_size',
-		title: 'Data Usage',
+		name: 'bps',
+		title: 'Bytes/sec',
 		data: [],
 		units: 'bytes',
-		tooltip: 'Usage',
+		tooltip: 'Bytes',
 	},
 	{
 		name: 'tps',
 		title: 'Txs/hour',
 		data: [],
 		tooltip: 'Txs',
-	},
-	{
-		name: 'bps',
-		title: 'Bytes/sec',
-		data: [],
-		units: 'bytes',
-		tooltip: 'Bytes',
 	},
 	{
 		name: 'tx_count',
@@ -99,6 +92,13 @@ const series = ref([
 		data: [],
 		units: 'bytes',
 		tooltip: 'Bytes',
+	},
+	{
+		name: 'data_size',
+		title: 'Data Usage',
+		data: [],
+		units: 'bytes',
+		tooltip: 'Usage',
 	},
 ])
 
@@ -125,7 +125,7 @@ const periods = ref([
 const selectedHighlightPeriodIdx = ref(0)
 const selectedHighlightPeriod = computed(() => periods.value[selectedHighlightPeriodIdx.value])
 
-const selectedChartPeriodIdx = ref(1)
+const selectedChartPeriodIdx = ref(2)
 const selectedChartPeriod = computed(() => periods.value[selectedChartPeriodIdx.value])
 
 const chartViews = ref(['line-chart', 'bar-chart'])

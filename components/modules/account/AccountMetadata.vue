@@ -25,7 +25,7 @@ const showMore = ref(false)
 
 			<Flex align="center" gap="8" :class="$style.value">
 				<CopyButton :text="account.hash" />
-				<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ space(account.hash) }}</Text>
+				<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ account.hash }}</Text>
 			</Flex>
 		</Flex>
 
