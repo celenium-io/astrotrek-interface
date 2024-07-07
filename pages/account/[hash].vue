@@ -3,6 +3,8 @@
 import { shortHash } from "~/services/utils"
 
 /** Modules */
+import AccountBridgeMetadata from "~/components/modules/account/AccountBridgeMetadata.vue"
+import AccountBridgeRoles from "~/components/modules/account/AccountBridgeRoles.vue"
 import AccountMetadata from "~/components/modules/account/AccountMetadata.vue"
 import AccountTransactions from "~/components/modules/account/AccountTransactions.vue"
 import AccountActions from "~/components/modules/account/AccountActions.vue"
@@ -13,9 +15,10 @@ import RawDataView from "@/components/shared/RawDataView.vue"
 
 /** UI */
 import Button from "~/components/ui/Button.vue"
+import Tooltip from "~/components/ui/Tooltip.vue"
 
 /** API */
-import { fetchAccountByHash, fetchAccountActions, fetchAccountRollups, fetchAccountTransactions } from "~/services/api/account.js"
+import { fetchAccountActions, fetchAccountBridgeRoles, fetchAccountByHash, fetchAccountRollups, fetchAccountTransactions } from "~/services/api/account.js"
 
 definePageMeta({
 	layout: "default",
@@ -27,6 +30,7 @@ const account = ref()
 const txs = ref([])
 const actions = ref([])
 const rollups = ref([])
+const bridgeRoles = ref([])
 const isLoading = ref(false)
 
 const { data } = await fetchAccountByHash(route.params.hash)
@@ -80,6 +84,41 @@ const fetchRollups = async () => {
 	})
 	rollups.value = data.value
 	handleNextCondition.value = rollups.value.length < limit.value
+
+	isLoading.value = false
+}
+
+const fetchBridgeRoles = async () => {
+	isLoading.value = true
+
+	bridgeRoles.value = []
+	const { data } = await fetchAccountBridgeRoles({
+		hash: account.value?.hash,
+		limit: limit.value,
+		offset: (page.value - 1) * limit.value,
+	})
+
+	data.value.forEach(r => {
+		if (r.sudo === account.value.hash) {
+			bridgeRoles.value.push({
+				bridge: r.address,
+				account: r.sudo,
+				role: 'admin',
+				rollup: r.rollup,
+			})
+		}
+
+		if (r.withdrawer === account.value.hash) {
+			bridgeRoles.value.push({
+				bridge: r.address,
+				account: r.withdrawer,
+				role: 'withdrawer',
+				rollup: r.rollup,
+			})
+		}
+	})
+
+	handleNextCondition.value = bridgeRoles.value.length < limit.value
 
 	isLoading.value = false
 }
@@ -147,6 +186,7 @@ const tabs = ref(
 		{ name: "Transactions" },
 		{ name: "Actions" },
 		{ name: "Rollups" },
+		{ name: "Bridge Roles" },
 	]
 )
 const activeTab = ref(tabs.value[0].name)
@@ -169,6 +209,10 @@ watch(
 				page.value = 1
 				fetchRollups()
 				break
+			case "Bridge Roles":
+				page.value = 1
+				fetchBridgeRoles()
+				break
 		}
 	},
 )
@@ -186,6 +230,9 @@ watch(
 					break
 				case "Rollups":
 					fetchRollups()
+					break
+				case "Bridge Roles":
+					fetchBridgeRoles()
 					break
 			}
 		}
@@ -206,19 +253,28 @@ watch(
 			/>
 
 			<Flex align="center" justify="between" wide>
-				<Flex align="center" gap="8">
+				<Flex align="center" gap="12">
 					<Icon name="account" size="14" color="primary" />
 
 					<Text size="14" weight="500" color="primary">
 						Account <Text weight="600">{{ shortHash(account.hash) }}</Text>
 					</Text>
+
+					<Tooltip v-if="account.bridge">
+						<Icon name="bridge" size="18" color="brand" />
+
+						<template #content>
+							Bridge account
+						</template>
+					</Tooltip>
 				</Flex>
 
 				<RawDataView :entity="account" name="account" />
 			</Flex>
 		</Flex>
 
-		<AccountMetadata :account="account" />
+		<AccountBridgeMetadata v-if="account.bridge" :account="account" />
+		<AccountMetadata v-else :account="account" />
 
 		<Flex direction="column" gap="12">
 			<Flex align="center" justify="between">
@@ -251,6 +307,8 @@ watch(
 			<AccountActions v-if="activeTab === 'Actions'" :actions="actions" :isLoading="isLoading" />
 
 			<AccountRollups v-if="activeTab === 'Rollups'" :rollups="rollups" :isLoading="isLoading" />
+
+			<AccountBridgeRoles v-if="activeTab === 'Bridge Roles'" :roles="bridgeRoles" :isLoading="isLoading" />
 		</Flex>
 	</Flex>
 </template>

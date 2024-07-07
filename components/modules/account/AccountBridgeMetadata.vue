@@ -1,0 +1,183 @@
+<script setup>
+/** Vendor */
+import { DateTime } from "luxon"
+
+/** Services */
+import { getRollupHashSafeURL } from "~/services/utils/rollups"
+import { space, spaces } from "@/services/utils"
+
+/** UI */
+import Button from "@/components/ui/Button.vue"
+import { capitalize } from "vue"
+
+const props = defineProps({
+	account: {
+		type: Object,
+	},
+})
+
+const showMore = ref(false)
+</script>
+
+<template>
+	<Flex direction="column" :class="$style.wrapper">
+		<Flex align="center" :class="$style.item">
+			<Text size="13" weight="600" color="secondary" :class="$style.key">Hash</Text>
+
+			<Flex align="center" gap="8" :class="$style.value">
+				<CopyButton :text="account.hash" />
+				<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ account.hash }}</Text>
+			</Flex>
+		</Flex>
+
+		<Flex align="center" :class="$style.item">
+			<Text size="13" weight="600" color="secondary" :class="$style.key">Balance</Text>
+
+			<Text size="13" weight="600" color="primary" mono :class="$style.value"> {{ `${spaces(account.balances[0].value)} ${account.balances[0].currency.toUpperCase()}` }} </Text>
+		</Flex>
+
+		<Flex align="center" :class="$style.item">
+			<Text size="13" weight="600" color="secondary" :class="$style.key">Rollup</Text>
+			
+			<NuxtLink :to="`/rollup/${getRollupHashSafeURL(account.bridge.rollup)}`">
+				<Flex align="center" gap="4" :class="$style.value">
+					<CopyButton :text="account.bridge.rollup" />
+					<Text size="13" weight="600" color="primary" mono>{{ account.bridge.rollup }}</Text>
+					<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
+				</Flex>
+			</NuxtLink>
+		</Flex>
+
+		<Flex align="center" :class="$style.item">
+			<Text size="13" weight="600" color="secondary" :class="$style.key">Admin</Text>
+			
+			<NuxtLink :to="`/account/${account.bridge.sudo}`">
+				<Flex align="center" gap="4" :class="$style.value">
+					<CopyButton :text="account.bridge.sudo" />
+					<Text size="13" weight="600" color="primary" mono>{{ account.bridge.sudo }}</Text>
+					<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
+				</Flex>
+			</NuxtLink>
+		</Flex>
+
+		<Flex align="center" :class="$style.item">
+			<Text size="13" weight="600" color="secondary" :class="$style.key">Withdrawer</Text>
+			
+			<NuxtLink :to="`/account/${account.bridge.withdrawer}`">
+				<Flex align="center" gap="4" :class="$style.value">
+					<CopyButton :text="account.bridge.withdrawer" />
+					<Text size="13" weight="600" color="primary" mono>{{ account.bridge.withdrawer }}</Text>
+					<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
+				</Flex>
+			</NuxtLink>
+		</Flex>
+
+		<Flex align="center" :class="$style.item">
+			<Text size="13" weight="600" color="secondary" :class="$style.key">Asset</Text>
+
+			<Text size="13" weight="600" color="primary" mono :class="$style.value"> {{ account.bridge.asset.toUpperCase() }} </Text>
+		</Flex>
+
+		<Flex align="center" :class="$style.item">
+			<Text size="13" weight="600" color="secondary" :class="$style.key">Fee Asset</Text>
+
+			<Text size="13" weight="600" color="primary" mono :class="$style.value"> {{ account.bridge.fee_asset.toUpperCase() }} </Text>
+		</Flex>
+
+		<template v-if="showMore">
+			<Flex align="center" :class="$style.item">
+				<Text size="13" weight="600" color="secondary" :class="$style.key">Signed Txs Count</Text>
+
+				<Text size="13" weight="600" color="primary" mono :class="$style.value"> {{ account.signed_tx_count }} </Text>
+			</Flex>
+
+			<Flex align="center" :class="$style.item">
+				<Text size="13" weight="600" color="secondary" :class="$style.key">Actions Count</Text>
+
+				<Text size="13" weight="600" color="primary" mono :class="$style.value"> {{ account.actions_count }} </Text>
+			</Flex>
+
+			<Flex align="center" :class="$style.item">
+				<Text size="13" weight="600" color="secondary" :class="$style.key">First Height</Text>
+				
+				<NuxtLink :to="`/block/${account.first_height}`">
+					<Flex align="center" gap="4" :class="$style.value">
+						<Text size="13" weight="600" color="primary" mono>{{ spaces(account.first_height) }}</Text>
+						<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
+					</Flex>
+				</NuxtLink>
+			</Flex>
+
+			<Flex align="center" :class="$style.item">
+				<Text size="13" weight="600" color="secondary" :class="$style.key">Nonce</Text>
+
+				<Text size="13" weight="600" color="primary" mono :class="$style.value"> {{ account.nonce }} </Text>
+			</Flex>
+		</template>
+	</Flex>
+
+	<Flex @click="showMore = !showMore" align="center" justify="end" gap="4" :class="$style.show_more">
+		<Icon size="12" name="chevron-double" color="brand" :rotate="showMore ? 180 : 0" />
+		<Text size="12" weight="600" color="brand">Show {{ showMore ? 'Less' : 'More' }}</Text>
+	</Flex>
+</template>
+
+<style module>
+.wrapper {
+	border-radius: 8px;
+	box-shadow: inset 0 0 0 1px var(--op-5);
+	background: var(--op-3);
+}
+
+.item {
+	height: 36px;
+
+	padding: 0 12px;
+
+	&:last-child {
+		border-bottom: none;
+	}
+}
+
+.key {
+	min-width: 300px;
+}
+
+.value {
+	min-width: 0;
+}
+
+.overflow {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.disable {
+	cursor: default;
+	pointer-events: none;
+}
+
+.show_more {
+	margin-top: -10px;
+
+	cursor: pointer;
+}
+
+@media (max-width: 650px) {
+	.item {
+		height: 54px;
+
+		flex-direction: column;
+		align-items: start;
+		justify-content: center;
+		gap: 8px;
+
+		overflow: hidden;
+	}
+
+	.value {
+		width: 100%;
+	}
+}
+</style>

@@ -1,5 +1,6 @@
 <script setup>
 /** Modules */
+// import RollupBridgeMetadata from "~/components/modules/account/RollupBridgeMetadata.vue"
 import RollupMetadata from "~/components/modules/rollup/RollupMetadata.vue"
 import RollupActions from "~/components/modules/rollup/RollupActions.vue"
 import RollupCharts from "~/components/modules/rollup/RollupCharts.vue";
@@ -10,6 +11,7 @@ import RawDataView from "@/components/shared/RawDataView.vue"
 /** UI */
 import Button from "~/components/ui/Button.vue"
 import { Dropdown, DropdownItem } from "@/components/ui/Dropdown"
+import Tooltip from "~/components/ui/Tooltip.vue"
 
 /** API */
 import { fetchRollupActions, fetchRollupByHash } from "~/services/api/rollup"
@@ -160,12 +162,22 @@ watch(
 					<Text size="14" weight="500" color="primary">
 						Rollup <Text weight="600">{{ rollup.hash }}</Text>
 					</Text>
+
+					<Tooltip v-if="rollup.bridge">
+						<Icon name="bridge" size="18" color="brand" />
+
+						<template #content>
+							Bridge rollup
+						</template>
+					</Tooltip>
 				</Flex>
 
 				<RawDataView :entity="rollup" name="rollup" />
 			</Flex>
 		</Flex>
 
+		<!-- <RollupBridgeMetadata v-if="rollup.bridge" :rollup="rollup" /> -->
+		<!-- <RollupMetadata v-else :rollup="rollup" /> -->
 		<RollupMetadata :rollup="rollup" />
 
 		<Flex direction="column" gap="12">

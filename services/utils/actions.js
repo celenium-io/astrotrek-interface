@@ -1,4 +1,4 @@
-import { base64Decode, capitalize, capitalizeAndReplaceUnderscore, formatBytes, midHash, shortHash, strToHex } from "./index.js";
+import { base64Decode, capitalize, capitalizeAndReplaceUnderscore, formatBytes, midHash, shortHash, spaces, strToHex } from "./index.js";
 
 export const getActionTitle = (actionType) => {
 	if (!actionType) return "Action"
@@ -60,7 +60,7 @@ export const getActionDescription = (action) => {
 			description = `Bridge account was initialized for ${data.rollup_id}`
 			break;
 		case "bridge_lock":
-			description = `Transfer ${data.amount} from ${midHash(data.to)} to ${midHash(data.destination_chain_address)}`
+			description = `Transfer ${spaces(data.amount)} ${(data.asset).toUpperCase()} from sequencer to ${midHash(data.to)}`
 			break;
 		case "bridge_unlock":
 			description = `Unlock ${midHash(data.amount)} ${midHash(data.fee_asset)} to ${midHash(data.to)}`
