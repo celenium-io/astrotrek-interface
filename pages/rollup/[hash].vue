@@ -167,7 +167,7 @@ watch(
 						<Icon name="bridge" size="18" color="brand" />
 
 						<template #content>
-							Bridge rollup
+							Has bridge account
 						</template>
 					</Tooltip>
 				</Flex>
