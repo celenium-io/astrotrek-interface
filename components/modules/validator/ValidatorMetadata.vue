@@ -74,7 +74,7 @@ fetchUptime()
 
 			<Flex align="center" gap="8" :class="$style.value">
 				<CopyButton :text="validator.address" />
-				<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ space(validator.address) }}</Text>
+				<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ validator.address }}</Text>
 			</Flex>
 		</Flex>
 

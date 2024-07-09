@@ -20,7 +20,7 @@ const props = defineProps({
 
 		<RollupsTable v-if="rollups.length > 0" :rollups="rollups" />
 
-		<EmptyHolder v-else title="This account didn't push anything in any rollup" />
+		<EmptyHolder v-else-if="!isLoading" title="This account didn't push anything in any rollup" />
 	</Flex>
 </template>
 

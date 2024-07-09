@@ -1,4 +1,4 @@
-import { base64Decode, capitalize, capitalizeAndReplaceUnderscore, formatBytes, midHash, strToHex } from "./index.js";
+import { base64Decode, capitalize, capitalizeAndReplaceUnderscore, formatBytes, midHash, shortHash, spaces, strToHex } from "./index.js";
 
 export const getActionTitle = (actionType) => {
 	if (!actionType) return "Action"
@@ -60,7 +60,31 @@ export const getActionDescription = (action) => {
 			description = `Bridge account was initialized for ${data.rollup_id}`
 			break;
 		case "bridge_lock":
-			description = `Transfer ${data.amount} from ${midHash(data.to)} to ${midHash(data.destination_chain_address)}`
+			description = `Transfer ${spaces(data.amount)} ${(data.asset).toUpperCase()} from sequencer to ${midHash(data.to)}`
+			break;
+		case "bridge_unlock":
+			description = `Unlock ${midHash(data.amount)} ${midHash(data.fee_asset)} to ${midHash(data.to)}`
+			break;
+		case "bridge_sudo_change_action":
+			let actions = []
+			if (data.sudo) {
+				actions.push(`Sudo address for ${shortHash(data.bridge)} was changed to ${shortHash(data.sudo)}`)
+			}
+			if (data.withdrawer) {
+				actions.push(`Withdrawer address for ${shortHash(data.bridge)} was changed to ${shortHash(data.withdrawer)}`)
+			}
+			if (data.fee_asset) {
+				actions.push(`Fee asset address for ${shortHash(data.bridge)} was changed to ${data.fee_asset}`)
+			}
+
+			for (let i = 0; i < actions.length; i++) {
+				description = description + (i === 0 ? '' : ' | ') + actions[i]
+			}
+			break;
+		case "fee_change":
+			Object.keys(data).forEach(k => {
+				description = `${capitalizeAndReplaceUnderscore(k)} was change to ${data[k]}`
+			})
 			break;
 		case "fee_asset_change":
 			if (data.addition) {

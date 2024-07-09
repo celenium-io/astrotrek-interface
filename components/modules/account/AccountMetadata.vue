@@ -7,7 +7,6 @@ import { space, spaces } from "@/services/utils"
 
 /** UI */
 import Button from "@/components/ui/Button.vue"
-import { capitalize } from "vue";
 
 const props = defineProps({
 	account: {
@@ -25,14 +24,14 @@ const showMore = ref(false)
 
 			<Flex align="center" gap="8" :class="$style.value">
 				<CopyButton :text="account.hash" />
-				<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ space(account.hash) }}</Text>
+				<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ account.hash }}</Text>
 			</Flex>
 		</Flex>
 
 		<Flex align="center" :class="$style.item">
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Balance</Text>
 
-			<Text size="13" weight="600" color="primary" mono :class="$style.value"> {{ `${spaces(account.balance.value)} ${account.balance.currency.toUpperCase()}` }} </Text>
+			<Text size="13" weight="600" color="primary" mono :class="$style.value"> {{ `${spaces(account.balances[0].value)} ${account.balances[0].currency.toUpperCase()}` }} </Text>
 		</Flex>
 
 		<Flex align="center" :class="$style.item">

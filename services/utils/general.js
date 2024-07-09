@@ -53,6 +53,10 @@ export const shortHash = (hash) => {
 	if (!hash) return ""
 	
 	if (hash.length > 16) {
+		if (hash.startsWith("astria")) {
+			return `astria ••• ${hash.slice(-4)}`
+		}
+
 		return `${hash.slice(0, 4)} ••• ${hash.slice(-4)}`
 	} else {
 		return hash
@@ -61,6 +65,10 @@ export const shortHash = (hash) => {
 
 export const midHash = (hash) => {
 	if (hash.length > 24) {
+		if (hash.startsWith("astria")) {
+			return `astria ••• ${hash.slice(-8,-4)} ${hash.slice(-4)}`
+		}
+
 		return `${hash.slice(0, 4)} ${hash.slice(4, 8)} ••• ${hash.slice(-8,-4)} ${hash.slice(-4)}`
 	} else {
 		return hash
@@ -68,8 +76,13 @@ export const midHash = (hash) => {
 }
 
 export const splitAddress = (address, charCount = 4) => {
+	if (address.startsWith("astria")) {
+		return `astria...${address.slice(-charCount)}`
+	}
+
 	return `${address.slice(0, charCount)}...${address.slice(-charCount)}`
 }
+
 
 export const getNetworkName = () => {
 	const { hostname } = useRequestURL()

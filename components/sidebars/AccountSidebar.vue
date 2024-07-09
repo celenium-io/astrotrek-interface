@@ -14,6 +14,7 @@ import LinkToEntity from "@/components/shared/LinkToEntity.vue"
 /** UI */
 import Button from "@/components/ui/Button.vue"
 import Sidebar from "@/components/ui/Sidebar.vue"
+import Tooltip from "@/components/ui/Tooltip.vue"
 import TransactionsList from "@/components/tables/TransactionsList.vue"
 
 const props = defineProps({
@@ -66,10 +67,18 @@ watch(
 		<Flex direction="column" justify="between" wide gap="16">
 			<Flex direction="column" gap="16" :class="$style.content">
 				<Flex direction="column" gap="8">
-					<Flex align="center" gap="4">
+					<Flex align="center" gap="8">
 						<Icon name="account" size="12" color="secondary" />
 
 						<Text size="13" weight="500" color="secondary"> Account </Text>
+
+						<Tooltip v-if="account.bridge">
+							<Icon name="bridge" size="18" color="brand" />
+
+							<template #content>
+								Bridge account
+							</template>
+						</Tooltip>
 					</Flex>
 
 					<Flex align="center" gap="8">
@@ -124,7 +133,7 @@ watch(
 					<Flex align="center" justify="between">
 						<Text size="13" weight="600" color="tertiary">Balance</Text>
 
-						<Text size="13" weight="600" color="primary" tabular> {{ `${spaces(account.balance.value)} ${account.balance.currency.toUpperCase()}` }} </Text>
+						<Text size="13" weight="600" color="primary" tabular> {{ `${spaces(account.balances[0].value)} ${account.balances[0].currency.toUpperCase()}` }} </Text>
 					</Flex>
 
 					<Flex align="center" justify="between">

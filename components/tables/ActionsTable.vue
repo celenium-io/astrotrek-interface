@@ -9,7 +9,7 @@ import Button from "@/components/ui/Button.vue"
 import { fetchTxByHash } from "~/services/api/tx"
 
 /** Services */
-import { midHash, spaces } from "@/services/utils"
+import { capitalizeAndReplaceUnderscore, midHash, shortHash, spaces } from "@/services/utils"
 import { getActionDataLength, getActionDescription, getActionTitle } from "@/services/utils/actions.js"
 import { getRollupHashSafeURL } from "~/services/utils/rollups"
 
@@ -140,7 +140,7 @@ const handleOpenTx = async (action) => {
 
 					<Flex v-else-if="act.type === 'ics20_withdrawal'" gap="4" :class="$style.description">
 						<Text size="13" weight="500" color="secondary">
-							{{ `Withdraw ${act.data.amount} ${act.data.denom} to` }}
+							{{ `Withdraw ${spaces(act.data.amount)} ${act.data.denom} to` }}
 						</Text>
 
 						<LinkToEntity
@@ -166,7 +166,7 @@ const handleOpenTx = async (action) => {
 
 					<Flex v-else-if="act.type === 'bridge_lock'" gap="4" :class="$style.description">
 						<Text size="13" weight="500" color="secondary">
-							{{ `Transfer ${act.data.amount} from` }}
+							{{ `Transfer ${spaces(act.data.amount)} ${(act.data.asset).toUpperCase()} from sequencer to` }}
 						</Text>
 
 						<LinkToEntity
@@ -175,17 +175,118 @@ const handleOpenTx = async (action) => {
 							size="13"
 							:class="$style.link"
 						/>
+					</Flex>
 
-						<Text size="13" weight="500" color="secondary">to</Text>
+					<Flex v-else-if="act.type === 'bridge_unlock'" gap="4" :class="$style.description">
+						<Text size="13" weight="500" color="secondary">
+							{{ `Unlock ${act.data.amount} ${act.data.fee_asset} to` }}
+						</Text>
 
 						<LinkToEntity
-							:entity="{ title: midHash(act.data.destination_chain_address), type: 'account', id: act.data.destination_chain_address }"
+							:entity="{ title: midHash(act.data.to), type: 'account', id: act.data.to }"
 							color="secondary"
 							size="13"
 							:class="$style.link"
 						/>
 					</Flex>
 
+					<Flex v-else-if="act.type === 'bridge_sudo_change_action'" gap="4" :class="$style.description">
+						<Flex v-if="act.data.sudo" gap="4" :class="$style.description_el">
+							<Text size="13" weight="500" color="secondary">
+								Sudo address for
+							</Text>
+
+							<LinkToEntity
+								:entity="{ title: shortHash(act.data.bridge), type: 'account', id: act.data.bridge }"
+								color="secondary"
+								size="13"
+								:class="$style.link"
+							/>
+
+							<Text size="13" weight="500" color="secondary">
+								was changed to
+							</Text>
+
+							<LinkToEntity
+								:entity="{ title: shortHash(act.data.sudo), type: 'account', id: act.data.sudo }"
+								color="secondary"
+								size="13"
+								:class="$style.link"
+							/>
+						</Flex>
+
+						<Flex v-if="act.data.withdrawer" gap="4" :class="$style.description_el">
+							<Text size="13" weight="500" color="secondary">
+								{{ `${act.data.sudo ? ' | ' : ''}Withdrawer address for` }}
+							</Text>
+
+							<LinkToEntity
+								:entity="{ title: shortHash(act.data.bridge), type: 'account', id: act.data.bridge }"
+								color="secondary"
+								size="13"
+								:class="$style.link"
+							/>
+
+							<Text size="13" weight="500" color="secondary">
+								was changed to
+							</Text>
+
+							<LinkToEntity
+								:entity="{ title: shortHash(act.data.withdrawer), type: 'account', id: act.data.withdrawer }"
+								color="secondary"
+								size="13"
+								:class="$style.link"
+							/>
+						</Flex>
+
+						<Flex v-if="act.data.fee_asset" gap="4" :class="$style.description_el">
+							<Text size="13" weight="500" color="secondary">
+								{{ `${act.data.sudo || act.data.withdrawer ? ' | ' : ''}Fee asset for` }}
+							</Text>
+
+							<LinkToEntity
+								:entity="{ title: shortHash(act.data.bridge), type: 'account', id: act.data.bridge }"
+								color="secondary"
+								size="13"
+								:class="$style.link"
+							/>
+
+							<Text size="13" weight="500" color="secondary">
+								{{ `was changed to ${act.data.fee_asset.toUpperCase()}` }}
+							</Text>
+						</Flex>
+					</Flex>
+
+					<Flex v-else-if="act.type === 'fee_change'" gap="4" :class="$style.description">
+						<Text v-for="k in Object.keys(act.data)" size="13" weight="500" color="secondary">
+							{{ `${capitalizeAndReplaceUnderscore(k)} was change to ${act.data[k]}` }}
+						</Text>
+					</Flex>
+
+					<Flex v-else-if="act.type === 'fee_asset_change'" gap="4">
+						<Flex v-if="act.data.addition" gap="4" :class="$style.description">
+							<LinkToEntity
+								:entity="{ title: midHash(act.data.addition), type: 'account', id: act.data.addition }"
+								color="secondary"
+								size="13"
+								:class="$style.link"
+							/>
+
+							<Text size="13" weight="500" color="secondary">was added for fee payments</Text>
+						</Flex>
+
+						<Flex v-else="act.data.removal" gap="4" :class="$style.description">
+							<LinkToEntity
+								:entity="{ title: midHash(act.data.removal), type: 'account', id: act.data.removal }"
+								color="secondary"
+								size="13"
+								:class="$style.link"
+							/>
+
+							<Text size="13" weight="500" color="secondary">was removed for fee payments</Text>
+						</Flex>
+					</Flex>
+					
 					<Flex v-else>
 						<Text size="13" weight="500" color="secondary" :class="$style.description">
 							{{ getActionDescription(act) }}
@@ -261,9 +362,17 @@ const handleOpenTx = async (action) => {
 }
 
 .description {
-	max-width: 800px;
+	max-width: 700px;
 	padding-left: 8px;
 	
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.description_el {
+	max-width: 100%;
+
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;

@@ -63,7 +63,7 @@ const showMore = ref(false)
 
 			<Flex align="center" gap="8" :class="$style.value">
 				<CopyButton :text="tx.signer" />
-				<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ space(tx.signer) }}</Text>
+				<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ tx.signer }}</Text>
 			</Flex>
 		</Flex>
 

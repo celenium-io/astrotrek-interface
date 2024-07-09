@@ -16,13 +16,19 @@ import RawDataView from "@/components/shared/RawDataView.vue"
 /** API */
 import { fetchBlockByHeight, fetchBlockTxs, fetchBlockActions } from "~/services/api/block"
 
+/** Store */
+import { useAppStore } from "@/store/app"
+const appStore = useAppStore()
+
 definePageMeta({
 	layout: "default",
 })
 
 const route = useRoute()
+const router = useRouter()
 
 const block = ref()
+const lastBlock = computed(() => appStore.latestBlocks[0])
 const txs = ref([])
 const actions = ref([])
 const isLoading = ref(false)
@@ -165,14 +171,33 @@ await fetchTxs()
 			/>
 
 			<Flex align="center" justify="between" wide>
-				<Flex align="center" gap="8">
-					<Icon name="block" size="14" color="primary" />
+				<Flex align="center" gap="16">
+					<Flex align="center" gap="8">
+						<Icon name="block" size="14" color="primary" />
 
-					<Text size="14" weight="500" color="primary">
-						Block <Text weight="600">{{ spaces(block.height) }}</Text>
-					</Text>
+						<Text size="14" weight="500" color="primary">
+							Block <Text weight="600">{{ spaces(block.height) }}</Text>
+						</Text>
 
-					<CopyButton :text="block.height" />
+						<CopyButton :text="block.height" />
+					</Flex>
+
+					<Flex align="center" gap="8">
+						<Button @click="router.push(`/block/${block.height - 1}`)" type="tertiary" size="mini" :disabled="block.height === 1">
+							<Icon name="arrow-redo-right" size="16" color="secondary" :style="{ transform: 'scaleX(-1)' }" />
+							Prev
+						</Button>
+
+						<Button
+							@click="router.push(`/block/${block.height + 1}`)"
+							type="tertiary"
+							size="mini"
+							:disabled="block.height === lastBlock?.height"
+						>
+							Next
+							<Icon name="arrow-redo-right" size="16" color="secondary" />
+						</Button>
+					</Flex>
 				</Flex>
 
 				<RawDataView :entity="block" name="block" />

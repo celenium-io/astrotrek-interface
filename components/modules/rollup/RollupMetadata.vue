@@ -69,6 +69,67 @@ const showMore = ref(false)
 			<Text size="13" weight="600" color="primary" mono :class="$style.value">{{ formatBytes(rollup.size) }}</Text>
 		</Flex>
 
+		<Flex v-if="rollup.bridge" align="start" direction="column">
+			<Flex align="center" :class="$style.item">
+				<Text size="13" weight="600" color="secondary" :class="$style.key">Bridge</Text>
+				
+				<Flex align="center" gap="4" :class="$style.value">
+					<CopyButton :text="rollup.bridge.address" />
+
+					<NuxtLink :to="`/account/${rollup.bridge.address}`" target="_blank">
+						<Flex align="center" gap="4">
+							<Text size="13" weight="600" color="primary" mono>{{ rollup.bridge.address }}</Text>
+
+							<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
+						</Flex>
+					</NuxtLink>
+				</Flex>
+			</Flex>
+
+			<Flex align="center" :class="$style.item">
+				<Text size="13" weight="600" color="secondary" :class="$style.key">Admin</Text>
+				
+				<Flex align="center" gap="4" :class="$style.value">
+					<CopyButton :text="rollup.bridge.sudo" />
+
+					<NuxtLink :to="`/account/${rollup.bridge.sudo}`" target="_blank">
+						<Flex align="center" gap="4">
+							<Text size="13" weight="600" color="primary" mono>{{ rollup.bridge.sudo }}</Text>
+
+							<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
+						</Flex>
+					</NuxtLink>
+				</Flex>
+			</Flex>
+
+			<Flex align="center" :class="$style.item">
+				<Text size="13" weight="600" color="secondary" :class="$style.key">Withdrawer</Text>
+				
+				<Flex align="center" gap="4" :class="$style.value">
+					<CopyButton :text="rollup.bridge.withdrawer" />
+
+					<NuxtLink :to="`/account/${rollup.bridge.withdrawer}`" target="_blank">
+						<Flex align="center" gap="4">
+							<Text size="13" weight="600" color="primary" mono>{{ rollup.bridge.withdrawer }}</Text>
+
+							<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
+						</Flex>
+					</NuxtLink>
+				</Flex>
+			</Flex>
+
+			<Flex align="center" :class="$style.item">
+				<Text size="13" weight="600" color="secondary" :class="$style.key">Asset</Text>
+
+				<Text size="13" weight="600" color="primary" mono :class="$style.value"> {{ rollup.bridge.asset.toUpperCase() }} </Text>
+			</Flex>
+
+			<Flex align="center" :class="$style.item">
+				<Text size="13" weight="600" color="secondary" :class="$style.key">Fee Asset</Text>
+
+				<Text size="13" weight="600" color="primary" mono :class="$style.value"> {{ rollup.bridge.fee_asset.toUpperCase() }} </Text>
+			</Flex>
+		</Flex>
 		<template v-if="showMore">
 				<!-- <Flex align="center" :class="$style.item">
 					<Text size="13" weight="600" color="secondary" :class="$style.key">Signer</Text>

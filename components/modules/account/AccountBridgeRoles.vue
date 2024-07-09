@@ -1,26 +1,25 @@
 <script setup>
-import TransactionsTable from "~/components/tables/TransactionsTable.vue"
 import EmptyHolder from "~/components/shared/EmptyHolder.vue"
-import LoadingHolder from "~/components/shared/LoadingHolder.vue"
+import LoadingHolder from "@/components/shared/LoadingHolder.vue"
+import RolesTable from "~/components/tables/RolesTable.vue"
 
 const props = defineProps({
-	txs: {
+	roles: {
 		type: Array,
 	},
 	isLoading: {
 		type: Boolean,
-		default: false,
 	}
 })
 </script>
 
 <template>
 	<Flex direction="column" :class="$style.wrapper">
-		<LoadingHolder v-if="isLoading" title="Loading transactions.." />
+		<LoadingHolder v-if="isLoading" title="Loading bridge roles.." />
 
-		<TransactionsTable v-if="txs.length > 0" :txs="txs" />
+		<RolesTable v-if="roles.length > 0" :isLoading="isLoading" :roles="roles" />
 
-		<EmptyHolder v-else-if="!isLoading" title="This account didn't sign any transaction" />
+		<EmptyHolder v-else-if="!isLoading" title="This account has no role" />
 	</Flex>
 </template>
 

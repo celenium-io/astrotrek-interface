@@ -41,7 +41,7 @@ const showMore = ref(false)
 					<Flex align="center" gap="4">
 						<Text size="13" weight="600" color="primary" mono :class="$style.overflow">
 							{{ block.proposer.name }}
-							<Text color="tertiary">{{ space(block.proposer?.address) }} </Text>
+							<Text color="tertiary">{{ block.proposer?.address }} </Text>
 						</Text>
 
 						<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>

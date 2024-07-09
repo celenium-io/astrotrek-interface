@@ -52,7 +52,7 @@ const props = defineProps({
 				<Flex align="center" gap="8">
 					<Text size="12" weight="500" color="secondary">
 						<Text color="tertiary">Balance</Text>
-						{{ account.balance.value }} NRIA
+						{{ `${spaces(account.balances[0].value)} ${account.balances[0].currency.toUpperCase()}` }}
 					</Text>
 
 					<div :class="$style.dot" />

@@ -106,7 +106,7 @@ watch(
 						<Flex direction="column" gap="8">
 							<Text size="12" weight="600" color="secondary">Signer</Text>
 
-							<Text size="12" weight="600" color="tertiary">{{ space(tx.signer) }}</Text>
+							<Text size="12" weight="600" color="tertiary">{{ tx.signer }}</Text>
 						</Flex>
 
 						<Icon name="arrow-narrow-up-right" size="12" color="secondary" />
