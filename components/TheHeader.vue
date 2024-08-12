@@ -5,15 +5,18 @@ import { Dropdown, DropdownItem } from "@/components/ui/Dropdown"
 /** Local */
 import NavigationPopup from "./NavigationPopup.vue"
 
-/**
- * Composable
- */
+/** Composable */
 import { useOutside } from "@/composables/outside"
+
+/** Store */
+import { useAppStore } from "@/store/app"
+const appStore = useAppStore()
 
 let removeOutside = null
 
 const navigationPopupEl = ref()
 const showPopup = ref(false)
+const lastHead = computed(() => appStore.lastHead)
 
 watch(
 	() => showPopup.value,
@@ -76,7 +79,15 @@ watch(
 					</Flex>
 
 					<template #popup>
-						<DropdownItem> Astria-Dusk </DropdownItem>
+						<DropdownItem>
+							<Flex align="center" direction="column" gap="4">
+								<Flex justify="start" wide>
+									<Text size="12" color="secondary">Astria-Dusk</Text>	
+								</Flex>
+								
+								<Text size="12" color="tertiary"> {{ lastHead.chain_id }} </Text>
+							</Flex>
+						</DropdownItem>
 					</template>
 				</Dropdown>
 
