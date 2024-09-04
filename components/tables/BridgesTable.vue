@@ -3,11 +3,10 @@
 import Tooltip from "@/components/ui/Tooltip.vue"
 
 /** Components */
-import EmptyHolder from "~/components/shared/EmptyHolder.vue"
 import LinkToEntity from "@/components/shared/LinkToEntity.vue"
 
 /** Services */
-import { formatBytes, spaces } from "@/services/utils"
+import { midHash } from "@/services/utils"
 import { getRollupHashSafeURL } from "~/services/utils/rollups"
 
 /** Store */
@@ -15,73 +14,59 @@ import { useSidebarsStore } from "@/store/sidebars"
 const sidebarsStore = useSidebarsStore()
 
 const props = defineProps({
-	rollups: {
+	bridges: {
 		type: Array,
-	},
-	isLoading: {
-		type: Boolean,
-	},
-	generalRollupsList: {
-		type: Boolean,
-		default: false,
 	},
 })
 </script>
 
 <template>
 	<Flex direction="column" :class="$style.wrapper">
-		<ClientOnly>
-			<Transition name="fade">
-				<Flex v-if="isLoading" direction="column" align="center" gap="16" :class="$style.loading">
-					<Spinner size="16" />
-
-					<Flex direction="column" align="center" gap="8">
-						<Text size="14" weight="500" color="primary">Fetching rollups...</Text>
-						<Text size="13" weight="500" color="tertiary">It's almost done</Text>
-					</Flex>
-				</Flex>
-			</Transition>
-		</ClientOnly>
-
 		<Flex
-			v-if="rollups.length > 0"
-			v-for="rollup in rollups"
-			@click="sidebarsStore.open('rollup', rollup)"
+			v-if="bridges"
+			v-for="bridge in bridges"
 			justify="between"
 			align="center"
-			:class="[!generalRollupsList && $style.row, generalRollupsList && $style.row_general_list, isLoading && $style.disabled]"
+			:class="[$style.row, isLoading && $style.disabled]"
 		>
 			<Flex direction="column" gap="8">
 				<Flex align="center" gap="6">
-					<Icon name="rollup" size="16" color="secondary" />
+					<Icon name="bridge" size="16" color="secondary" />
 
-					<LinkToEntity :entity="{ title: rollup.hash, type: 'rollup', id: getRollupHashSafeURL(rollup.hash)}" color="primary" />
+					<Text size="12" weight="500" color="primary">Bridge</Text>
 
-					<Tooltip v-if="rollup.bridge_count">
-						<Icon name="bridge" size="18" color="brand" />
+					<LinkToEntity :entity="{ title: midHash(bridge.address), type: 'account', id: bridge.address}" color="primary" />
 
-						<template #content>
-							Associated with bridge account
-						</template>
-					</Tooltip>
+					<Text size="12" weight="500" color="primary">associated with rollup</Text>
+
+					<LinkToEntity :entity="{ title: midHash(bridge.rollup), type: 'rollup', id: getRollupHashSafeURL(bridge.rollup)}" color="primary" />
 				</Flex>
 
 				<Flex align="center" gap="8">
-					<Text size="12" weight="500" color="secondary">
-						<Text color="tertiary">Size</Text>
-						{{ formatBytes(rollup.size) }}
-					</Text>
+					<Text size="12" weight="500" color="tertiary">Sudo</Text>
+
+					<LinkToEntity :entity="{ title: midHash(bridge.sudo), type: 'account', id: bridge.sudo}" color="secondary" />
 
 					<div :class="$style.dot" />
 
-					<Text size="12" weight="500" color="tertiary">First Height&nbsp;</Text>
+					<Text size="12" weight="500" color="tertiary">Withdrawer</Text>
 
-					<LinkToEntity :entity="{ title: spaces(rollup.first_height), type: 'block', id: rollup.first_height}" color="secondary" />
+					<LinkToEntity :entity="{ title: midHash(bridge.withdrawer), type: 'account', id: bridge.withdrawer}" color="secondary" />
+
+					<div :class="$style.dot" />
+					
+					<Text size="12" weight="500" color="tertiary">Asset</Text>
+					<Text size="12" weight="500" color="secondary"> {{ bridge.asset }} </Text>
+
+					<div :class="$style.dot" />
+					
+					<Text size="12" weight="500" color="tertiary">Fee asset</Text>
+					<Text size="12" weight="500" color="secondary"> {{ bridge.fee_asset }} </Text>
 				</Flex>
 			</Flex>
 
 			<Tooltip>
-				<Flex align="center" gap="4">
+				<!-- <Flex align="center" gap="4">
 					<Text size="13" weight="600" color="primary"> {{ spaces(rollup.actions_count) }} </Text>
 					
 					<Icon name="action" size="13" color="tertiary" />
@@ -89,11 +74,9 @@ const props = defineProps({
 
 				<template #content>
 					<Text size="12" color="tertiary">Actions count</Text>
-				</template>
+				</template> -->
 			</Tooltip>
 		</Flex>
-
-		<EmptyHolder v-else-if="!isLoading" title="There are no rollups" :style="{ borderTop: '1px solid var(--op-5)' }" />
 	</Flex>
 </template>
 

@@ -1,9 +1,9 @@
 <script setup>
 /** Modules */
-// import RollupBridgeMetadata from "~/components/modules/account/RollupBridgeMetadata.vue"
 import RollupMetadata from "~/components/modules/rollup/RollupMetadata.vue"
 import RollupActions from "~/components/modules/rollup/RollupActions.vue"
-import RollupCharts from "~/components/modules/rollup/RollupCharts.vue";
+import RollupBridges from "~/components/modules/rollup/RollupBridges.vue"
+import RollupCharts from "~/components/modules/rollup/RollupCharts.vue"
 
 /** Components */
 import RawDataView from "@/components/shared/RawDataView.vue"
@@ -14,7 +14,7 @@ import { Dropdown, DropdownItem } from "@/components/ui/Dropdown"
 import Tooltip from "~/components/ui/Tooltip.vue"
 
 /** API */
-import { fetchRollupActions, fetchRollupByHash } from "~/services/api/rollup"
+import { fetchRollupActions, fetchRollupBridges, fetchRollupByHash } from "~/services/api/rollup"
 
 definePageMeta({
 	layout: "default",
@@ -24,6 +24,7 @@ const route = useRoute()
 
 const rollup = ref()
 const actions = ref([])
+const bridges = ref([])
 const isLoading = ref(false)
 const rollupHashSafeURL = ref(route.params.hash)
 
@@ -48,6 +49,21 @@ const fetchActions = async () => {
 	})
 	actions.value = data.value
 	handleNextCondition.value = actions.value.length < limit.value
+
+	isLoading.value = false
+}
+
+const fetchBridges = async () => {
+	isLoading.value = true
+
+	const { data } = await fetchRollupBridges({
+		hash: rollupHashSafeURL.value,
+		limit: limit.value,
+		offset: (page.value - 1) * limit.value,
+	})
+	
+	bridges.value = data.value
+	handleNextCondition.value = bridges.value.length < limit.value
 
 	isLoading.value = false
 }
@@ -110,7 +126,20 @@ useHead({
 	],
 })
 
-const tabs = ref([{ name: "Actions" }, { name: "Analytics" }])
+const tabs = ref([
+	{
+		name: "Actions",
+		display: true,
+	},
+	{
+		name: "Bridges",
+		display: rollup.value?.bridge_count > 0,
+	},
+	{
+		name: "Analytics",
+		display: true,
+	}
+])
 const activeTab = ref(tabs.value[0].name)
 
 const periods = ref([
@@ -136,9 +165,32 @@ const selectedPeriod = computed(() => periods.value[selectedPeriodIdx.value])
 await fetchActions()
 
 watch(
+	() => activeTab.value,
+	async () => {
+		switch (activeTab.value) {
+			case "Actions":
+				page.value = 1
+				await fetchActions()
+				break
+			case "Bridges":
+				page.value = 1
+				await fetchBridges()
+				break
+		}
+	},
+)
+
+watch(
 	() => page.value,
-	() => {
-		fetchActions()
+	async () => {
+		switch (activeTab.value) {
+			case "Actions":
+				await fetchActions()
+				break
+			case "Bridges":
+				await fetchBridges()
+				break
+		}
 	},
 )
 </script>
@@ -163,11 +215,11 @@ watch(
 						Rollup <Text weight="600">{{ rollup.hash }}</Text>
 					</Text>
 
-					<Tooltip v-if="rollup.bridge">
+					<Tooltip v-if="rollup.bridge_count">
 						<Icon name="bridge" size="18" color="brand" />
 
 						<template #content>
-							Has bridge account
+							Associated with bridge account
 						</template>
 					</Tooltip>
 				</Flex>
@@ -176,15 +228,13 @@ watch(
 			</Flex>
 		</Flex>
 
-		<!-- <RollupBridgeMetadata v-if="rollup.bridge" :rollup="rollup" /> -->
-		<!-- <RollupMetadata v-else :rollup="rollup" /> -->
 		<RollupMetadata :rollup="rollup" />
 
 		<Flex direction="column" gap="12">
 			<Flex align="center" justify="between">
 				<Flex align="center" gap="8">
 					<Text
-						v-for="tab in tabs"
+						v-for="tab in tabs.filter(tab => tab.display)"
 						@click="activeTab = tab.name"
 						size="13"
 						weight="600"
@@ -225,6 +275,7 @@ watch(
 			</Flex>
 
 			<RollupActions v-if="activeTab === 'Actions'" :actions="actions" :isLoading="isLoading" />
+			<RollupBridges v-if="activeTab === 'Bridges'" :bridges="bridges" :isLoading="isLoading" />
 
 			<RollupCharts v-if="activeTab === 'Analytics'" :rollup="rollup" :period="selectedPeriod" />
 		</Flex>

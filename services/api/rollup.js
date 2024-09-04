@@ -56,3 +56,17 @@ export const fetchRollupAddresses = async ({hash, limit, offset}) => {
 		console.error(error)
 	}
 }
+
+export const fetchRollupBridges = async ({ hash, limit, offset }) => {
+	try {
+		const url = new URL(`${useServerURL()}/rollup/${hash}/bridges`)
+
+        if (limit) url.searchParams.append("limit", limit)
+		if (offset) url.searchParams.append("offset", offset)
+
+		const data = await useFetch(url.href)
+		return data
+	} catch (error) {
+		console.error(error)
+	}
+}
