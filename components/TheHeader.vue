@@ -1,9 +1,12 @@
 <script setup>
 /** UI */
-import { Dropdown, DropdownItem } from "@/components/ui/Dropdown"
+import { Dropdown, DropdownDivider, DropdownItem, DropdownTitle } from "@/components/ui/Dropdown"
 
 /** Local */
 import NavigationPopup from "./NavigationPopup.vue"
+
+/** Services */
+import { getNetworkName } from "@/services/utils/general"
 
 /** Composable */
 import { useOutside } from "@/composables/outside"
@@ -32,6 +35,10 @@ watch(
 		}
 	},
 )
+
+const handleNavigate = (url) => {
+	window.location.replace(url)
+}
 </script>
 
 <template>
@@ -73,13 +80,28 @@ watch(
 			<Flex align="center" gap="16">
 				<Dropdown>
 					<Flex align="center" gap="8" :class="$style.network">
-						<div :class="$style.dot" />
-						<Text size="13" weight="600" color="primary" :class="$style.network_name">Astria-Dusk</Text>
+						<div :class="$style.dot" :style="{ background: `${lastHead.synced ? 'var(--green)' : 'var(--red)'}` }" />
+						<Text size="13" weight="600" color="primary" :class="$style.network_name"> {{ getNetworkName() }} </Text>
 						<Icon name="chevron" size="14" color="tertiary" />
 					</Flex>
 
 					<template #popup>
-						<DropdownItem>
+						<DropdownTitle>
+							<Flex gap="8">
+								<div :class="$style.dot" :style="{ background: `${lastHead.synced ? 'var(--green)' : 'var(--red)'}`, marginTop: '3px' }" />
+								
+								<Flex direction="column" gap="6">
+									<Text color="secondary">Head {{ lastHead.synced ? "" : "not" }} Synced </Text>
+									<Text color="tertiary">{{ lastHead.chain_id }}</Text>
+								</Flex>
+							</Flex>
+						</DropdownTitle>
+
+						<DropdownDivider />
+						
+						<DropdownItem @click="handleNavigate('https://dusk.astrotrek.io')">Dusk</DropdownItem>
+						<DropdownItem @click="handleNavigate('https://dawn.astrotrek.io')">Dawn</DropdownItem>
+						<!-- <DropdownItem>
 							<Flex align="center" direction="column" gap="4">
 								<Flex justify="start" wide>
 									<Text size="12" color="secondary">Astria-Dusk</Text>	
@@ -87,7 +109,7 @@ watch(
 								
 								<Text size="12" color="tertiary"> {{ lastHead.chain_id }} </Text>
 							</Flex>
-						</DropdownItem>
+						</DropdownItem> -->
 					</template>
 				</Dropdown>
 
@@ -151,7 +173,6 @@ watch(
 	width: 6px;
 	height: 6px;
 	border-radius: 50%;
-	background: var(--green);
 }
 
 @media (max-width: 500px) {

@@ -88,17 +88,21 @@ export const getNetworkName = () => {
 	const { hostname } = useRequestURL()
 
 	switch (hostname) {
-		case "celenium.io":
-			return "Mainnet"
+		case "dusk.astrotrek.io":
+			return "Dusk"
 
-		case "dev.celenium.io":
+		case "dawn.astrotrek.io":
+			return "Dawn"
+
+		case "dev.astrotrek.io":
 			return "Development"
 
 		case "localhost":
 			return "Local"
 
 		default:
-			return "Unknown"
+			return "Dusk"
+			// return "Unknown"
 	}
 }
 
