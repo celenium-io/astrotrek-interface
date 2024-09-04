@@ -294,16 +294,23 @@ const handleOpenTx = async (action) => {
 					</Flex>
 				</Flex>
 
-				<Flex align="center" gap="12">
-					<Flex gap="4">
-						<Text size="12" color="tertiary">Block</Text>
+				<Flex align="center" gap="8">
+					<Text size="12" color="tertiary">Block</Text>
 
-						<LinkToEntity :entity="{ title: spaces(act.height), type: 'block', id: act.height }" :class="$style.link" />
+					<LinkToEntity :entity="{ title: spaces(act.height), type: 'block', id: act.height }" :class="$style.link" />
+
+					<div :class="$style.dot" />
+
+					<Flex v-if="act.fee" align="center" gap="8">
+						<Text size="12" color="tertiary">Fee</Text>
+						<Text size="12" color="secondary"> {{ spaces(act.fee.amount) }} </Text>
+						<Text size="12" color="secondary"> {{ act.fee.asset.replace('transfer/channel-0/', '').toUpperCase() }} </Text>
+
+						<div :class="$style.dot" />
 					</Flex>
 
-					<Flex align="center" gap="4">
-						<Text size="12" color="tertiary"> {{ DateTime.fromISO(act.time).setLocale("en").toFormat("tt, LLL d, y") }} </Text>
-					</Flex>
+					<Text size="12" color="tertiary"> {{ DateTime.fromISO(act.time).setLocale("en").toFormat("tt, LLL d, y") }} </Text>
+					
 				</Flex>
 			</Flex>
 
@@ -382,6 +389,14 @@ const handleOpenTx = async (action) => {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+}
+
+.dot {
+	width: 4px;
+	height: 4px;
+
+	border-radius: 50%;
+	background: var(--op-10);
 }
 
 @media (max-width: 1000px) {

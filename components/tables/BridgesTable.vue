@@ -56,12 +56,12 @@ const props = defineProps({
 					<div :class="$style.dot" />
 					
 					<Text size="12" weight="500" color="tertiary">Asset</Text>
-					<Text size="12" weight="500" color="secondary"> {{ bridge.asset }} </Text>
+					<Text size="12" weight="500" color="secondary"> {{ bridge.asset.replace('transfer/channel-0/', '').toUpperCase() }} </Text>
 
 					<div :class="$style.dot" />
 					
 					<Text size="12" weight="500" color="tertiary">Fee asset</Text>
-					<Text size="12" weight="500" color="secondary"> {{ bridge.fee_asset }} </Text>
+					<Text size="12" weight="500" color="secondary"> {{ bridge.fee_asset.toUpperCase() }} </Text>
 				</Flex>
 			</Flex>
 
