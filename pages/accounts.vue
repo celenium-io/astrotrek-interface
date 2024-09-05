@@ -8,6 +8,10 @@ import AccountsTable from "@/components/tables/AccountsTable.vue"
 /** API */
 import { fetchAccounts } from "@/services/api/account"
 
+/** Store */
+import { useAppStore } from "@/store/app"
+const appStore = useAppStore()
+
 definePageMeta({
 	layout: "default",
 })
@@ -65,6 +69,7 @@ useHead({
 
 const accounts = ref([])
 const isLoading = ref(false)
+const lastHead = computed(() => appStore.lastHead)
 
 const limit = ref(15)
 const getAccounts = async () => {
@@ -75,14 +80,15 @@ const getAccounts = async () => {
 		offset: (page.value - 1) * limit.value,
 	})
 	accounts.value = data.value
-	handleNextCondition.value = accounts.value.length < limit.value
-
+	
 	isLoading.value = false
 }
 
 /** Pagination */
 const page = ref(1)
-const handleNextCondition = ref(true)
+const handleNextCondition = computed(() => lastHead.value.total_accounts - (limit.value * page.value) <= 0)
+
+console.log(handleNextCondition.value);
 
 const handleNext = () => {
 	page.value += 1
