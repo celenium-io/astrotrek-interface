@@ -72,8 +72,8 @@ watch(
 
 						<Text size="13" weight="500" color="secondary"> Account </Text>
 
-						<Tooltip v-if="account.bridge">
-							<Icon name="bridge" size="18" color="brand" />
+						<Tooltip v-if="account.is_bridge">
+							<Icon name="bridge" size="16" color="brand" />
 
 							<template #content>
 								Bridge account

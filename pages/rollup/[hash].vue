@@ -43,6 +43,8 @@ const fetchActions = async () => {
 
 	const { data } = await fetchRollupActions({
 		hash: rollupHashSafeURL.value,
+		bridge_actions: true,
+		rollup_actions: true,
 		limit: limit.value,
 		offset: (page.value - 1) * limit.value,
 		sort: "desc",

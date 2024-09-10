@@ -88,8 +88,6 @@ const getAccounts = async () => {
 const page = ref(1)
 const handleNextCondition = computed(() => lastHead.value.total_accounts - (limit.value * page.value) <= 0)
 
-console.log(handleNextCondition.value);
-
 const handleNext = () => {
 	page.value += 1
 }

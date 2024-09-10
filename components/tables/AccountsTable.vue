@@ -1,4 +1,7 @@
 <script setup>
+/** UI */
+import Tooltip from "@/components/ui/Tooltip.vue"
+
 /** Components */
 import LinkToEntity from "@/components/shared/LinkToEntity.vue"
 
@@ -47,6 +50,14 @@ const props = defineProps({
 					<Icon name="account" size="16" color="secondary" />
 
 					<LinkToEntity :entity="{ title: midHash(account.hash), type: 'account', id: account.hash}" color="primary" />
+
+					<Tooltip v-if="account.is_bridge">
+						<Icon name="bridge" size="18" color="brand" />
+
+						<template #content>
+							Bridge account
+						</template>
+					</Tooltip>
 				</Flex>
 
 				<Flex align="center" gap="8">

@@ -8,6 +8,10 @@ import RollupsTable from "@/components/tables/RollupsTable.vue"
 /** API */
 import { fetchRollups } from "@/services/api/rollup"
 
+/** Store */
+import { useAppStore } from "@/store/app"
+const appStore = useAppStore()
+
 definePageMeta({
 	layout: "default",
 })
@@ -65,6 +69,7 @@ useHead({
 
 const rollups = ref([])
 const isLoading = ref(false)
+const lastHead = computed(() => appStore.lastHead)
 
 const limit = ref(15)
 const getRollups = async () => {
@@ -75,14 +80,13 @@ const getRollups = async () => {
 		offset: (page.value - 1) * limit.value,
 	})
 	rollups.value = data.value
-	handleNextCondition.value = rollups.value.length < limit.value
 
 	isLoading.value = false
 }
 
 /** Pagination */
 const page = ref(1)
-const handleNextCondition = ref(true)
+const handleNextCondition = computed(() => lastHead.value.total_rollups - (limit.value * page.value) <= 0)
 
 const handleNext = () => {
 	page.value += 1

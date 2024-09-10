@@ -27,7 +27,7 @@ const showMore = ref(false)
 		</Flex>
 
 		<Flex align="center" :class="$style.item">
-			<Text size="13" weight="600" color="secondary" :class="$style.key">Actions Count</Text>
+			<Text size="13" weight="600" color="secondary" :class="$style.key"> {{ rollup.bridge_count > 0 ? 'Rollup ' : '' }} Actions Count </Text>
 
 			<Text size="13" weight="600" color="primary" mono :class="$style.value"> {{ rollup.actions_count }} </Text>
 		</Flex>
