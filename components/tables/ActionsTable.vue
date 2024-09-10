@@ -77,7 +77,7 @@ const handleOpenTx = async (action) => {
 
 					<Flex v-else-if="act.type === 'transfer'" gap="4" :class="$style.description">
 						<Text size="13" weight="500" color="secondary">
-							{{ `Sent ${act.data.amount} NRIA to` }}
+							{{ `Sent ${spaces(act.data.amount)} NRIA to` }}
 						</Text>
 
 						<LinkToEntity
@@ -90,7 +90,7 @@ const handleOpenTx = async (action) => {
 
 					<Flex v-else-if="act.type === 'mint'" gap="4" :class="$style.description">
 						<Text size="13" weight="500" color="secondary">
-							{{ `Minted ${act.data.amount} NRIA to` }}
+							{{ `Minted ${spaces(act.data.amount)} NRIA to` }}
 						</Text>
 
 						<LinkToEntity
@@ -179,7 +179,7 @@ const handleOpenTx = async (action) => {
 
 					<Flex v-else-if="act.type === 'bridge_unlock'" gap="4" :class="$style.description">
 						<Text size="13" weight="500" color="secondary">
-							{{ `Unlock ${act.data.amount} ${act.data.fee_asset} to` }}
+							{{ `Unlock ${spaces(act.data.amount)} ${act.data.fee_asset} to` }}
 						</Text>
 
 						<LinkToEntity
@@ -304,7 +304,7 @@ const handleOpenTx = async (action) => {
 					<Flex v-if="act.fee" align="center" gap="8">
 						<Text size="12" color="tertiary">Fee</Text>
 						<Text size="12" color="secondary"> {{ spaces(act.fee.amount) }} </Text>
-						<Text size="12" color="secondary"> {{ act.fee.asset.replace('transfer/channel-0/', '').toUpperCase() }} </Text>
+						<Text size="12" color="secondary"> {{ act.fee.asset.toUpperCase() }} </Text>
 
 						<div :class="$style.dot" />
 					</Flex>

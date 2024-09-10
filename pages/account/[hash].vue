@@ -3,7 +3,7 @@
 import { shortHash } from "~/services/utils"
 
 /** Modules */
-import AccountBridgeMetadata from "~/components/modules/account/AccountBridgeMetadata.vue"
+import AccountBridgeInfo from "~/components/modules/account/AccountBridgeInfo.vue"
 import AccountBridgeRoles from "~/components/modules/account/AccountBridgeRoles.vue"
 import AccountMetadata from "~/components/modules/account/AccountMetadata.vue"
 import AccountTransactions from "~/components/modules/account/AccountTransactions.vue"
@@ -273,8 +273,9 @@ watch(
 			</Flex>
 		</Flex>
 
-		<AccountBridgeMetadata v-if="account.bridge" :account="account" />
-		<AccountMetadata v-else :account="account" />
+		<AccountMetadata :account="account" />
+
+		<AccountBridgeInfo v-if="account.bridge" :account="account" />
 
 		<Flex direction="column" gap="12">
 			<Flex align="center" justify="between">

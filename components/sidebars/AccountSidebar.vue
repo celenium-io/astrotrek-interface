@@ -1,12 +1,10 @@
 <script setup>
-/** Vendor */
-import { DateTime } from "luxon"
-
 /** API */
-import { fetchAccountTransactions } from "@/services/api/account.js"
+import { fetchAccountByHash, fetchAccountTransactions } from "@/services/api/account.js"
 
 /** Services */
-import { formatBytes, midHash, shortHash, spaces } from "@/services/utils"
+import { midHash, spaces } from "@/services/utils"
+import { getRollupHashSafeURL } from "@/services/utils/rollups"
 
 /** Components */
 import LinkToEntity from "@/components/shared/LinkToEntity.vue"
@@ -52,8 +50,13 @@ const fetchTxs = async () => {
 
 watch(
 	() => props.show,
-	() => {
+	async () => {
 		if (props.show) {
+			if (props.account.is_bridge) {
+				const { data } = await fetchAccountByHash(props.account.hash)
+				props.account.bridge = data?.value?.bridge
+			}
+
 			fetchTxs()
 		} else {
 			txs.value = []
@@ -125,6 +128,72 @@ watch(
 					</NuxtLink>
 				</Flex>
 
+				<div v-if="account.bridge" :class="$style.divider" />
+
+				<Flex v-if="account.bridge" direction="column" gap="16">
+					<Text size="12" weight="600" color="primary">Bridge Info</Text>
+
+					<Flex align="center" justify="between">
+						<Text size="13" weight="600" color="tertiary">Rollup</Text>
+
+						<Flex align="center" gap="8">
+							<CopyButton :text="account.bridge?.rollup" />
+
+							<NuxtLink :to="`/rollup/${getRollupHashSafeURL(account.bridge?.rollup)}`" target="_blank">
+								<Flex align="center" gap="4">
+									<Text size="13" weight="600" color="primary">{{ midHash(account.bridge?.rollup) }}</Text>
+
+									<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
+								</Flex>
+							</NuxtLink>
+						</Flex>
+					</Flex>
+
+					<Flex align="center" justify="between">
+						<Text size="13" weight="600" color="tertiary">Admin</Text>
+
+						<Flex align="center" gap="8">
+							<CopyButton :text="account.bridge?.sudo" />
+
+							<NuxtLink :to="`/account/${account.bridge?.sudo}`" target="_blank">
+								<Flex align="center" gap="4">
+									<Text size="13" weight="600" color="primary">{{ midHash(account.bridge?.sudo) }}</Text>
+
+									<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
+								</Flex>
+							</NuxtLink>
+						</Flex>
+					</Flex>
+
+					<Flex align="center" justify="between">
+						<Text size="13" weight="600" color="tertiary">Withdrawer</Text>
+
+						<Flex align="center" gap="8">
+							<CopyButton :text="account.bridge?.withdrawer" />
+
+							<NuxtLink :to="`/account/${account.bridge?.withdrawer}`" target="_blank">
+								<Flex align="center" gap="4">
+									<Text size="13" weight="600" color="primary">{{ midHash(account.bridge?.withdrawer) }}</Text>
+
+									<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
+								</Flex>
+							</NuxtLink>
+						</Flex>
+					</Flex>
+
+					<Flex align="center" justify="between">
+						<Text size="13" weight="600" color="tertiary">Asset</Text>
+
+						<Text size="13" weight="600" color="primary" tabular> {{ account.bridge?.asset.toUpperCase() }} </Text>
+					</Flex>
+
+					<Flex align="center" justify="between">
+						<Text size="13" weight="600" color="tertiary">Fee Asset</Text>
+
+						<Text size="13" weight="600" color="primary" tabular> {{ account.bridge?.fee_asset.toUpperCase() }} </Text>
+					</Flex>
+				</Flex>
+
 				<div :class="$style.divider" />
 
 				<Flex direction="column" gap="16">
@@ -149,7 +218,7 @@ watch(
 					</Flex>
 				</Flex>
 			</Flex>
-
+						
 			<Button @click="emit('onClose')" :link="`/account/${account.hash}`" type="secondary" size="medium">Open Account</Button>
 		</Flex>
 	</Sidebar>

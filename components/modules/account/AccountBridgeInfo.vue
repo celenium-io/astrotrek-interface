@@ -22,42 +22,6 @@ const showMore = ref(false)
 <template>
 	<Flex direction="column" :class="$style.wrapper">
 		<Flex align="center" :class="$style.item">
-			<Text size="13" weight="600" color="secondary" :class="$style.key">Hash</Text>
-
-			<Flex align="center" gap="8" :class="$style.value">
-				<CopyButton :text="account.hash" />
-				<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ account.hash }}</Text>
-			</Flex>
-		</Flex>
-
-		<Flex v-if="account.balances.length < 2" align="center" :class="$style.item">
-			<Text size="13" weight="600" color="secondary" :class="$style.key">Balance</Text>
-
-			<Flex align="center" gap="8" :class="$style.value">
-				<CopyButton :text="account.balances[0].value" />
-
-				<Text size="13" weight="600" color="primary" mono> {{ spaces(account.balances[0].value) }} </Text>
-
-				<Text size="13" weight="600" color="secondary" mono> {{ account.balances[0].currency.toUpperCase() }} </Text>
-			</Flex>
-			<!-- <Text size="13" weight="600" color="primary" mono :class="$style.value"> {{ `${spaces(account.balances[0].value)} ${account.balances[0].currency.toUpperCase()}` }} </Text> -->
-		</Flex>
-
-		<Flex v-else align="start" :class="$style.item" :style="{ padding: '6px 12px' }">
-			<Text size="13" weight="600" color="secondary" :class="$style.key">Balance</Text>
-
-			<Flex direction="column" gap="14" :class="$style.value">
-				<Flex v-for="b in account.balances" align="center" gap="8">
-					<CopyButton :text="b.value" />
-
-					<Text size="13" weight="600" color="primary" mono> {{ spaces(b.value) }} </Text>
-
-					<Text size="13" weight="600" color="secondary" mono> {{ b.currency.toUpperCase() }} </Text>
-				</Flex>
-			</Flex>
-		</Flex>
-
-		<Flex align="center" :class="$style.item">
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Rollup</Text>
 			
 			<NuxtLink :to="`/rollup/${getRollupHashSafeURL(account.bridge.rollup)}`">
@@ -104,42 +68,6 @@ const showMore = ref(false)
 
 			<Text size="13" weight="600" color="primary" mono :class="$style.value"> {{ account.bridge.fee_asset.toUpperCase() }} </Text>
 		</Flex>
-
-		<template v-if="showMore">
-			<Flex align="center" :class="$style.item">
-				<Text size="13" weight="600" color="secondary" :class="$style.key">Signed Txs Count</Text>
-
-				<Text size="13" weight="600" color="primary" mono :class="$style.value"> {{ account.signed_tx_count }} </Text>
-			</Flex>
-
-			<Flex align="center" :class="$style.item">
-				<Text size="13" weight="600" color="secondary" :class="$style.key">Actions Count</Text>
-
-				<Text size="13" weight="600" color="primary" mono :class="$style.value"> {{ account.actions_count }} </Text>
-			</Flex>
-
-			<Flex align="center" :class="$style.item">
-				<Text size="13" weight="600" color="secondary" :class="$style.key">First Height</Text>
-				
-				<NuxtLink :to="`/block/${account.first_height}`">
-					<Flex align="center" gap="4" :class="$style.value">
-						<Text size="13" weight="600" color="primary" mono>{{ spaces(account.first_height) }}</Text>
-						<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
-					</Flex>
-				</NuxtLink>
-			</Flex>
-
-			<Flex align="center" :class="$style.item">
-				<Text size="13" weight="600" color="secondary" :class="$style.key">Nonce</Text>
-
-				<Text size="13" weight="600" color="primary" mono :class="$style.value"> {{ account.nonce }} </Text>
-			</Flex>
-		</template>
-	</Flex>
-
-	<Flex @click="showMore = !showMore" align="center" justify="end" gap="4" :class="$style.show_more">
-		<Icon size="12" name="chevron-double" color="brand" :rotate="showMore ? 180 : 0" />
-		<Text size="12" weight="600" color="brand">Show {{ showMore ? 'Less' : 'More' }}</Text>
 	</Flex>
 </template>
 

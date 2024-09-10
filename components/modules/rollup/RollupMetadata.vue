@@ -47,7 +47,7 @@ const showMore = ref(false)
 		<Flex align="center" :class="$style.item">
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Celestia Namespace ID</Text>
 			
-			<Flex align="center" gap="4" :class="$style.value">
+			<Flex align="center" gap="8" :class="$style.value">
 				<CopyButton :text="namespaceID" />
 
 				<NuxtLink :to="namespaceLink" target="_blank">

@@ -72,7 +72,7 @@ const getSharePower = (validator) => {
 				</Flex>
 
 				<Text size="12" weight="500" color="secondary">
-					<Text color="tertiary">Name</Text>
+					<Text v-if="v.name" color="tertiary">Name</Text>
 					{{ v.name }}
 				</Text>
 			</Flex>
