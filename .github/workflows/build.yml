@@ -24,8 +24,8 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t ghcr.io/${{ github.repository }}/astrotrek-interface:${{ github.ref_name }} .
+          docker build -t ghcr.io/${{ github.repository }}:${{ github.ref_name }} .
 
       - name: Push Docker Image to GitHub Container Registry
         run: |
-          docker push ghcr.io/${{ github.repository }}/astrotrek-interface:${{ github.ref_name }}
+          docker push ghcr.io/${{ github.repository }}:${{ github.ref_name }}
