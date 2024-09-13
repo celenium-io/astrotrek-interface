@@ -1,13 +1,18 @@
 version: "3.8"
 services:
     nuxt-app:
-        image: ghcr.io/celenium-io/astrotrek-interface:test-build
+        image: ghcr.io/celenium-io/astrotrek-interface:${TAG:-latest}
         build:
             context: .
             dockerfile: Dockerfile
         ports:
             - "127.0.0.1:3000:3000"
         environment:
-            - NUXT_PUBLIC_API_DEV=https://api-dusk.astrotrek.io/v1
-            - NUXT_PUBLIC_WSS_DEV=wss://api-dusk.astrotrek.io/v1/ws
+            - NUXT_PUBLIC_API_DEV=${NUXT_PUBLIC_API_DEV:-https://api-dusk.astrotrek.io/v1}
+            - NUXT_PUBLIC_WSS_DEV=${NUXT_PUBLIC_WSS_DEV:-wss://api-dusk.astrotrek.io/v1/ws}
+        restart: always
         command: npm run start
+        logging:
+            options:
+                max-size: 10m
+                max-file: "5"
