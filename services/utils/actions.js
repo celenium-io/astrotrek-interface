@@ -44,7 +44,8 @@ export const getActionDescription = (action) => {
 			description = `Now validator ${strToHex(base64Decode(data.pub_key))} has power ${data.power}`
 			break;
 		case "ibc_relay":
-			description = `Action`
+			let type = data.type.split('.')
+			description = `${type[type.length - 1]}`
 			break;
 		case "ibc_relayer_change":
 			if (data.addition) {
