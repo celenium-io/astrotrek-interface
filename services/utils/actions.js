@@ -41,11 +41,16 @@ export const getActionDescription = (action) => {
 			description = `Set ${midHash(data.new_address)} as new sudo address`
 			break;
 		case "validator_update":
-			description = `Now validator ${strToHex(base64Decode(data.pub_key))} has power ${data.power}`
+			description = `Now validator ${strToHex(base64Decode(data.pubkey))} has power ${data.power}`
 			break;
 		case "ibc_relay":
-			let type = data.type.split('.')
-			description = `${type[type.length - 1]}`
+			if (data.type) {
+				let type = data.type.split('.')
+				description = `${type[type.length - 1]}`
+			} else {
+				description = 'Action'
+			}
+
 			break;
 		case "ibc_relayer_change":
 			if (data.addition) {
