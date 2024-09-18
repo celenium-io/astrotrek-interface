@@ -143,7 +143,7 @@ const showMore = ref(false)
 
 @media (max-width: 650px) {
 	.item {
-		height: 54px;
+		min-height: 54px;
 
 		flex-direction: column;
 		align-items: start;
