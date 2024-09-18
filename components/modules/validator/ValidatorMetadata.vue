@@ -60,7 +60,7 @@ fetchUptime()
 
 <template>
 	<Flex direction="column" :class="$style.wrapper">
-		<Flex align="center" :class="$style.item">
+		<Flex v-if="validator.name" align="center" :class="$style.item">
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Name</Text>
 
 			<Flex align="center" gap="8" :class="$style.value">

@@ -140,6 +140,8 @@ watch(
 					<Text size="14" weight="500" color="primary">
 						Validator <Text weight="600">{{ shortHash(validator.address) }}</Text>
 					</Text>
+
+					<Text v-if="validator.power === '0'" size="14" weight="500" color="red">Inactive</Text>
 				</Flex>
 
 				<RawDataView :entity="validator" name="validator" />

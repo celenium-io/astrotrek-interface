@@ -81,10 +81,12 @@ watch(
 		<Flex direction="column" justify="between" wide gap="16">
 			<Flex direction="column" gap="16" :class="$style.content">
 				<Flex direction="column" gap="8">
-					<Flex align="center" gap="4">
+					<Flex align="center" gap="6">
 						<Icon name="validator" size="12" color="secondary" />
 
 						<Text size="13" weight="500" color="secondary"> Validator </Text>
+
+						<Text v-if="validator.power === '0'" size="13" weight="500" color="red">Inactive</Text>
 					</Flex>
 
 					<Flex align="center" gap="8">
@@ -101,7 +103,7 @@ watch(
 						<CopyButton :text="validator.address" />
 					</Flex>
 
-					<Text size="16" weight="600" height="120" color="primary">
+					<Text v-if="validator.name" size="16" weight="600" height="120" color="primary">
 						{{ validator.name }}
 					</Text>
 				</Flex>

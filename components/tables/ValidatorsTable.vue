@@ -31,10 +31,11 @@ const totalPower = computed(() => {
 	return res
 })
 
-const getSharePower = (validator) => {
+const getSharePower = (validator, int = true) => {
 	let share = 0
-	if (totalPower.value && validator.power) {
-		share = parseInt(parseFloat(validator.power) / totalPower.value * 100)
+	if (totalPower.value && validator.power > 0) {
+		share = parseFloat(validator.power) / totalPower.value * 100
+		share = int ? Math.max(parseInt(share), 1) : Math.round(share * 100) / 100
 	}
 
 	return share
@@ -69,6 +70,8 @@ const getSharePower = (validator) => {
 					<Icon name="validator" size="16" color="secondary" />
 
 					<LinkToEntity :entity="{ title: midHash(v.address), type: 'validator', id: v.id}" color="primary" />
+
+					<Text v-if="v.power === '0'" size="12" weight="500" color="red">Inactive</Text>
 				</Flex>
 
 				<Text size="12" weight="500" color="secondary">
@@ -108,7 +111,7 @@ const getSharePower = (validator) => {
 						<Flex align="center" justify="between">
 							<Text size="12" weight="500" color="tertiary">Validator Share</Text>
 
-							<Text size="13" weight="600" color="primary"> {{ getSharePower(v) }}% </Text>
+							<Text size="13" weight="600" color="primary"> {{ getSharePower(v, false) }}% </Text>
 						</Flex>
 					</Flex>
 				</template>
