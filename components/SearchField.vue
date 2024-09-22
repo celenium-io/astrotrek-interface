@@ -218,7 +218,7 @@ watch(
 						<Text size="12" weight="500" color="tertiary">Here will be the history after the first query</Text>
 					</Flex>
 					<Flex v-else-if="!results.length && history.length" direction="column" gap="2" :class="$style.inner">
-						<NuxtLink v-for="item in history" :to="`/${item.type}/${item.body.hash}`" @click="handleSaveToHistory(item)">
+						<NuxtLink v-for="item in history" :to="`/${item.type === 'address' ? 'account' : item.type}/${item.body.hash}`" @click="handleSaveToHistory(item)">
 							<Flex align="center" justify="between" :class="$style.item">
 								<Flex align="center" gap="6">
 									<Icon name="time" size="12" color="secondary" />
