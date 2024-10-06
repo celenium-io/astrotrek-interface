@@ -69,7 +69,7 @@ const debouncedSearch = useDebounceFn(async (e) => {
 	if (data.value.length) {
 		results.value = data.value.map(item => {
 			let newItem = { ...item }
-			if (newItem.type === 'validator') {
+			if (newItem.type === 'validator' || newItem.type === 'bridge') {
 				newItem.body.hash = newItem.body.address
 			}
 
@@ -122,6 +122,8 @@ const getResultPath = (result) => {
 			return `/block/${result.body.height}`
 		case "validator":
 			return `/validator/${result.body.id}`
+		case "bridge":
+			return `/account/${result.body.address}`
 
 		default:
 			return `/${result.type}/${result.body.hash}`
@@ -237,7 +239,7 @@ watch(
 						<NuxtLink v-for="result in results" :to="getResultPath(result)" @click="handleSaveToHistory(result)">
 							<Flex align="center" justify="between" :class="$style.item">
 								<Flex align="center" gap="6">
-									<Icon :name="result.type" size="12" color="secondary" />
+									<Icon :name="result.type === 'address' ? 'account' : result.type" size="12" color="secondary" />
 									<Text size="13" weight="600" color="primary">
 										{{ shortHash(result.body.hash) }}
 									</Text>

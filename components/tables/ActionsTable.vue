@@ -144,7 +144,7 @@ const handleOpenTx = async (action) => {
 						</Text>
 
 						<LinkToEntity
-							:entity="{ title: midHash(act.data.destination_chain_address), type: 'account', id: act.data.destination_chain_address }"
+							:entity="{ title: midHash(act.data.destination_address), type: 'account', id: act.data.destination_address }"
 							color="secondary"
 							size="13"
 							:class="$style.link"
