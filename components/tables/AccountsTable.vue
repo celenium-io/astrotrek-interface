@@ -63,11 +63,11 @@ const props = defineProps({
 				<Flex align="center" gap="8">
 					<Text size="12" weight="500" color="secondary">
 						<Text color="tertiary">Balance</Text>
-						{{ `${spaces(account.balances[0].value)} ${account.balances[0].currency.toUpperCase()}` }}
+						{{ `${spaces(account.balances[0]?.value)}${account.balances.length ? account.balances[0]?.currency.toUpperCase() : ''}` }}
 					</Text>
 
 					<div :class="$style.dot" />
-
+					
 					<Text size="12" weight="500" color="tertiary">First Height&nbsp;</Text>
 
 					<LinkToEntity :entity="{ title: spaces(account.first_height), type: 'block', id: account.first_height}" color="secondary" />

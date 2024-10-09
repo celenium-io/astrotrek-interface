@@ -11,6 +11,7 @@ import { useOutside } from "@/composables/outside"
 
 /** Services */
 import { shortHash } from "~/services/utils"
+import { getRollupHashSafeURL } from "~/services/utils/rollups"
 
 /** API */
 import { search } from "@/services/api/store"
@@ -119,6 +120,24 @@ const getResultPath = (result) => {
 		case "address":
 			return `/account/${result.body.hash}`
 		case "block":
+			return `/${result.type}/${result.body.height}`
+		case "validator":
+			return `/${result.type}/${result.body.id}`
+		case "bridge":
+			return `/account/${result.body.address}`
+		case "rollup":
+			return `/${result.type}/${getRollupHashSafeURL(result.body.hash)}`
+
+		default:
+			return `/${result.type}/${result.body.hash}`
+	}
+}
+
+const getItemLink = (item) => {
+	switch (item.type) {
+		case "address":
+			return `/account/${result.body.hash}`
+		case "block":
 			return `/block/${result.body.height}`
 		case "validator":
 			return `/validator/${result.body.id}`
@@ -126,7 +145,7 @@ const getResultPath = (result) => {
 			return `/account/${result.body.address}`
 
 		default:
-			return `/${result.type}/${result.body.hash}`
+			return `/${item.type === 'address' ? 'account' : item.type}/${item.body.hash}`
 	}
 }
 
@@ -220,7 +239,7 @@ watch(
 						<Text size="12" weight="500" color="tertiary">Here will be the history after the first query</Text>
 					</Flex>
 					<Flex v-else-if="!results.length && history.length" direction="column" gap="2" :class="$style.inner">
-						<NuxtLink v-for="item in history" :to="`/${item.type === 'address' ? 'account' : item.type}/${item.body.hash}`" @click="handleSaveToHistory(item)">
+						<NuxtLink v-for="item in history" :to="getResultPath(item)" @click="handleSaveToHistory(item)">
 							<Flex align="center" justify="between" :class="$style.item">
 								<Flex align="center" gap="6">
 									<Icon name="time" size="12" color="secondary" />

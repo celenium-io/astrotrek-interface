@@ -13,13 +13,19 @@ import { useOutside } from "@/composables/outside"
 
 /** Store */
 import { useAppStore } from "@/store/app"
+import { useModalsStore } from "@/store/modals"
 const appStore = useAppStore()
+const modalsStore = useModalsStore()
 
 let removeOutside = null
 
 const navigationPopupEl = ref()
 const showPopup = ref(false)
 const lastHead = computed(() => appStore.lastHead)
+
+const handleViewConstants = () => {
+	modalsStore.open("constants")
+}
 
 watch(
 	() => showPopup.value,
@@ -86,12 +92,12 @@ const handleNavigate = (url) => {
 					</Flex>
 
 					<template #popup>
-						<DropdownTitle>
+						<DropdownTitle @click="handleViewConstants" :style="{ cursor: 'pointer' }">
 							<Flex gap="8">
 								<div :class="$style.dot" :style="{ background: `${lastHead.synced ? 'var(--green)' : 'var(--red)'}`, marginTop: '3px' }" />
 								
 								<Flex direction="column" gap="6">
-									<Text color="secondary">Head {{ lastHead.synced ? "" : "not" }} Synced </Text>
+									<Text color="secondary">Head {{ lastHead.synced ? "" : "not" }} synced </Text>
 									<Text color="tertiary">{{ lastHead.chain_id }}</Text>
 								</Flex>
 							</Flex>
@@ -101,15 +107,6 @@ const handleNavigate = (url) => {
 						
 						<DropdownItem @click="handleNavigate('https://dusk.astrotrek.io')">Dusk</DropdownItem>
 						<DropdownItem @click="handleNavigate('https://dawn.astrotrek.io')">Dawn</DropdownItem>
-						<!-- <DropdownItem>
-							<Flex align="center" direction="column" gap="4">
-								<Flex justify="start" wide>
-									<Text size="12" color="secondary">Astria-Dusk</Text>	
-								</Flex>
-								
-								<Text size="12" color="tertiary"> {{ lastHead.chain_id }} </Text>
-							</Flex>
-						</DropdownItem> -->
 					</template>
 				</Dropdown>
 

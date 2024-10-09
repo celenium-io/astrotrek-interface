@@ -35,6 +35,8 @@ const props = defineProps({
 	},
 })
 
+console.log('actions', props.actions);
+
 const handleViewRawData = (action) => {
 	cacheStore.current.action = action
 	cacheStore.current._target = "action"
@@ -77,7 +79,7 @@ const handleOpenTx = async (action) => {
 
 					<Flex v-else-if="act.type === 'transfer'" gap="4" :class="$style.description">
 						<Text size="13" weight="500" color="secondary">
-							{{ `Sent ${spaces(act.data.amount)} NRIA to` }}
+							{{ `Sent ${spaces(act.data.amount)} ${(act.data.asset).toUpperCase()} to` }}
 						</Text>
 
 						<LinkToEntity
@@ -90,7 +92,7 @@ const handleOpenTx = async (action) => {
 
 					<Flex v-else-if="act.type === 'mint'" gap="4" :class="$style.description">
 						<Text size="13" weight="500" color="secondary">
-							{{ `Minted ${spaces(act.data.amount)} NRIA to` }}
+							{{ `Minted ${spaces(act.data.amount)} ${(act.data.asset).toUpperCase()} to` }}
 						</Text>
 
 						<LinkToEntity
@@ -179,7 +181,7 @@ const handleOpenTx = async (action) => {
 
 					<Flex v-else-if="act.type === 'bridge_unlock'" gap="4" :class="$style.description">
 						<Text size="13" weight="500" color="secondary">
-							{{ `Unlock ${spaces(act.data.amount)} ${act.data.fee_asset} to` }}
+							{{ `Unlock ${spaces(act.data.amount)} ${act.data.fee_asset.toUpperCase()} to` }}
 						</Text>
 
 						<LinkToEntity

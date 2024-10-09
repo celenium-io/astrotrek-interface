@@ -1,5 +1,13 @@
 <script setup>
+/** Store */
+import { useModalsStore } from "@/store/modals"
+const modalsStore = useModalsStore()
+
 const appConfig = useAppConfig()
+
+const handleViewConstants = () => {
+	modalsStore.open("constants")
+}
 </script>
 
 <template>
@@ -59,6 +67,7 @@ const appConfig = useAppConfig()
 					<NuxtLink to="/rollups">
 						<Text size="13" weight="600" color="secondary">Rollups</Text>
 					</NuxtLink>
+					<Text @click="handleViewConstants" size="13" weight="600" color="secondary" :style="{ cursor: 'pointer' }">Constants</Text>
 				</Flex>
 				<Flex align="center" gap="16" :class="$style.links">
 					<a href="https://www.pklab.io/privacy" target="_blank">

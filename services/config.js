@@ -23,7 +23,7 @@ export const useServerURL = () => {
 			return Server.API.dawn
 
 		default:
-			return runtimeConfig.public.API_DEV || Server.API.dev
+			return runtimeConfig.public.API_DEV || Server.API.dawn
 	}
 }
 
@@ -39,6 +39,6 @@ export const useSocketURL = () => {
 			return Server.WSS.dawn
 
 		default:
-			return runtimeConfig.public.WSS_DEV || Server.WSS.dev
+			return runtimeConfig.public.WSS_DEV || Server.WSS.dawn
 	}
 }
