@@ -64,6 +64,8 @@ export const shortHash = (hash) => {
 }
 
 export const midHash = (hash) => {
+	if (!hash) return ""
+	
 	if (hash.length > 24) {
 		if (hash.startsWith("astria")) {
 			return `astria ••• ${hash.slice(-8,-4)} ${hash.slice(-4)}`
