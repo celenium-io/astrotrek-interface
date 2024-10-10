@@ -35,8 +35,6 @@ const props = defineProps({
 	},
 })
 
-console.log('actions', props.actions);
-
 const handleViewRawData = (action) => {
 	cacheStore.current.action = action
 	cacheStore.current._target = "action"

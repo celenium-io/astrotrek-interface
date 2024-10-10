@@ -13,6 +13,9 @@ import Button from "~/components/ui/Button.vue"
 import { Dropdown, DropdownItem } from "@/components/ui/Dropdown"
 import Tooltip from "~/components/ui/Tooltip.vue"
 
+/** Services */
+import { capitalize } from "~/services/utils"
+
 /** API */
 import { fetchRollupActions, fetchRollupBridges, fetchRollupByHash } from "~/services/api/rollup"
 
@@ -21,6 +24,7 @@ definePageMeta({
 })
 
 const route = useRoute()
+const router = useRouter()
 
 const rollup = ref()
 const actions = ref([])
@@ -68,6 +72,17 @@ const fetchBridges = async () => {
 	handleNextCondition.value = bridges.value.length < limit.value
 
 	isLoading.value = false
+}
+
+const fetchData = async () => {
+	switch (activeTab.value) {
+		case "actions":
+			await fetchActions()
+			break
+		case "bridges":
+			await fetchBridges()
+			break
+	}
 }
 
 /** Pagination */
@@ -128,21 +143,32 @@ useHead({
 	],
 })
 
+const selectedPeriodIdx = ref(1)
+const selectedPeriod = computed(() => periods.value[selectedPeriodIdx.value])
+
 const tabs = ref([
 	{
-		name: "Actions",
+		name: "actions",
 		display: true,
 	},
 	{
-		name: "Bridges",
+		name: "bridges",
 		display: rollup.value?.bridge_count > 0,
 	},
 	{
-		name: "Analytics",
+		name: "analytics",
 		display: true,
 	}
 ])
-const activeTab = ref(tabs.value[0].name)
+const activeTab = ref(route.query.tab && tabs.value.map((tab) => tab.name).includes(route.query.tab) ? route.query.tab : tabs.value[0].name)
+
+const updateRouteQuery = () => {
+	router.replace({
+		query: {
+			tab: activeTab.value,
+		},
+	})
+}
 
 const periods = ref([
 	{
@@ -161,38 +187,30 @@ const periods = ref([
 		timeframe: "day",
 	},
 ])
-const selectedPeriodIdx = ref(1)
-const selectedPeriod = computed(() => periods.value[selectedPeriodIdx.value])
 
-await fetchActions()
+await fetchData()
+updateRouteQuery()
 
+const isUpdatingPaage = ref(false)
 watch(
 	() => activeTab.value,
 	async () => {
-		switch (activeTab.value) {
-			case "Actions":
-				page.value = 1
-				await fetchActions()
-				break
-			case "Bridges":
-				page.value = 1
-				await fetchBridges()
-				break
-		}
+		isUpdatingPaage.value = true
+
+		page.value = 1
+		updateRouteQuery()
+		await fetchData()
+
+		isUpdatingPaage.value = false
 	},
 )
 
 watch(
 	() => page.value,
 	async () => {
-		switch (activeTab.value) {
-			case "Actions":
-				await fetchActions()
-				break
-			case "Bridges":
-				await fetchBridges()
-				break
-		}
+		if (isUpdatingPaage.value) return
+
+		await fetchData()
 	},
 )
 </script>
@@ -243,11 +261,11 @@ watch(
 						color="secondary"
 						:class="[$style.tab, activeTab === tab.name && $style.active]"
 					>
-						{{ tab.name }}
+						{{ capitalize(tab.name) }}
 					</Text>
 				</Flex>
 
-				<Flex v-if="activeTab !== 'Analytics'" align="center" gap="6" :class="$style.pagination">
+				<Flex v-if="activeTab !== 'analytics'" align="center" gap="6" :class="$style.pagination">
 					<Button @click="handlePrev" size="mini" type="secondary" :disabled="page === 1 || isLoading">
 						<Icon name="chevron" size="14" color="primary" style="transform: rotate(90deg)" />
 					</Button>
@@ -276,10 +294,10 @@ watch(
 				</Flex>
 			</Flex>
 
-			<RollupActions v-if="activeTab === 'Actions'" :actions="actions" :isLoading="isLoading" />
-			<RollupBridges v-if="activeTab === 'Bridges'" :bridges="bridges" :isLoading="isLoading" />
+			<RollupActions v-if="activeTab === 'actions'" :actions="actions" :isLoading="isLoading" />
+			<RollupBridges v-if="activeTab === 'bridges'" :bridges="bridges" :isLoading="isLoading" />
 
-			<RollupCharts v-if="activeTab === 'Analytics'" :rollup="rollup" :period="selectedPeriod" />
+			<RollupCharts v-if="activeTab === 'analytics'" :rollup="rollup" :period="selectedPeriod" />
 		</Flex>
 	</Flex>
 </template>

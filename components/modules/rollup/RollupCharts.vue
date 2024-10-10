@@ -6,12 +6,9 @@ import { DateTime } from "luxon"
 import { fetchRollupSeries } from "@/services/api/stats.js";
 
 /** Services */
-import { formatBytes, space, spaces } from "@/services/utils"
-import { getNamespaceID, getNamespaceLink } from "@/services/utils/rollups"
 import { getRollupHashSafeURL } from "~/services/utils/rollups"
 
 /** UI */
-import Button from "@/components/ui/Button.vue"
 import LineChart from "@/components/ui/Charts/LineChart.vue"
 
 const props = defineProps({
@@ -63,9 +60,8 @@ const sizeSeries = ref([])
 const actionsSeries = ref([])
 
 const fetchData = async () => {
-	sizeSeries.value = await getRollupSeries('size')
-
-	actionsSeries.value = await getRollupSeries('actions_count')
+	getRollupSeries('size').then((res) => sizeSeries.value = res)
+	getRollupSeries('actions_count').then((res) => actionsSeries.value = res)
 }
 
 await fetchData()
@@ -83,12 +79,6 @@ watch(
 		<LineChart v-if="sizeSeries.length > 0" title="Data Usage" :data="sizeSeries" :period="period" units="bytes" tooltip="Pushed" />
 
 		<LineChart v-if="actionsSeries.length > 0" title="Actions Count" :data="actionsSeries" :period="period" tooltip="Actions" />
-
-		<!-- <LoadingHolder v-if="isLoading" title="Loading charts.." /> -->
-
-		<!-- <ActionsTable v-if="actions.length > 0" :actions="actions" txLink /> -->
-
-		<!-- <EmptyHolder v-else-if="!isLoading" title="This rollup doesn't contain any action" /> -->
 	</Flex>
 </template>
 

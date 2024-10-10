@@ -69,7 +69,7 @@ export const getActionDescription = (action) => {
 			description = `Transfer ${spaces(data.amount)} ${(data.asset).toUpperCase()} from sequencer to ${midHash(data.to)}`
 			break;
 		case "bridge_unlock":
-			description = `Unlock ${spaces(data.amount)} ${midHash(data.fee_asset)} to ${midHash(data.to)}`
+			description = `Unlock ${spaces(data.amount)} ${data.fee_asset.toUpperCase()} to ${midHash(data.to)}`
 			break;
 		case "bridge_sudo_change_action":
 			let actions = []
@@ -80,7 +80,7 @@ export const getActionDescription = (action) => {
 				actions.push(`Withdrawer address for ${shortHash(data.bridge)} was changed to ${shortHash(data.withdrawer)}`)
 			}
 			if (data.fee_asset) {
-				actions.push(`Fee asset address for ${shortHash(data.bridge)} was changed to ${data.fee_asset}`)
+				actions.push(`Fee asset address for ${shortHash(data.bridge)} was changed to ${data.fee_asset.toUpperCase()}`)
 			}
 
 			for (let i = 0; i < actions.length; i++) {

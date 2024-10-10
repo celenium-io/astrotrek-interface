@@ -1,6 +1,6 @@
 <script setup>
 /** Services */
-import { spaces } from "~/services/utils"
+import { capitalize, spaces } from "~/services/utils"
 
 /** UI */
 import Button from "~/components/ui/Button.vue"
@@ -74,6 +74,17 @@ const fetchActions = async () => {
 	isLoading.value = false
 }
 
+const fetchData = async () => {
+	switch (activeTab.value) {
+		case "transactions":
+			await fetchTxs()
+			break
+		case "actions":
+			await fetchActions()
+			break
+	}
+}
+
 useHead({
 	title: `Block ${spaces(block.value?.height)} - Astria Explorer`,
 	link: [
@@ -110,8 +121,23 @@ useHead({
 	],
 })
 
-const tabs = ref([{ name: "Transactions" }, { name: "Actions" }])
-const activeTab = ref(tabs.value[0].name)
+const tabs = ref([
+	{
+		name: "transactions"
+	},
+	{
+		name: "actions"
+	}
+])
+const activeTab = ref(route.query.tab && tabs.value.map((tab) => tab.name).includes(route.query.tab) ? route.query.tab : tabs.value[0].name)
+
+const updateRouteQuery = () => {
+	router.replace({
+		query: {
+			tab: activeTab.value,
+		},
+	})
+}
 
 const limit = ref(15)
 
@@ -127,35 +153,31 @@ const handlePrev = () => {
 	page.value -= 1
 }
 
+await fetchData()
+updateRouteQuery()
+
+const isUpdatingPaage = ref(false)
 watch(
 	() => activeTab.value,
 	async () => {
-		switch (activeTab.value) {
-			case "Transactions":
-				page.value === 1 ? fetchTxs() : page.value = 1
-				break
-			case "Actions":
-				page.value === 1 ? fetchActions() : page.value = 1
-				break
-		}
+		isUpdatingPaage.value = true
+
+		page.value = 1
+		updateRouteQuery()
+		await fetchData()
+
+		isUpdatingPaage.value = false
 	},
 )
 
 watch(
 	() => page.value,
 	async () => {
-		switch (activeTab.value) {
-			case "Transactions":
-				fetchTxs()
-				break
-			case "Actions":
-				fetchActions()
-				break
-		}
+		if (isUpdatingPaage.value) return
+
+		await fetchData()
 	},
 )
-
-await fetchTxs()
 </script>
 
 <template>
@@ -217,7 +239,7 @@ await fetchTxs()
 						color="secondary"
 						:class="[$style.tab, activeTab === tab.name && $style.active]"
 					>
-						{{ tab.name }}
+						{{ capitalize(tab.name) }}
 					</Text>
 				</Flex>
 
@@ -232,8 +254,8 @@ await fetchTxs()
 				</Flex>
 			</Flex>
 
-			<BlockTransactions v-if="activeTab === 'Transactions'" :txs="txs" :isLoading="isLoading" />
-			<BlockActions v-if="activeTab === 'Actions'" :actions="actions" :isLoading="isLoading" />
+			<BlockTransactions v-if="activeTab === 'transactions'" :txs="txs" :isLoading="isLoading" />
+			<BlockActions v-if="activeTab === 'actions'" :actions="actions" :isLoading="isLoading" />
 		</Flex>
 	</Flex>
 </template>

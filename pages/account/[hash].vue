@@ -17,6 +17,9 @@ import RawDataView from "@/components/shared/RawDataView.vue"
 import Button from "~/components/ui/Button.vue"
 import Tooltip from "~/components/ui/Tooltip.vue"
 
+/** Services */
+import { capitalizeAndReplaceUnderscore } from "~/services/utils"
+
 /** API */
 import { fetchAccountActions, fetchAccountBridgeRoles, fetchAccountByHash, fetchAccountRollups, fetchAccountTransactions } from "~/services/api/account.js"
 
@@ -25,6 +28,7 @@ definePageMeta({
 })
 
 const route = useRoute()
+const router = useRouter()
 
 const account = ref()
 const txs = ref([])
@@ -123,6 +127,23 @@ const fetchBridgeRoles = async () => {
 	isLoading.value = false
 }
 
+const fetchData = async () => {
+	switch (activeTab.value) {
+		case "transactions":
+			fetchTxs()
+			break
+		case "actions":
+			fetchActions()
+			break
+		case "rollups":
+			fetchRollups()
+			break
+		case "bridge_roles":
+			fetchBridgeRoles()
+			break
+	}
+}
+
 /** Pagination */
 const page = ref(1)
 const handleNextCondition = ref(true)
@@ -183,59 +204,47 @@ useHead({
 
 const tabs = ref(
 	[
-		{ name: "Transactions" },
-		{ name: "Actions" },
-		{ name: "Rollups" },
-		{ name: "Bridge Roles" },
+		{ name: "transactions", },
+		{ name: "actions" },
+		{ name: "rollups" },
+		{ name: "bridge_roles" },
 	]
 )
-const activeTab = ref(tabs.value[0].name)
+const activeTab = ref(route.query.tab && tabs.value.map((tab) => tab.name).includes(route.query.tab) ? route.query.tab : tabs.value[0].name)
 
-await fetchTxs()
+const updateRouteQuery = () => {
+	router.replace({
+		query: {
+			tab: activeTab.value,
+		},
+	})
+}
 
+await fetchData()
+updateRouteQuery()
+
+const isUpdatingPaage = ref(false)
 watch(
 	() => activeTab.value,
 	async () => {
-		switch (activeTab.value) {
-			case "Transactions":
-				page.value = 1
-				fetchTxs()
-				break
-			case "Actions":
-				page.value = 1
-				fetchActions()
-				break
-			case "Rollups":
-				page.value = 1
-				fetchRollups()
-				break
-			case "Bridge Roles":
-				page.value = 1
-				fetchBridgeRoles()
-				break
-		}
+		isUpdatingPaage.value = true
+
+		page.value = 1
+		updateRouteQuery()
+		await fetchData()
+
+		isUpdatingPaage.value = false
 	},
 )
 
 watch(
 	() => page.value,
-	() => {
-		if (page.value !== 1) {
-			switch (activeTab.value) {
-				case "Transactions":
-					fetchTxs()
-					break
-				case "Actions":
-					fetchActions()
-					break
-				case "Rollups":
-					fetchRollups()
-					break
-				case "Bridge Roles":
-					fetchBridgeRoles()
-					break
-			}
-		}
+	async () => {
+		// console.log('isUpdatingPaage.value', isUpdatingPaage.value);
+		
+		if (isUpdatingPaage.value) return
+		
+		await fetchData()
 	},
 )
 </script>
@@ -288,7 +297,7 @@ watch(
 						color="secondary"
 						:class="[$style.tab, activeTab === tab.name && $style.active]"
 					>
-						{{ tab.name }}
+						{{ capitalizeAndReplaceUnderscore(tab.name) }}
 					</Text>
 				</Flex>
 
@@ -303,13 +312,13 @@ watch(
 				</Flex>
 			</Flex>
 
-			<AccountTransactions v-if="activeTab === 'Transactions'" :txs="txs" :isLoading="isLoading" />
+			<AccountTransactions v-if="activeTab === 'transactions'" :txs="txs" :isLoading="isLoading" />
 
-			<AccountActions v-if="activeTab === 'Actions'" :actions="actions" :isLoading="isLoading" />
+			<AccountActions v-if="activeTab === 'actions'" :actions="actions" :isLoading="isLoading" />
 
-			<AccountRollups v-if="activeTab === 'Rollups'" :rollups="rollups" :isLoading="isLoading" />
+			<AccountRollups v-if="activeTab === 'rollups'" :rollups="rollups" :isLoading="isLoading" />
 
-			<AccountBridgeRoles v-if="activeTab === 'Bridge Roles'" :roles="bridgeRoles" :isLoading="isLoading" />
+			<AccountBridgeRoles v-if="activeTab === 'bridge_roles'" :roles="bridgeRoles" :isLoading="isLoading" />
 		</Flex>
 	</Flex>
 </template>
