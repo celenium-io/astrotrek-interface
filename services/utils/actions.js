@@ -32,10 +32,10 @@ export const getActionDescription = (action) => {
 			description = `Pushed ${formatBytes(base64Decode(data.data).length)} to ${data.rollup_id}`
 			break;
 		case "transfer":
-			description = `Sent ${data.amount} NRIA to ${midHash(data.to)}`
+			description = `Sent ${spaces(data.amount)} NRIA to ${midHash(data.to)}`
 			break;
 		case "mint":
-			description = `Minted ${data.amount} NRIA to ${midHash(data.to)}`
+			description = `Minted ${spaces(data.amount)} NRIA to ${midHash(data.to)}`
 			break;
 		case "sudo_address_change":
 			description = `Set ${midHash(data.new_address)} as new sudo address`
@@ -60,7 +60,7 @@ export const getActionDescription = (action) => {
 			}
 			break;
 		case "ics20_withdrawal":
-			description = `Withdraw ${data.amount} ${data.denom} to ${midHash(data.destination_chain_address)}`
+			description = `Withdraw ${spaces(data.amount)} ${data.denom} to ${midHash(data.destination_chain_address)}`
 			break;
 		case "init_bridge_account":
 			description = `Bridge account was initialized for ${data.rollup_id}`
@@ -69,7 +69,7 @@ export const getActionDescription = (action) => {
 			description = `Transfer ${spaces(data.amount)} ${(data.asset).toUpperCase()} from sequencer to ${midHash(data.to)}`
 			break;
 		case "bridge_unlock":
-			description = `Unlock ${midHash(data.amount)} ${midHash(data.fee_asset)} to ${midHash(data.to)}`
+			description = `Unlock ${spaces(data.amount)} ${midHash(data.fee_asset)} to ${midHash(data.to)}`
 			break;
 		case "bridge_sudo_change_action":
 			let actions = []
