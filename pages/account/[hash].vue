@@ -240,8 +240,6 @@ watch(
 watch(
 	() => page.value,
 	async () => {
-		// console.log('isUpdatingPaage.value', isUpdatingPaage.value);
-		
 		if (isUpdatingPaage.value) return
 		
 		await fetchData()
