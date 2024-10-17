@@ -1,5 +1,5 @@
 export const ActionIconMap = {
-	sequence: "sequence",
+	rollup_data_submission: "sequence",
 	transfer: "transfer",
 }
 

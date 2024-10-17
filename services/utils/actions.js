@@ -28,7 +28,7 @@ export const getActionDescription = (action) => {
 	let description = ""
 	let data = action.data
 	switch (action.type) {
-		case "sequence":
+		case "rollup_data_submission":
 			description = `Pushed ${formatBytes(base64Decode(data.data).length)} to ${data.rollup_id}`
 			break;
 		case "transfer":

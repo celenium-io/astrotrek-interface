@@ -62,7 +62,7 @@ const handleOpenTx = async (action) => {
 						</Text>
 					</Flex>
 
-					<Flex v-if="act.type === 'sequence'" gap="4" :class="$style.description">
+					<Flex v-if="act.type === 'rollup_data_submission'" gap="4" :class="$style.description">
 						<Text size="13" weight="500" color="secondary">
 							{{ `Pushed ${getActionDataLength(act)} to` }}
 						</Text>
