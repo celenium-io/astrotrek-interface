@@ -87,3 +87,18 @@ export const fetchAccountBridgeRoles = async ({hash, limit, offset, sort}) => {
 		console.error(error)
 	}
 }
+
+export const fetchAccountDeposits = async ({hash, limit, offset, sort}) => {
+	try {
+		const url = new URL(`${useServerURL()}/address/${hash}/deposits`)
+
+        if (limit) url.searchParams.append("limit", limit)
+		if (offset) url.searchParams.append("offset", offset)
+		if (sort) url.searchParams.append("sort", sort)
+
+		const data = await useFetch(url.href)
+		return data
+	} catch (error) {
+		console.error(error)
+	}
+}

@@ -116,6 +116,8 @@ const handleSaveToHistory = (target) => {
 }
 
 const getResultPath = (result) => {
+	if (!result) return
+
 	switch (result.type) {
 		case "address":
 			return `/account/${result.body.hash}`
@@ -133,29 +135,13 @@ const getResultPath = (result) => {
 	}
 }
 
-const getItemLink = (item) => {
-	switch (item.type) {
-		case "address":
-			return `/account/${result.body.hash}`
-		case "block":
-			return `/block/${result.body.height}`
-		case "validator":
-			return `/validator/${result.body.id}`
-		case "bridge":
-			return `/account/${result.body.address}`
-
-		default:
-			return `/${item.type === 'address' ? 'account' : item.type}/${item.body.hash}`
-	}
-}
-
 const onKeydown = (e) => {
 	if (e.code === "Escape") {
 		show.value = false
 		inputEl.value.blur()
 	}
 
-	if (e.code === "Enter") {
+	if (e.code === "Enter" && results.value.length) {
 		const target = results.value[0]
 		router.push(getResultPath(target))
 

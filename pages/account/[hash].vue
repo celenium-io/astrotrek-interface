@@ -3,12 +3,13 @@
 import { shortHash } from "~/services/utils"
 
 /** Modules */
+import AccountActions from "~/components/modules/account/AccountActions.vue"
 import AccountBridgeInfo from "~/components/modules/account/AccountBridgeInfo.vue"
 import AccountBridgeRoles from "~/components/modules/account/AccountBridgeRoles.vue"
+import AccountDeposits from "~/components/modules/account/AccountDeposits.vue"
 import AccountMetadata from "~/components/modules/account/AccountMetadata.vue"
-import AccountTransactions from "~/components/modules/account/AccountTransactions.vue"
-import AccountActions from "~/components/modules/account/AccountActions.vue"
 import AccountRollups from "~/components/modules/account/AccountRollups.vue"
+import AccountTransactions from "~/components/modules/account/AccountTransactions.vue"
 
 /** Components */
 import RawDataView from "@/components/shared/RawDataView.vue"
@@ -21,7 +22,7 @@ import Tooltip from "~/components/ui/Tooltip.vue"
 import { capitalizeAndReplaceUnderscore } from "~/services/utils"
 
 /** API */
-import { fetchAccountActions, fetchAccountBridgeRoles, fetchAccountByHash, fetchAccountRollups, fetchAccountTransactions } from "~/services/api/account.js"
+import { fetchAccountActions, fetchAccountBridgeRoles, fetchAccountByHash, fetchAccountDeposits, fetchAccountRollups, fetchAccountTransactions } from "~/services/api/account.js"
 
 definePageMeta({
 	layout: "default",
@@ -31,10 +32,12 @@ const route = useRoute()
 const router = useRouter()
 
 const account = ref()
-const txs = ref([])
 const actions = ref([])
-const rollups = ref([])
 const bridgeRoles = ref([])
+const deposits = ref([])
+const rollups = ref([])
+const txs = ref([])
+
 const isLoading = ref(false)
 
 const { data } = await fetchAccountByHash(route.params.hash)
@@ -127,6 +130,21 @@ const fetchBridgeRoles = async () => {
 	isLoading.value = false
 }
 
+const fetchDeposits = async () => {
+	isLoading.value = true
+
+	const { data } = await fetchAccountDeposits({
+		hash: account.value?.hash,
+		limit: limit.value,
+		offset: (page.value - 1) * limit.value,
+		sort: "desc",
+	})
+	deposits.value = data.value
+	handleNextCondition.value = deposits.value.length < limit.value
+
+	isLoading.value = false
+}
+
 const fetchData = async () => {
 	switch (activeTab.value) {
 		case "transactions":
@@ -140,6 +158,9 @@ const fetchData = async () => {
 			break
 		case "bridge_roles":
 			fetchBridgeRoles()
+			break
+		case "deposits":
+			fetchDeposits()
 			break
 	}
 }
@@ -169,7 +190,7 @@ useHead({
 			name: "description",
 			content: `Astria Account ${account.value?.hash.toUpperCase().slice(0, 4)} ••• ${account.value?.hash
 				.toUpperCase()
-				.slice(-4)}. The hash, actions, rollups, transactions.`,
+				.slice(-4)}. The hash, actions, rollups, transactions, deposits.`,
 		},
 		{
 			property: "og:title",
@@ -181,7 +202,7 @@ useHead({
 			property: "og:description",
 			content: `Astria Account ${account.value?.hash.toUpperCase().slice(0, 4)} ••• ${account.value?.hash
 				.toUpperCase()
-				.slice(-4)}. The hash, actions, rollups, transactions.`,
+				.slice(-4)}. The hash, actions, rollups, transactions, deposits.`,
 		},
 		{
 			property: "og:url",
@@ -197,17 +218,18 @@ useHead({
 			name: "twitter:description",
 			content: `Astria Account ${account.value?.hash.toUpperCase().slice(0, 4)} ••• ${account.value?.hash
 				.toUpperCase()
-				.slice(-4)}. The hash, actions, rollups, transactions.`,
+				.slice(-4)}. The hash, actions, rollups, transactions, deposits.`,
 		},
 	],
 })
 
 const tabs = ref(
 	[
-		{ name: "transactions", },
-		{ name: "actions" },
-		{ name: "rollups" },
-		{ name: "bridge_roles" },
+		{ name: "transactions", visible: true },
+		{ name: "actions", visible: true },
+		{ name: "rollups", visible: true },
+		{ name: "bridge_roles", visible: true },
+		{ name: "deposits", visible: account.value?.is_bridge },
 	]
 )
 const activeTab = ref(route.query.tab && tabs.value.map((tab) => tab.name).includes(route.query.tab) ? route.query.tab : tabs.value[0].name)
@@ -240,8 +262,6 @@ watch(
 watch(
 	() => page.value,
 	async () => {
-		// console.log('isUpdatingPaage.value', isUpdatingPaage.value);
-		
 		if (isUpdatingPaage.value) return
 		
 		await fetchData()
@@ -269,7 +289,7 @@ watch(
 						Account <Text weight="600">{{ shortHash(account.hash) }}</Text>
 					</Text>
 
-					<Tooltip v-if="account.bridge">
+					<Tooltip v-if="account.is_bridge">
 						<Icon name="bridge" size="18" color="brand" />
 
 						<template #content>
@@ -284,13 +304,13 @@ watch(
 
 		<AccountMetadata :account="account" />
 
-		<AccountBridgeInfo v-if="account.bridge" :account="account" />
+		<AccountBridgeInfo v-if="account.is_bridge" :account="account" />
 
 		<Flex direction="column" gap="12">
 			<Flex align="center" justify="between">
 				<Flex align="center" gap="8">
 					<Text
-						v-for="tab in tabs"
+						v-for="tab in tabs.filter(t => t.visible)"
 						@click="activeTab = tab.name"
 						size="13"
 						weight="600"
@@ -319,6 +339,8 @@ watch(
 			<AccountRollups v-if="activeTab === 'rollups'" :rollups="rollups" :isLoading="isLoading" />
 
 			<AccountBridgeRoles v-if="activeTab === 'bridge_roles'" :roles="bridgeRoles" :isLoading="isLoading" />
+
+			<AccountDeposits v-if="activeTab === 'deposits'" :deposits="deposits" :isLoading="isLoading" />
 		</Flex>
 	</Flex>
 </template>
