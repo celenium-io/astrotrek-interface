@@ -1,9 +1,11 @@
 <script setup>
 /** Modules */
-import RollupMetadata from "~/components/modules/rollup/RollupMetadata.vue"
 import RollupActions from "~/components/modules/rollup/RollupActions.vue"
 import RollupBridges from "~/components/modules/rollup/RollupBridges.vue"
 import RollupCharts from "~/components/modules/rollup/RollupCharts.vue"
+import RollupDeposits from "~/components/modules/rollup/RollupDeposits.vue"
+import RollupMetadata from "~/components/modules/rollup/RollupMetadata.vue"
+
 
 /** Components */
 import RawDataView from "@/components/shared/RawDataView.vue"
@@ -17,7 +19,7 @@ import Tooltip from "~/components/ui/Tooltip.vue"
 import { capitalize } from "~/services/utils"
 
 /** API */
-import { fetchRollupActions, fetchRollupBridges, fetchRollupByHash } from "~/services/api/rollup"
+import { fetchRollupActions, fetchRollupBridges, fetchRollupByHash, fetchRollupDeposits } from "~/services/api/rollup"
 
 definePageMeta({
 	layout: "default",
@@ -29,7 +31,10 @@ const router = useRouter()
 const rollup = ref()
 const actions = ref([])
 const bridges = ref([])
+const deposits = ref([])
+
 const isLoading = ref(false)
+
 const rollupHashSafeURL = ref(route.params.hash)
 
 const { data } = await fetchRollupByHash(rollupHashSafeURL.value)
@@ -74,6 +79,21 @@ const fetchBridges = async () => {
 	isLoading.value = false
 }
 
+const fetchDeposits = async () => {
+	isLoading.value = true
+
+	const { data } = await fetchRollupDeposits({
+		hash: rollupHashSafeURL.value,
+		limit: limit.value,
+		offset: (page.value - 1) * limit.value,
+	})
+	
+	deposits.value = data.value
+	handleNextCondition.value = deposits.value.length < limit.value
+
+	isLoading.value = false
+}
+
 const fetchData = async () => {
 	switch (activeTab.value) {
 		case "actions":
@@ -81,6 +101,9 @@ const fetchData = async () => {
 			break
 		case "bridges":
 			await fetchBridges()
+			break
+		case "deposits":
+			await fetchDeposits()
 			break
 	}
 }
@@ -153,6 +176,10 @@ const tabs = ref([
 	},
 	{
 		name: "bridges",
+		display: rollup.value?.bridge_count > 0,
+	},
+	{
+		name: "deposits",
 		display: rollup.value?.bridge_count > 0,
 	},
 	{
@@ -296,6 +323,7 @@ watch(
 
 			<RollupActions v-if="activeTab === 'actions'" :actions="actions" :isLoading="isLoading" />
 			<RollupBridges v-if="activeTab === 'bridges'" :bridges="bridges" :isLoading="isLoading" />
+			<RollupDeposits v-if="activeTab === 'deposits'" :deposits="deposits" :isLoading="isLoading" />
 
 			<RollupCharts v-if="activeTab === 'analytics'" :rollup="rollup" :period="selectedPeriod" />
 		</Flex>

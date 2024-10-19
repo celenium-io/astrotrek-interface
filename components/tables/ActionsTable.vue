@@ -62,7 +62,7 @@ const handleOpenTx = async (action) => {
 						</Text>
 					</Flex>
 
-					<Flex v-if="act.type === 'sequence'" gap="4" :class="$style.description">
+					<Flex v-if="act.type === 'rollup_data_submission'" gap="4" :class="$style.description">
 						<Text size="13" weight="500" color="secondary">
 							{{ `Pushed ${getActionDataLength(act)} to` }}
 						</Text>
@@ -297,7 +297,7 @@ const handleOpenTx = async (action) => {
 				<Flex align="center" gap="8">
 					<Text size="12" color="tertiary">Block</Text>
 
-					<LinkToEntity :entity="{ title: spaces(act.height), type: 'block', id: act.height }" :class="$style.link" />
+					<LinkToEntity :entity="{ title: spaces(act.height), type: 'block', id: act.height }" color="secondary" :class="$style.link" />
 
 					<div :class="$style.dot" />
 
