@@ -124,10 +124,11 @@ watch(
 						
 						<DropdownItem
 							v-for="n in networks.filter(el => el.name !== selectedNetworkName)"
-							@click="handleNavigate('https://astrotrek.io')"
+							@click="handleNavigate(n.url)"
 						>
 							{{ n.name }}
 						</DropdownItem>
+						
 						<!-- <DropdownItem @click="handleNavigate('https://astrotrek.io')">Mainnet</DropdownItem>
 						<DropdownItem @click="handleNavigate('https://dusk.astrotrek.io')">Dusk</DropdownItem>
 						<DropdownItem @click="handleNavigate('https://dawn.astrotrek.io')">Dawn</DropdownItem> -->
