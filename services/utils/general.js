@@ -90,6 +90,9 @@ export const getNetworkName = () => {
 	const { hostname } = useRequestURL()
 
 	switch (hostname) {
+		case "astrotrek.io":
+			return "Mainnet"
+
 		case "dusk.astrotrek.io":
 			return "Dusk"
 
@@ -103,8 +106,7 @@ export const getNetworkName = () => {
 			return "Local"
 
 		default:
-			return "Dusk"
-			// return "Unknown"
+			return "Unknown"
 	}
 }
 

@@ -27,6 +27,27 @@ const handleViewConstants = () => {
 	modalsStore.open("constants")
 }
 
+const handleNavigate = (url) => {
+	window.location.replace(url)
+}
+
+const selectedNetworkName = computed(() => getNetworkName())
+
+const networks = ref([
+	{
+		name: "Mainnet",
+		url: "https://astrotrek.io",
+	},
+	{
+		name: "Dusk",
+		url: "https://dusk.astrotrek.io",
+	},
+	{
+		name: "Dawn",
+		url: "https://dawn.astrotrek.io",
+	},
+])
+
 watch(
 	() => showPopup.value,
 	() => {
@@ -41,10 +62,6 @@ watch(
 		}
 	},
 )
-
-const handleNavigate = (url) => {
-	window.location.replace(url)
-}
 </script>
 
 <template>
@@ -87,7 +104,7 @@ const handleNavigate = (url) => {
 				<Dropdown>
 					<Flex align="center" gap="8" :class="$style.network">
 						<div :class="$style.dot" :style="{ background: `${lastHead.synced ? 'var(--green)' : 'var(--red)'}` }" />
-						<Text size="13" weight="600" color="primary" :class="$style.network_name"> {{ getNetworkName() }} </Text>
+						<Text size="13" weight="600" color="primary" :class="$style.network_name"> {{ selectedNetworkName }} </Text>
 						<Icon name="chevron" size="14" color="tertiary" />
 					</Flex>
 
@@ -105,8 +122,15 @@ const handleNavigate = (url) => {
 
 						<DropdownDivider />
 						
+						<DropdownItem
+							v-for="n in networks.filter(el => el.name !== selectedNetworkName)"
+							@click="handleNavigate('https://astrotrek.io')"
+						>
+							{{ n.name }}
+						</DropdownItem>
+						<!-- <DropdownItem @click="handleNavigate('https://astrotrek.io')">Mainnet</DropdownItem>
 						<DropdownItem @click="handleNavigate('https://dusk.astrotrek.io')">Dusk</DropdownItem>
-						<DropdownItem @click="handleNavigate('https://dawn.astrotrek.io')">Dawn</DropdownItem>
+						<DropdownItem @click="handleNavigate('https://dawn.astrotrek.io')">Dawn</DropdownItem> -->
 					</template>
 				</Dropdown>
 
