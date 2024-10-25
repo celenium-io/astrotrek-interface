@@ -1,11 +1,13 @@
 export const Server = {
 	API: {
-		mainnet: "https://api-dusk.astrotrek.io/v1",
+		mainnet: "https://api.astrotrek.io/v1",
+		dusk: "https://api-dusk.astrotrek.io/v1",
 		dawn: "https://api-dawn.astrotrek.io/v1",
 		dev: process.env.API_DEV || "https://api-dusk.astrotrek.io/v1",
 	},
 	WSS: {
-		mainnet: "wss://api-dusk.astrotrek.io/v1/ws",
+		mainnet: "wss://api.astrotrek.io/v1/ws",
+		dusk: "wss://api-dusk.astrotrek.io/v1/ws",
 		dawn: "wss://api-dawn.astrotrek.io/v1/ws",
 		dev: process.env.WSS_DEV || "wss://api-dusk.astrotrek.io/v1/ws",
 	},
@@ -16,8 +18,11 @@ export const useServerURL = () => {
 	const runtimeConfig = useRuntimeConfig()
 
 	switch (requestURL.hostname) {
-		case "dusk.astrotrek.io":
+		case "astrotrek.io":
 			return Server.API.mainnet
+
+		case "dusk.astrotrek.io":
+			return Server.API.dusk
 
 		case "dawn.astrotrek.io":
 			return Server.API.dawn
@@ -32,8 +37,11 @@ export const useSocketURL = () => {
 	const runtimeConfig = useRuntimeConfig()
 
 	switch (requestURL.hostname) {
-		case "dusk.astrotrek.io":
+		case "astrotrek.io":
 			return Server.WSS.mainnet
+			
+		case "dusk.astrotrek.io":
+			return Server.WSS.dusk
 			
 		case "dawn.astrotrek.io":
 			return Server.WSS.dawn
