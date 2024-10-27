@@ -133,7 +133,7 @@ watch(
 				]"
 			/>
 
-			<Flex align="center" justify="between" wide>
+			<Flex v-if="validator" align="center" justify="between" wide>
 				<Flex align="center" gap="8">
 					<Icon name="validator" size="14" color="primary" />
 
@@ -148,7 +148,7 @@ watch(
 			</Flex>
 		</Flex>
 
-		<ValidatorMetadata :validator="validator" />
+		<ValidatorMetadata v-if="validator" :validator="validator" />
 
 		<Flex direction="column" gap="12">
 			<Flex align="center" justify="between">

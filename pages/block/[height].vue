@@ -40,6 +40,8 @@ if (!data.value) {
 	})
 } else {
 	block.value = data.value
+	await fetchData()
+	updateRouteQuery()
 }
 
 const fetchTxs = async () => {
@@ -48,7 +50,7 @@ const fetchTxs = async () => {
 	isLoading.value = true
 
 	const { data } = await fetchBlockTxs({
-		height: block.value.height,
+		height: block.value?.height,
 		limit: limit.value,
 		offset: (page.value - 1) * limit.value,
 	})
@@ -153,9 +155,6 @@ const handlePrev = () => {
 	page.value -= 1
 }
 
-await fetchData()
-updateRouteQuery()
-
 const isUpdatingPaage = ref(false)
 watch(
 	() => activeTab.value,
@@ -198,23 +197,23 @@ watch(
 						<Icon name="block" size="14" color="primary" />
 
 						<Text size="14" weight="500" color="primary">
-							Block <Text weight="600">{{ spaces(block.height) }}</Text>
+							Block <Text weight="600">{{ spaces(block?.height) }}</Text>
 						</Text>
 
-						<CopyButton :text="block.height" />
+						<CopyButton :text="block?.height" />
 					</Flex>
 
 					<Flex align="center" gap="8">
-						<Button @click="router.push(`/block/${block.height - 1}`)" type="tertiary" size="mini" :disabled="block.height === 1">
+						<Button @click="router.push(`/block/${block?.height - 1}`)" type="tertiary" size="mini" :disabled="block?.height === 1">
 							<Icon name="arrow-redo-right" size="16" color="secondary" :style="{ transform: 'scaleX(-1)' }" />
 							Prev
 						</Button>
 
 						<Button
-							@click="router.push(`/block/${block.height + 1}`)"
+							@click="router.push(`/block/${block?.height + 1}`)"
 							type="tertiary"
 							size="mini"
-							:disabled="block.height === lastBlock?.height"
+							:disabled="block?.height === lastBlock?.height"
 						>
 							Next
 							<Icon name="arrow-redo-right" size="16" color="secondary" />
@@ -226,7 +225,7 @@ watch(
 			</Flex>
 		</Flex>
 
-		<BlockMetadata :block="block" />
+		<BlockMetadata v-if="block" :block="block" />
 
 		<Flex direction="column" gap="12">
 			<Flex align="center" justify="between">

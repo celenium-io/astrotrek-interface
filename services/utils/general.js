@@ -34,7 +34,7 @@ export const strToHex = (str) => {
 }
 
 export const hexToBase64 = (hex) => {
-	if (!hex) return ""
+	if (!hex?.length) return ""
 
 	let binary = hex.match(/.{1,2}/g).map(byte => String.fromCharCode(parseInt(byte, 16))).join('')
 
@@ -42,6 +42,8 @@ export const hexToBase64 = (hex) => {
 }
 
 export const shortHex = (hex) => {
+	if (!hex?.length) return ""
+
 	if (hex.length > 16) {
 		return `${hex.slice(0, 4)} ••• ${hex.slice(-4)}`
 	} else {
@@ -50,7 +52,7 @@ export const shortHex = (hex) => {
 }
 
 export const shortHash = (hash) => {
-	if (!hash) return ""
+	if (!hash?.length) return ""
 	
 	if (hash.length > 16) {
 		if (hash.startsWith("astria")) {

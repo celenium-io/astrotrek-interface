@@ -28,15 +28,15 @@ const showMore = ref(false)
 			</Flex>
 		</Flex>
 
-		<Flex v-if="account.balances.length < 2" align="center" :class="$style.item">
+		<Flex v-if="account?.balances.length < 2" align="center" :class="$style.item">
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Balance</Text>
 
 			<Flex align="center" gap="8" :class="$style.value">
-				<CopyButton :text="account.balances[0].value" />
+				<CopyButton :text="account?.balances[0].value" />
 
-				<Text size="13" weight="600" color="primary" mono> {{ spaces(account.balances[0].value) }} </Text>
+				<Text size="13" weight="600" color="primary" mono> {{ spaces(account?.balances[0].value) }} </Text>
 
-				<Text size="13" weight="600" color="secondary" mono> {{ account.balances[0].currency.toUpperCase() }} </Text>
+				<Text size="13" weight="600" color="secondary" mono> {{ account?.balances[0].currency.toUpperCase() }} </Text>
 			</Flex>
 			<!-- <Text size="13" weight="600" color="primary" mono :class="$style.value"> {{ `${spaces(account.balances[0].value)} ${account.balances[0].currency.toUpperCase()}` }} </Text> -->
 		</Flex>
@@ -45,7 +45,7 @@ const showMore = ref(false)
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Balance</Text>
 
 			<Flex direction="column" gap="14" :class="$style.value">
-				<Flex v-for="b in account.balances" align="center" gap="8">
+				<Flex v-for="b in account?.balances" align="center" gap="8">
 					<CopyButton :text="b.value" />
 
 					<Text size="13" weight="600" color="primary" mono> {{ spaces(b.value) }} </Text>

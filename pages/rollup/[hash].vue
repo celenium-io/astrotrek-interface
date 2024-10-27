@@ -44,6 +44,8 @@ if (!data.value) {
 	})
 } else {
 	rollup.value = data.value
+	await fetchData()
+	updateRouteQuery()
 }
 
 const limit = ref(15)
@@ -121,7 +123,7 @@ const handlePrev = () => {
 }
 
 useHead({
-	title: `Rollup ${rollup.value.hash.toUpperCase().slice(0, 4)} ••• ${rollup.value.hash.toUpperCase().slice(-4)} - Astria Explorer`,
+	title: `Rollup ${rollup.value?.hash.toUpperCase().slice(0, 4)} ••• ${rollup.value?.hash.toUpperCase().slice(-4)} - Astria Explorer`,
 	link: [
 		{
 			rel: "canonical",
@@ -131,19 +133,19 @@ useHead({
 	meta: [
 		{
 			name: "description",
-			content: `Astria Rollup ${rollup.value.hash.toUpperCase().slice(0, 4)} ••• ${rollup.value.hash
+			content: `Astria Rollup ${rollup.value?.hash.toUpperCase().slice(0, 4)} ••• ${rollup.value?.hash
 				.toUpperCase()
 				.slice(-4)}. The hash, actions, metadata, size.`,
 		},
 		{
 			property: "og:title",
-			content: `Rollup ${rollup.value.hash.toUpperCase().slice(0, 4)} ••• ${rollup.value.hash
+			content: `Rollup ${rollup.value?.hash.toUpperCase().slice(0, 4)} ••• ${rollup.value?.hash
 				.toUpperCase()
 				.slice(-4)} - Astria Explorer`,
 		},
 		{
 			property: "og:description",
-			content: `Astria Rollup ${rollup.value.hash.toUpperCase().slice(0, 4)} ••• ${rollup.value.hash
+			content: `Astria Rollup ${rollup.value?.hash.toUpperCase().slice(0, 4)} ••• ${rollup.value?.hash
 				.toUpperCase()
 				.slice(-4)}. The hash, actions, metadata, size.`,
 		},
@@ -153,13 +155,13 @@ useHead({
 		},
 		{
 			name: "twitter:title",
-			content: `Rollup ${rollup.value.hash.toUpperCase().slice(0, 4)} ••• ${rollup.value.hash
+			content: `Rollup ${rollup.value?.hash.toUpperCase().slice(0, 4)} ••• ${rollup.value?.hash
 				.toUpperCase()
 				.slice(-4)} - Astria Explorer`,
 		},
 		{
 			name: "twitter:description",
-			content: `Astria Rollup ${rollup.value.hash.toUpperCase().slice(0, 4)} ••• ${rollup.value.hash
+			content: `Astria Rollup ${rollup.value?.hash.toUpperCase().slice(0, 4)} ••• ${rollup.value?.hash
 				.toUpperCase()
 				.slice(-4)}. The hash, actions, metadata, size.`,
 		},
@@ -215,9 +217,6 @@ const periods = ref([
 	},
 ])
 
-await fetchData()
-updateRouteQuery()
-
 const isUpdatingPaage = ref(false)
 watch(
 	() => activeTab.value,
@@ -259,10 +258,10 @@ watch(
 					<Icon name="rollup" size="14" color="primary" />
 
 					<Text size="14" weight="500" color="primary">
-						Rollup <Text weight="600">{{ rollup.hash }}</Text>
+						Rollup <Text weight="600">{{ rollup?.hash }}</Text>
 					</Text>
 
-					<Tooltip v-if="rollup.bridge_count">
+					<Tooltip v-if="rollup?.bridge_count">
 						<Icon name="bridge" size="18" color="brand" />
 
 						<template #content>
@@ -275,7 +274,7 @@ watch(
 			</Flex>
 		</Flex>
 
-		<RollupMetadata :rollup="rollup" />
+		<RollupMetadata v-if="rollup" :rollup="rollup" />
 
 		<Flex direction="column" gap="12">
 			<Flex align="center" justify="between">

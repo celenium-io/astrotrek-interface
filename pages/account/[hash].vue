@@ -1,7 +1,4 @@
 <script setup>
-/** Services */
-import { shortHash } from "~/services/utils"
-
 /** Modules */
 import AccountActions from "~/components/modules/account/AccountActions.vue"
 import AccountBridgeInfo from "~/components/modules/account/AccountBridgeInfo.vue"
@@ -19,7 +16,7 @@ import Button from "~/components/ui/Button.vue"
 import Tooltip from "~/components/ui/Tooltip.vue"
 
 /** Services */
-import { capitalizeAndReplaceUnderscore } from "~/services/utils"
+import { capitalizeAndReplaceUnderscore, shortHash } from "@/services/utils"
 
 /** API */
 import { fetchAccountActions, fetchAccountBridgeRoles, fetchAccountByHash, fetchAccountDeposits, fetchAccountRollups, fetchAccountTransactions } from "~/services/api/account.js"
@@ -47,6 +44,8 @@ if (!data.value) {
 	})
 } else {
 	account.value = data.value
+	await fetchData()
+	updateRouteQuery()
 }
 
 const limit = ref(15)
@@ -242,9 +241,6 @@ const updateRouteQuery = () => {
 	})
 }
 
-await fetchData()
-updateRouteQuery()
-
 const isUpdatingPaage = ref(false)
 watch(
 	() => activeTab.value,
@@ -286,10 +282,10 @@ watch(
 					<Icon name="account" size="14" color="primary" />
 
 					<Text size="14" weight="500" color="primary">
-						Account <Text weight="600">{{ shortHash(account.hash) }}</Text>
+						<!-- Account <Text weight="600">{{ shortHash(account?.hash) }}</Text> -->
 					</Text>
 
-					<Tooltip v-if="account.is_bridge">
+					<Tooltip v-if="account?.is_bridge">
 						<Icon name="bridge" size="18" color="brand" />
 
 						<template #content>
@@ -302,9 +298,9 @@ watch(
 			</Flex>
 		</Flex>
 
-		<AccountMetadata :account="account" />
+		<AccountMetadata v-if="account" :account="account" />
 
-		<AccountBridgeInfo v-if="account.is_bridge" :account="account" />
+		<AccountBridgeInfo v-if="account?.is_bridge" :account="account" />
 
 		<Flex direction="column" gap="12">
 			<Flex align="center" justify="between">

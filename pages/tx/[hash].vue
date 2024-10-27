@@ -111,14 +111,14 @@ const handlePrev = () => {
 	page.value -= 1
 }
 
+await fetchActions()
+
 watch(
 	() => page.value,
 	async () => {
 		await fetchActions()
 	},
 )
-
-await fetchActions()
 </script>
 
 <template>
@@ -133,10 +133,10 @@ await fetchActions()
 				]"
 			/>
 
-			<Flex align="center" justify="between" wide>
+			<Flex v-if="tx" align="center" justify="between" wide>
 				<Flex align="center" gap="8">
 					<Tooltip>
-						<Icon name="tx" size="14" :color="tx.status === 'success' ? 'green' : 'red'" />
+						<Icon name="tx" size="14" :color="tx?.status === 'success' ? 'green' : 'red'" />
 
 						<template #content>
 							<Text :color="tx.status === 'success' ? 'green' : 'red'">{{ capitalize(tx.status) }}</Text>
@@ -152,7 +152,7 @@ await fetchActions()
 			</Flex>
 		</Flex>
 
-		<TxMetadata :tx="tx" />
+		<TxMetadata v-if="tx" :tx="tx" />
 
 		<Flex direction="column" gap="12">
 			<Flex align="center" justify="between">
