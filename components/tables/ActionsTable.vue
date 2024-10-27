@@ -191,68 +191,61 @@ const handleOpenTx = async (action) => {
 					</Flex>
 
 					<Flex v-else-if="act.type === 'bridge_sudo_change_action'" gap="4" :class="$style.description">
+						<LinkToEntity
+							:entity="{ title: shortHash(act.data.bridge), type: 'account', id: act.data.bridge }"
+							color="secondary"
+							size="13"
+							:style="{minWidth: '50px'}"
+							:class="$style.link"
+						/>
+
+						<Text size="13" weight="500" color="secondary">
+							bridge settings were changed:
+						</Text>
+
 						<Flex v-if="act.data.sudo" gap="4" :class="$style.description_el">
 							<Text size="13" weight="500" color="secondary">
-								Sudo address for
-							</Text>
-
-							<LinkToEntity
-								:entity="{ title: shortHash(act.data.bridge), type: 'account', id: act.data.bridge }"
-								color="secondary"
-								size="13"
-								:class="$style.link"
-							/>
-
-							<Text size="13" weight="500" color="secondary">
-								was changed to
+								Sudo ->
 							</Text>
 
 							<LinkToEntity
 								:entity="{ title: shortHash(act.data.sudo), type: 'account', id: act.data.sudo }"
 								color="secondary"
 								size="13"
+								:style="{minWidth: '50px'}"
 								:class="$style.link"
 							/>
+
+							<Text v-if="act.data.withdrawer || act.data.fee_asset" size="13" weight="500" color="secondary">
+								|
+							</Text>
 						</Flex>
 
 						<Flex v-if="act.data.withdrawer" gap="4" :class="$style.description_el">
 							<Text size="13" weight="500" color="secondary">
-								{{ `${act.data.sudo ? ' | ' : ''}Withdrawer address for` }}
-							</Text>
-
-							<LinkToEntity
-								:entity="{ title: shortHash(act.data.bridge), type: 'account', id: act.data.bridge }"
-								color="secondary"
-								size="13"
-								:class="$style.link"
-							/>
-
-							<Text size="13" weight="500" color="secondary">
-								was changed to
+								Withdrawer ->
 							</Text>
 
 							<LinkToEntity
 								:entity="{ title: shortHash(act.data.withdrawer), type: 'account', id: act.data.withdrawer }"
 								color="secondary"
 								size="13"
+								:style="{minWidth: '50px'}"
 								:class="$style.link"
 							/>
+
+							<Text v-if="act.data.fee_asset" size="13" weight="500" color="secondary">
+								|
+							</Text>
 						</Flex>
 
 						<Flex v-if="act.data.fee_asset" gap="4" :class="$style.description_el">
 							<Text size="13" weight="500" color="secondary">
-								{{ `${act.data.sudo || act.data.withdrawer ? ' | ' : ''}Fee asset for` }}
+								Fee ->
 							</Text>
 
-							<LinkToEntity
-								:entity="{ title: shortHash(act.data.bridge), type: 'account', id: act.data.bridge }"
-								color="secondary"
-								size="13"
-								:class="$style.link"
-							/>
-
 							<Text size="13" weight="500" color="secondary">
-								{{ `was changed to ${act.data.fee_asset.toUpperCase()}` }}
+								{{ act.data.fee_asset.toUpperCase() }}
 							</Text>
 						</Flex>
 					</Flex>

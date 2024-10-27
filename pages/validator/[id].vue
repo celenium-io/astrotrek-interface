@@ -122,10 +122,9 @@ watch(
 </script>
 
 <template>
-	<Flex direction="column" gap="24" :class="$style.wrapper">
+	<Flex v-if="validator" direction="column" gap="24" :class="$style.wrapper">
 		<Flex direction="column" gap="40">
 			<Breadcrumbs
-				v-if="validator"
 				:items="[
 					{ link: '/', name: 'Explore' },
 					{ link: '/validators', name: 'Validators' },
@@ -133,7 +132,7 @@ watch(
 				]"
 			/>
 
-			<Flex v-if="validator" align="center" justify="between" wide>
+			<Flex align="center" justify="between" wide>
 				<Flex align="center" gap="8">
 					<Icon name="validator" size="14" color="primary" />
 
@@ -148,7 +147,7 @@ watch(
 			</Flex>
 		</Flex>
 
-		<ValidatorMetadata v-if="validator" :validator="validator" />
+		<ValidatorMetadata :validator="validator" />
 
 		<Flex direction="column" gap="12">
 			<Flex align="center" justify="between">

@@ -44,8 +44,6 @@ if (!data.value) {
 	})
 } else {
 	rollup.value = data.value
-	await fetchData()
-	updateRouteQuery()
 }
 
 const limit = ref(15)
@@ -217,6 +215,9 @@ const periods = ref([
 	},
 ])
 
+await fetchData()
+updateRouteQuery()
+
 const isUpdatingPaage = ref(false)
 watch(
 	() => activeTab.value,
@@ -242,10 +243,9 @@ watch(
 </script>
 
 <template>
-	<Flex direction="column" gap="24" :class="$style.wrapper">
+	<Flex v-if="rollup" direction="column" gap="24" :class="$style.wrapper">
 		<Flex direction="column" gap="40">
 			<Breadcrumbs
-				v-if="rollup"
 				:items="[
 					{ link: '/', name: 'Explore' },
 					{ link: '/rollups', name: 'Rollups' },
@@ -274,7 +274,7 @@ watch(
 			</Flex>
 		</Flex>
 
-		<RollupMetadata v-if="rollup" :rollup="rollup" />
+		<RollupMetadata :rollup="rollup" />
 
 		<Flex direction="column" gap="12">
 			<Flex align="center" justify="between">

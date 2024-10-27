@@ -44,8 +44,6 @@ if (!data.value) {
 	})
 } else {
 	account.value = data.value
-	await fetchData()
-	updateRouteQuery()
 }
 
 const limit = ref(15)
@@ -241,6 +239,9 @@ const updateRouteQuery = () => {
 	})
 }
 
+await fetchData()
+updateRouteQuery()
+
 const isUpdatingPaage = ref(false)
 watch(
 	() => activeTab.value,
@@ -266,10 +267,9 @@ watch(
 </script>
 
 <template>
-	<Flex direction="column" gap="24" :class="$style.wrapper">
+	<Flex v-if="account" direction="column" gap="24" :class="$style.wrapper">
 		<Flex direction="column" gap="40">
 			<Breadcrumbs
-				v-if="account"
 				:items="[
 					{ link: '/', name: 'Explore' },
 					{ link: '/accounts', name: 'Accounts' },
@@ -282,7 +282,7 @@ watch(
 					<Icon name="account" size="14" color="primary" />
 
 					<Text size="14" weight="500" color="primary">
-						<!-- Account <Text weight="600">{{ shortHash(account?.hash) }}</Text> -->
+						Account <Text weight="600">{{ shortHash(account?.hash) }}</Text>
 					</Text>
 
 					<Tooltip v-if="account?.is_bridge">
@@ -298,7 +298,7 @@ watch(
 			</Flex>
 		</Flex>
 
-		<AccountMetadata v-if="account" :account="account" />
+		<AccountMetadata :account="account" />
 
 		<AccountBridgeInfo v-if="account?.is_bridge" :account="account" />
 

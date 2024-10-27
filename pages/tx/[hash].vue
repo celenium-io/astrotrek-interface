@@ -122,10 +122,9 @@ watch(
 </script>
 
 <template>
-	<Flex direction="column" gap="16" :class="$style.wrapper">
+	<Flex v-if="tx" direction="column" gap="16" :class="$style.wrapper">
 		<Flex direction="column" gap="40">
 			<Breadcrumbs
-				v-if="tx"
 				:items="[
 					{ link: '/', name: 'Explore' },
 					{ link: '/txs', name: 'Transactions' },
@@ -133,7 +132,7 @@ watch(
 				]"
 			/>
 
-			<Flex v-if="tx" align="center" justify="between" wide>
+			<Flex align="center" justify="between" wide>
 				<Flex align="center" gap="8">
 					<Tooltip>
 						<Icon name="tx" size="14" :color="tx?.status === 'success' ? 'green' : 'red'" />
@@ -152,7 +151,7 @@ watch(
 			</Flex>
 		</Flex>
 
-		<TxMetadata v-if="tx" :tx="tx" />
+		<TxMetadata :tx="tx" />
 
 		<Flex direction="column" gap="12">
 			<Flex align="center" justify="between">

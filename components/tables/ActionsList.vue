@@ -1,6 +1,10 @@
 <script setup>
+/** UI */
+import Tooltip from "~/components/ui/Tooltip.vue"
+
 /** Services */
 import { getActionDescription, getActionTitle } from "@/services/utils/actions.js"
+import { spaces } from "@/services/utils"
 
 const props = defineProps({
 	actions: {
@@ -15,10 +19,23 @@ const props = defineProps({
 <template>
 	<Flex direction="column" gap="8">
 		<Flex v-for="act in actions.slice(0, Math.min(actions.length, 5))" direction="column" align="center" gap="4" wide :class="$style.action">
-			<Flex align="center" gap="8" :class="$style.title_wrapper">
-				<Icon name="action" size="12" color="secondary" />
+			<Flex align="center" justify="between" wide :class="$style.title_wrapper">
+				<Flex align="center" gap="8" :class="$style.title">
+					<Icon name="action" size="12" color="secondary" />
 
-				<Text size="12" weight="600" color="primary" :class="$style.title"> {{ getActionTitle(act.type) }} </Text>
+					<Text size="12" weight="600" color="primary"> {{ getActionTitle(act.type) }} </Text>
+				</Flex>
+
+				<Tooltip v-if="act.fee" side="left">
+					<Text size="12" weight="500" color="tertiary" :class="$style.fee"> {{ `${spaces(act.fee.amount)} ${act.fee.asset.toUpperCase()}` }} </Text>
+
+					<template #content>
+						<Flex align="start" direction="column" gap="4">
+							<Text size="12" weight="500" color="tertiary"> Action fee: </Text>
+							<Text size="12" weight="500" color="tertiary"> {{ `${spaces(act.fee.amount)} ${act.fee.asset.toUpperCase()}` }} </Text>
+						</Flex>
+					</template>
+				</Tooltip>
 			</Flex>
 
 			<Flex align="center" :class="$style.description_wrapper">
@@ -52,7 +69,15 @@ const props = defineProps({
 }
 
 .title {
-	width: 100%;
+	min-width: 70%;
+
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.fee {
+	max-width: 100px;
 
 	overflow: hidden;
 	text-overflow: ellipsis;

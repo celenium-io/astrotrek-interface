@@ -40,8 +40,6 @@ if (!data.value) {
 	})
 } else {
 	block.value = data.value
-	await fetchData()
-	updateRouteQuery()
 }
 
 const fetchTxs = async () => {
@@ -155,6 +153,9 @@ const handlePrev = () => {
 	page.value -= 1
 }
 
+await fetchData()
+updateRouteQuery()
+
 const isUpdatingPaage = ref(false)
 watch(
 	() => activeTab.value,
@@ -180,10 +181,9 @@ watch(
 </script>
 
 <template>
-	<Flex direction="column" gap="24" :class="$style.wrapper">
+	<Flex v-if="block" direction="column" gap="24" :class="$style.wrapper">
 		<Flex direction="column" gap="40">
 			<Breadcrumbs
-				v-if="block"
 				:items="[
 					{ link: '/', name: 'Explore' },
 					{ link: '/blocks', name: 'Blocks' },
@@ -225,7 +225,7 @@ watch(
 			</Flex>
 		</Flex>
 
-		<BlockMetadata v-if="block" :block="block" />
+		<BlockMetadata :block="block" />
 
 		<Flex direction="column" gap="12">
 			<Flex align="center" justify="between">

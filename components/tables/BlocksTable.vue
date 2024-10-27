@@ -32,6 +32,9 @@ const props = defineProps({
 		default: false,
 	},
 })
+
+console.log(props.blocks);
+
 </script>
 
 <template>
@@ -67,7 +70,16 @@ const props = defineProps({
 				<Flex align="center" gap="8">
 					<Text size="12" weight="500" color="tertiary">Proposer</Text>
 
-					<LinkToEntity v-if="b.proposer" :entity="{ title: splitAddress(b.proposer.address), type: 'validator', id: b.proposer.id}" color="secondary" />
+					<LinkToEntity
+						v-if="b.proposer"
+						:entity="{
+							title: b.proposer.name ? b.proposer.name : splitAddress(b.proposer.address),
+							type: 'validator',
+							id: b.proposer.id
+						}"
+						color="secondary"
+					/>
+
 					<Text v-else size="12" weight="500" color="secondary">Genesis</Text>
 
 					<div :class="$style.dot" />
