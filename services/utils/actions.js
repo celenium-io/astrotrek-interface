@@ -60,16 +60,16 @@ export const getActionDescription = (action) => {
 			}
 			break;
 		case "ics20_withdrawal":
-			description = `Withdraw ${spaces(data.amount)} ${data.denom} to ${midHash(data.destination_chain_address)}`
+			description = `Withdraw ${spaces(data.amount)} ${getAssetName(data.denom)} to ${midHash(data.destination_address)}`
 			break;
 		case "init_bridge_account":
 			description = `Bridge account was initialized for ${data.rollup_id}`
 			break;
 		case "bridge_lock":
-			description = `Transfer ${spaces(data.amount)} ${(data.asset).toUpperCase()} from sequencer to ${midHash(data.to)}`
+			description = `Transfer ${spaces(data.amount)} ${getAssetName(data.asset)} from sequencer to ${midHash(data.to)}`
 			break;
 		case "bridge_unlock":
-			description = `Unlock ${spaces(data.amount)} ${data.fee_asset.toUpperCase()} to ${midHash(data.to)}`
+			description = `Unlock ${spaces(data.amount)} ${getAssetName(data.fee_asset)} to ${midHash(data.to)}`
 			break;
 		case "bridge_sudo_change_action":
 			let actions = []
@@ -80,7 +80,7 @@ export const getActionDescription = (action) => {
 				actions.push(`Withdrawer address for ${shortHash(data.bridge)} was changed to ${shortHash(data.withdrawer)}`)
 			}
 			if (data.fee_asset) {
-				actions.push(`Fee asset address for ${shortHash(data.bridge)} was changed to ${data.fee_asset.toUpperCase()}`)
+				actions.push(`Fee asset address for ${shortHash(data.bridge)} was changed to ${getAssetName(data.fee_asset)}`)
 			}
 
 			for (let i = 0; i < actions.length; i++) {
@@ -110,4 +110,14 @@ export const getActionDataLength = (action) => {
 	if (!action) return
 	
 	return formatBytes(base64Decode(action.data.data).length)
+}
+
+export const getAssetName = (asset) => {
+	switch (asset) {
+		case "nria":
+			return "NRIA"
+	
+		default:
+			return asset.substring(asset.lastIndexOf('/') + 1).toUpperCase()
+	}
 }

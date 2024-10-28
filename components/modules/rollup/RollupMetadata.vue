@@ -10,7 +10,7 @@ const props = defineProps({
 })
 
 const namespaceID = getNamespaceID(props.rollup)
-const namespaceLink = getNamespaceLink("mocha", namespaceID)
+const namespaceLink = getNamespaceLink(namespaceID)
 
 const showMore = ref(false)
 </script>

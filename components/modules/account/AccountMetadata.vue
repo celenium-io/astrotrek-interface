@@ -3,7 +3,7 @@
 import { DateTime } from "luxon"
 
 /** Services */
-import { space, spaces } from "@/services/utils"
+import { getNativeAsset, spaces } from "@/services/utils"
 
 /** UI */
 import Button from "@/components/ui/Button.vue"
@@ -15,6 +15,7 @@ const props = defineProps({
 })
 
 const showMore = ref(false)
+const nativeAsset = ref(getNativeAsset())
 </script>
 
 <template>
@@ -36,7 +37,13 @@ const showMore = ref(false)
 
 				<Text size="13" weight="600" color="primary" mono> {{ spaces(account?.balances[0].value) }} </Text>
 
-				<Text size="13" weight="600" color="secondary" mono> {{ account?.balances[0].currency.toUpperCase() }} </Text>
+				<Text size="13" weight="600" color="secondary" mono>
+					{{
+						nativeAsset !== account?.balances[0].currency && account?.balances[0].value === 0
+							? account?.balances[0].currency.toUpperCase()
+							: nativeAsset
+					}}
+				</Text>
 			</Flex>
 			<!-- <Text size="13" weight="600" color="primary" mono :class="$style.value"> {{ `${spaces(account.balances[0].value)} ${account.balances[0].currency.toUpperCase()}` }} </Text> -->
 		</Flex>

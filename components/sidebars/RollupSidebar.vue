@@ -26,7 +26,7 @@ const props = defineProps({
 })
 
 const namespaceID = computed(() => getNamespaceID(props.rollup))
-const namespaceLink = computed(() => getNamespaceLink("mocha", namespaceID))
+const namespaceLink = computed(() => getNamespaceLink(namespaceID))
 
 const emit = defineEmits(["onClose"])
 </script>

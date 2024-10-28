@@ -10,7 +10,7 @@ import { fetchTxByHash } from "~/services/api/tx"
 
 /** Services */
 import { capitalizeAndReplaceUnderscore, midHash, shortHash, spaces } from "@/services/utils"
-import { getActionDataLength, getActionDescription, getActionTitle } from "@/services/utils/actions.js"
+import { getActionDataLength, getActionDescription, getActionTitle, getAssetName } from "@/services/utils/actions.js"
 import { getRollupHashSafeURL } from "~/services/utils/rollups"
 
 /** Components */
@@ -77,7 +77,7 @@ const handleOpenTx = async (action) => {
 
 					<Flex v-else-if="act.type === 'transfer'" gap="4" :class="$style.description">
 						<Text size="13" weight="500" color="secondary">
-							{{ `Sent ${spaces(act.data.amount)} ${(act.data.asset).toUpperCase()} to` }}
+							{{ `Sent ${spaces(act.data.amount)} ${getAssetName(act.data.asset)} to` }}
 						</Text>
 
 						<LinkToEntity
@@ -90,7 +90,7 @@ const handleOpenTx = async (action) => {
 
 					<Flex v-else-if="act.type === 'mint'" gap="4" :class="$style.description">
 						<Text size="13" weight="500" color="secondary">
-							{{ `Minted ${spaces(act.data.amount)} ${(act.data.asset).toUpperCase()} to` }}
+							{{ `Minted ${spaces(act.data.amount)} ${getAssetName(act.data.asset)} to` }}
 						</Text>
 
 						<LinkToEntity
@@ -140,7 +140,7 @@ const handleOpenTx = async (action) => {
 
 					<Flex v-else-if="act.type === 'ics20_withdrawal'" gap="4" :class="$style.description">
 						<Text size="13" weight="500" color="secondary">
-							{{ `Withdraw ${spaces(act.data.amount)} ${act.data.denom} to` }}
+							{{ `Withdraw ${spaces(act.data.amount)} ${getAssetName(act.data.denom)} to` }}
 						</Text>
 
 						<LinkToEntity
@@ -166,7 +166,7 @@ const handleOpenTx = async (action) => {
 
 					<Flex v-else-if="act.type === 'bridge_lock'" gap="4" :class="$style.description">
 						<Text size="13" weight="500" color="secondary">
-							{{ `Transfer ${spaces(act.data.amount)} ${(act.data.asset).toUpperCase()} from sequencer to` }}
+							{{ `Transfer ${spaces(act.data.amount)} ${getAssetName(act.data.asset)} from sequencer to` }}
 						</Text>
 
 						<LinkToEntity
@@ -179,7 +179,7 @@ const handleOpenTx = async (action) => {
 
 					<Flex v-else-if="act.type === 'bridge_unlock'" gap="4" :class="$style.description">
 						<Text size="13" weight="500" color="secondary">
-							{{ `Unlock ${spaces(act.data.amount)} ${act.data.fee_asset.toUpperCase()} to` }}
+							{{ `Unlock ${spaces(act.data.amount)} ${getAssetName(act.data.fee_asset)} to` }}
 						</Text>
 
 						<LinkToEntity
@@ -245,7 +245,7 @@ const handleOpenTx = async (action) => {
 							</Text>
 
 							<Text size="13" weight="500" color="secondary">
-								{{ act.data.fee_asset.toUpperCase() }}
+								{{ getAssetName(act.data.fee_asset) }}
 							</Text>
 						</Flex>
 					</Flex>
@@ -297,7 +297,7 @@ const handleOpenTx = async (action) => {
 					<Flex v-if="act.fee" align="center" gap="8">
 						<Text size="12" color="tertiary">Fee</Text>
 						<Text size="12" color="secondary"> {{ spaces(act.fee.amount) }} </Text>
-						<Text size="12" color="secondary"> {{ act.fee.asset.toUpperCase() }} </Text>
+						<Text size="12" color="secondary"> {{ getAssetName(act.fee.asset) }} </Text>
 
 						<div :class="$style.dot" />
 					</Flex>

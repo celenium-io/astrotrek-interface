@@ -1,4 +1,4 @@
-import { base64Decode, capitalize, capitalizeAndReplaceUnderscore, formatBytes, midHash, strToHex } from "./index.js";
+import { base64Decode, strToHex } from "./index.js";
 import { getCeleniumLink } from "@/services/constants"
 
 export const getNamespaceID = (rollup) => {
@@ -7,10 +7,10 @@ export const getNamespaceID = (rollup) => {
 	return getRollupHex(rollup.hash).slice(0, 20)
 }
 
-export const getNamespaceLink = (network, namespaceID) => {
-	if (!network || !namespaceID) return ""
+export const getNamespaceLink = (namespaceID) => {
+	if (!namespaceID) return ""
 
-	let link = getCeleniumLink(network)
+	let link = getCeleniumLink()
 
 	return `${link}namespace/000000000000000000000000000000000000${namespaceID}`
 }

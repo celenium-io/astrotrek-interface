@@ -8,6 +8,9 @@ import AccountsTable from "@/components/tables/AccountsTable.vue"
 /** API */
 import { fetchAccounts } from "@/services/api/account"
 
+/** Services */
+import { getNativeAsset } from "@/services/utils"
+
 /** Store */
 import { useAppStore } from "@/store/app"
 const appStore = useAppStore()
@@ -68,6 +71,7 @@ useHead({
 })
 
 const accounts = ref([])
+const asset = ref(getNativeAsset())
 const isLoading = ref(false)
 const lastHead = computed(() => appStore.lastHead)
 
@@ -76,6 +80,7 @@ const getAccounts = async () => {
 	isLoading.value = true
 
 	const { data } = await fetchAccounts({
+		asset: asset.value,
 		limit: limit.value,
 		offset: (page.value - 1) * limit.value,
 	})

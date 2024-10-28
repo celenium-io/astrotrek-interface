@@ -108,7 +108,7 @@ useHead({
 		},
 		{
 			property: "og:url",
-			content: `https://celenium.io${route.path}`,
+			content: `https://astrotrek.io${route.path}`,
 		},
 		{
 			name: "twitter:title",

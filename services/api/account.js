@@ -1,10 +1,11 @@
 /** Services */
 import { useServerURL } from "@/services/config"
 
-export const fetchAccounts = async ({ limit, offset, sort = "desc" }) => {
+export const fetchAccounts = async ({ asset, limit, offset, sort = "desc" }) => {
 	try {
 		const url = new URL(`${useServerURL()}/address`)
 
+		if (asset) url.searchParams.append("asset", asset)
 		if (limit) url.searchParams.append("limit", limit)
 		if (offset) url.searchParams.append("offset", offset)
 

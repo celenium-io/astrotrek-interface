@@ -123,3 +123,16 @@ export function reverseMapping(obj) {
 export function isObject(input) {
 	return typeof input === 'object' && input !== null && !Array.isArray(input)
 }
+
+
+export const getNativeAsset = () => {
+	let network = getNetworkName()
+
+	switch (network) {
+		case "Mainnet":
+			return "transfer/channel-0/utia"
+
+		default:
+			return "nria"
+	}
+}
