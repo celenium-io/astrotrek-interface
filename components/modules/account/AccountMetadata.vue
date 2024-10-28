@@ -4,6 +4,7 @@ import { DateTime } from "luxon"
 
 /** Services */
 import { getNativeAsset, spaces } from "@/services/utils"
+import { getAssetName } from "@/services/utils/actions.js"
 
 /** UI */
 import Button from "@/components/ui/Button.vue"
@@ -40,8 +41,8 @@ const nativeAsset = ref(getNativeAsset())
 				<Text size="13" weight="600" color="secondary" mono>
 					{{
 						nativeAsset !== account?.balances[0].currency && account?.balances[0].value === 0
-							? account?.balances[0].currency.toUpperCase()
-							: nativeAsset
+							? getAssetName(account?.balances[0].currency)
+							: getAssetName(nativeAsset)
 					}}
 				</Text>
 			</Flex>
@@ -53,11 +54,13 @@ const nativeAsset = ref(getNativeAsset())
 
 			<Flex direction="column" gap="14" :class="$style.value">
 				<Flex v-for="b in account?.balances" align="center" gap="8">
-					<CopyButton :text="b.value" />
+					<div v-if="b.value > 0">
+						<CopyButton :text="b.value" />
 
-					<Text size="13" weight="600" color="primary" mono> {{ spaces(b.value) }} </Text>
+						<Text size="13" weight="600" color="primary" mono> {{ spaces(b.value) }} </Text>
 
-					<Text size="13" weight="600" color="secondary" mono> {{ b.currency.toUpperCase() }} </Text>
+						<Text size="13" weight="600" color="secondary" mono> {{ b.currency.toUpperCase() }} </Text>
+					</div>
 				</Flex>
 			</Flex>
 		</Flex>
