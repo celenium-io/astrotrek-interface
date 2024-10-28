@@ -24,10 +24,10 @@ const showMore = ref(false)
 		<Flex align="center" :class="$style.item">
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Rollup</Text>
 			
-			<NuxtLink :to="`/rollup/${getRollupHashSafeURL(account.bridge.rollup)}`">
-				<Flex align="center" gap="4" :class="$style.value">
+			<NuxtLink :to="`/rollup/${getRollupHashSafeURL(account.bridge.rollup)}`" :class="$style.value">
+				<Flex align="center" gap="4">
 					<CopyButton :text="account.bridge.rollup" />
-					<Text size="13" weight="600" color="primary" mono>{{ account.bridge.rollup }}</Text>
+					<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ account.bridge.rollup }}</Text>
 					<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
 				</Flex>
 			</NuxtLink>
@@ -36,10 +36,10 @@ const showMore = ref(false)
 		<Flex align="center" :class="$style.item">
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Admin</Text>
 			
-			<NuxtLink :to="`/account/${account.bridge.sudo}`">
-				<Flex align="center" gap="4" :class="$style.value">
+			<NuxtLink :to="`/account/${account.bridge.sudo}`" :class="$style.value">
+				<Flex align="center" gap="4">
 					<CopyButton :text="account.bridge.sudo" />
-					<Text size="13" weight="600" color="primary" mono>{{ account.bridge.sudo }}</Text>
+					<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ account.bridge.sudo }}</Text>
 					<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
 				</Flex>
 			</NuxtLink>
@@ -48,10 +48,10 @@ const showMore = ref(false)
 		<Flex align="center" :class="$style.item">
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Withdrawer</Text>
 			
-			<NuxtLink :to="`/account/${account.bridge.withdrawer}`">
-				<Flex align="center" gap="4" :class="$style.value">
+			<NuxtLink :to="`/account/${account.bridge.withdrawer}`" :class="$style.value">
+				<Flex align="center" gap="4">
 					<CopyButton :text="account.bridge.withdrawer" />
-					<Text size="13" weight="600" color="primary" mono>{{ account.bridge.withdrawer }}</Text>
+					<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ account.bridge.withdrawer }}</Text>
 					<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
 				</Flex>
 			</NuxtLink>

@@ -303,8 +303,8 @@ watch(
 		<AccountBridgeInfo v-if="account?.is_bridge" :account="account" />
 
 		<Flex direction="column" gap="12">
-			<Flex align="center" justify="between">
-				<Flex align="center" gap="8">
+			<Flex align="center" justify="between" :class="$style.navigation">
+				<Flex align="center" gap="8" :class="$style.tabs">
 					<Text
 						v-for="tab in tabs.filter(t => t.visible)"
 						@click="activeTab = tab.name"
@@ -373,5 +373,22 @@ watch(
 
 .pagination {
 	padding-bottom: 6px;
+}
+
+@media (max-width: 650px) {
+	.navigation {
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	.tabs {
+		width: 100%;
+		justify-content: start;
+	}
+
+	.pagination {
+		width: 100%;
+		justify-content: end;
+	}
 }
 </style>

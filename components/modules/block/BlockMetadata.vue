@@ -87,11 +87,11 @@ const showMore = ref(false)
 			</Text>
 		</Flex>
 
-		<Flex align="center" :class="$style.item">
+		<!-- <Flex align="center" :class="$style.item">
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Fee</Text>
 
 			<Text size="13" weight="600" color="primary" mono :class="$style.value"> {{ block.stats.fee }} NRIA </Text>
-		</Flex>
+		</Flex> -->
 
 		<Flex align="center" :class="$style.item">
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Block Time</Text>
