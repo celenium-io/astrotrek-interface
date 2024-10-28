@@ -7,6 +7,7 @@ import LinkToEntity from "@/components/shared/LinkToEntity.vue"
 
 /** Services */
 import { midHash, spaces } from "@/services/utils"
+import { getAssetName } from "@/services/utils/actions.js"
 
 /** Store */
 import { useSidebarsStore } from "@/store/sidebars"
@@ -63,7 +64,8 @@ const props = defineProps({
 				<Flex align="center" gap="8">
 					<Text size="12" weight="500" color="secondary">
 						<Text color="tertiary">Balance</Text>
-						{{ `${spaces(account.balances[0]?.value)}${account.balances.length ? ' ' + account.balances[0]?.currency.toUpperCase() : ''}` }}
+						{{ `${spaces(account.balances[0]?.value)} ${getAssetName(account.balances[0]?.currency)}` }}
+						<!-- {{ `${spaces(account.balances[0]?.value)}${account.balances.length ? ' ' + account.balances[0]?.currency.toUpperCase() : ''}` }} -->
 					</Text>
 
 					<div :class="$style.dot" />

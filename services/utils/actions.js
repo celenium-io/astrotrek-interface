@@ -1,4 +1,4 @@
-import { base64Decode, capitalize, capitalizeAndReplaceUnderscore, formatBytes, midHash, shortHash, spaces, strToHex } from "./index.js";
+import { base64Decode, capitalize, capitalizeAndReplaceUnderscore, formatBytes, getNativeAsset, midHash, shortHash, spaces, strToHex } from "./index.js";
 
 export const getActionTitle = (actionType) => {
 	if (!actionType) return "Action"
@@ -113,6 +113,8 @@ export const getActionDataLength = (action) => {
 }
 
 export const getAssetName = (asset) => {
+	if (!asset?.length) return getAssetName(getNativeAsset())
+
 	switch (asset) {
 		case "nria":
 			return "NRIA"
