@@ -96,7 +96,7 @@ useHead({
 	meta: [
 		{
 			name: "description",
-			content: `Astria Block Height ${block.value?.height}. The timestamp, hash, proposer, metadata, gas used and transactions in the block.`,
+			content: `Astria Block Height ${block.value?.height}. The timestamp, hash, proposer, metadata and transactions in the block.`,
 		},
 		{
 			property: "og:title",
@@ -104,7 +104,7 @@ useHead({
 		},
 		{
 			property: "og:description",
-			content: `Astria Block Height ${block.value?.height}. The timestamp, hash, proposer, metadata, gas used and transactions in the block.`,
+			content: `Astria Block Height ${block.value?.height}. The timestamp, hash, proposer, metadata and transactions in the block.`,
 		},
 		{
 			property: "og:url",
@@ -116,7 +116,7 @@ useHead({
 		},
 		{
 			name: "twitter:description",
-			content: `Astria Block Height ${block.value?.height}. The timestamp, hash, proposer, metadata, gas used and transactions in the block.`,
+			content: `Astria Block Height ${block.value?.height}. The timestamp, hash, proposer, metadata and transactions in the block.`,
 		},
 	],
 })

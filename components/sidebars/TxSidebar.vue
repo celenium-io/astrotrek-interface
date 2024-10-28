@@ -148,12 +148,6 @@ watch(
 					</Flex>
 
 					<Flex align="center" justify="between">
-						<Text size="13" weight="600" color="tertiary">Gas Used / Wanted</Text>
-
-						<Text size="13" weight="600" color="primary"> {{ tx.gas_used }} / {{ tx.gas_wanted }} </Text>
-					</Flex>
-
-					<Flex align="center" justify="between">
 						<Text size="13" weight="600" color="tertiary">Signature</Text>
 
 						<Flex align="center" gap="6">

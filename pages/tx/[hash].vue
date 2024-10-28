@@ -63,7 +63,7 @@ useHead({
 			name: "description",
 			content: `Astria Transaction ${tx.value?.hash.toUpperCase().slice(0, 4)} ••• ${tx.value?.hash
 				.toUpperCase()
-				.slice(-4)}. The timestamp, hash, actions, metadata, gas used.`,
+				.slice(-4)}. The timestamp, hash, actions, metadata.`,
 		},
 		{
 			property: "og:title",
@@ -75,7 +75,7 @@ useHead({
 			property: "og:description",
 			content: `Astria Transaction ${tx.value?.hash.toUpperCase().slice(0, 4)} ••• ${tx.value?.hash
 				.toUpperCase()
-				.slice(-4)}. The timestamp, hash, actions, metadata, gas used.`,
+				.slice(-4)}. The timestamp, hash, actions, metadata.`,
 		},
 		{
 			property: "og:url",
@@ -91,7 +91,7 @@ useHead({
 			name: "twitter:description",
 			content: `Astria Transaction ${tx.value?.hash.toUpperCase().slice(0, 4)} ••• ${tx.value?.hash
 				.toUpperCase()
-				.slice(-4)}. The timestamp, hash, actions, metadata, gas used.`,
+				.slice(-4)}. The timestamp, hash, actions, metadata.`,
 		},
 	],
 })

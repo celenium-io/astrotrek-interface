@@ -78,18 +78,6 @@ const showMore = ref(false)
 				</Flex>
 
 				<Flex align="center" :class="$style.item">
-					<Text size="13" weight="600" color="secondary" :class="$style.key">Gas Used</Text>
-
-					<Text size="13" weight="600" color="primary" mono :class="$style.value">{{ tx.gas_used }}</Text>
-				</Flex>
-
-				<Flex align="center" :class="$style.item">
-					<Text size="13" weight="600" color="secondary" :class="$style.key">Gas Wanted</Text>
-
-					<Text size="13" weight="600" color="primary" mono :class="$style.value">{{ tx.gas_wanted }}</Text>
-				</Flex>
-
-				<Flex align="center" :class="$style.item">
 					<Text size="13" weight="600" color="secondary" :class="$style.key">Nonce</Text>
 
 					<Flex align="center" gap="8" :class="$style.value">

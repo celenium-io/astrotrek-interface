@@ -17,6 +17,27 @@ const props = defineProps({
 
 const showMore = ref(false)
 const nativeAsset = ref(getNativeAsset())
+const balances = computed(() => {
+	let res = []
+
+	if (props.account?.balances.length > 1) {
+		res = props.account?.balances.filter(el => +el.value !== 0)
+		if (res.length === 0) {
+			res = props.account?.balances.slice(0, 1)
+		}
+
+		res.forEach(b => b.currency = getAssetName(b.currency))
+	} else {
+		res = props.account?.balances
+		if (nativeAsset.value !== res[0].currency && +res[0].value === 0) {
+			res[0].currency = getAssetName(nativeAsset)
+		} else {
+			res[0].currency = getAssetName(res[0].currency)
+		}
+	}
+
+	return res
+})
 </script>
 
 <template>
@@ -30,37 +51,30 @@ const nativeAsset = ref(getNativeAsset())
 			</Flex>
 		</Flex>
 
-		<Flex v-if="account?.balances.length < 2" align="center" :class="$style.item">
+		<Flex v-if="balances.length < 2" align="center" :class="$style.item">
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Balance</Text>
 
 			<Flex align="center" gap="8" :class="$style.value">
-				<CopyButton :text="account?.balances[0].value" />
+				<CopyButton :text="balances[0].value" />
 
-				<Text size="13" weight="600" color="primary" mono> {{ spaces(account?.balances[0].value) }} </Text>
+				<Text size="13" weight="600" color="primary" mono> {{ spaces(balances[0].value) }} </Text>
 
 				<Text size="13" weight="600" color="secondary" mono>
-					{{
-						nativeAsset !== account?.balances[0].currency && account?.balances[0].value === 0
-							? getAssetName(account?.balances[0].currency)
-							: getAssetName(nativeAsset)
-					}}
+					{{ balances[0].currency }}
 				</Text>
 			</Flex>
-			<!-- <Text size="13" weight="600" color="primary" mono :class="$style.value"> {{ `${spaces(account.balances[0].value)} ${account.balances[0].currency.toUpperCase()}` }} </Text> -->
 		</Flex>
 
 		<Flex v-else align="start" :class="$style.item" :style="{ padding: '6px 12px' }">
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Balance</Text>
 
 			<Flex direction="column" gap="14" :class="$style.value">
-				<Flex v-for="b in account?.balances" align="center" gap="8">
-					<div v-if="b.value > 0">
-						<CopyButton :text="b.value" />
+				<Flex v-for="b in balances" align="center" gap="8">
+					<CopyButton :text="b.value" />
 
-						<Text size="13" weight="600" color="primary" mono> {{ spaces(b.value) }} </Text>
+					<Text size="13" weight="600" color="primary" mono> {{ spaces(b.value) }} </Text>
 
-						<Text size="13" weight="600" color="secondary" mono> {{ b.currency.toUpperCase() }} </Text>
-					</div>
+					<Text size="13" weight="600" color="secondary" mono> {{ b.currency }} </Text>
 				</Flex>
 			</Flex>
 		</Flex>
