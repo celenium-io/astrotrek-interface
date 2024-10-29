@@ -8,6 +8,7 @@ import LinkToEntity from "@/components/shared/LinkToEntity.vue"
 /** Services */
 import { midHash } from "@/services/utils"
 import { getRollupHashSafeURL } from "~/services/utils/rollups"
+import { getAssetName } from "@/services/utils/actions.js"
 
 /** Store */
 import { useSidebarsStore } from "@/store/sidebars"
@@ -56,12 +57,12 @@ const props = defineProps({
 					<div :class="$style.dot" />
 					
 					<Text size="12" weight="500" color="tertiary">Asset</Text>
-					<Text size="12" weight="500" color="secondary"> {{ bridge.asset.toUpperCase() }} </Text>
+					<Text size="12" weight="500" color="secondary"> {{ getAssetName(bridge.asset) }} </Text>
 
 					<div :class="$style.dot" />
 					
 					<Text size="12" weight="500" color="tertiary">Fee asset</Text>
-					<Text size="12" weight="500" color="secondary"> {{ bridge.fee_asset.toUpperCase() }} </Text>
+					<Text size="12" weight="500" color="secondary"> {{ getAssetName(bridge.fee_asset) }} </Text>
 				</Flex>
 			</Flex>
 

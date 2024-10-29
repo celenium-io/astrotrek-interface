@@ -5,6 +5,7 @@ import { fetchAccountByHash, fetchAccountTransactions } from "@/services/api/acc
 /** Services */
 import { midHash, spaces } from "@/services/utils"
 import { getRollupHashSafeURL } from "@/services/utils/rollups"
+import { getAssetName } from "@/services/utils/actions.js"
 
 /** Components */
 import LinkToEntity from "@/components/shared/LinkToEntity.vue"
@@ -184,13 +185,13 @@ watch(
 					<Flex align="center" justify="between">
 						<Text size="13" weight="600" color="tertiary">Asset</Text>
 
-						<Text size="13" weight="600" color="primary" tabular> {{ account.bridge?.asset.toUpperCase() }} </Text>
+						<Text size="13" weight="600" color="primary" tabular> {{ getAssetName(account.bridge?.asset) }} </Text>
 					</Flex>
 
 					<Flex align="center" justify="between">
 						<Text size="13" weight="600" color="tertiary">Fee Asset</Text>
 
-						<Text size="13" weight="600" color="primary" tabular> {{ account.bridge?.fee_asset.toUpperCase() }} </Text>
+						<Text size="13" weight="600" color="primary" tabular> {{ getAssetName(account.bridge?.fee_asset) }} </Text>
 					</Flex>
 				</Flex>
 

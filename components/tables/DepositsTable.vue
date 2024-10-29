@@ -9,8 +9,8 @@ import Tooltip from "@/components/ui/Tooltip.vue"
 import LinkToEntity from "@/components/shared/LinkToEntity.vue"
 
 /** Services */
-import { capitalize, formatBytes, midHash, spaces } from "@/services/utils"
-import { getRollupHashSafeURL } from "~/services/utils/rollups"
+import { midHash, spaces } from "@/services/utils"
+import { getAssetName } from "@/services/utils/actions.js"
 
 /** API */
 import { fetchTxByHash } from "~/services/api/tx"
@@ -49,7 +49,7 @@ const handleOpenTx = async (deposit) => {
 
 					<Flex v-if="d.bridge" gap="4">
 						<Text size="13" weight="500" color="primary">
-							{{ `Wired deposit of ${spaces(d.amount)} ${(d.asset).toUpperCase()} to` }}
+							{{ `Wired deposit of ${spaces(d.amount)} ${getAssetName(d.asset)} to` }}
 						</Text>
 
 						<LinkToEntity
@@ -61,7 +61,7 @@ const handleOpenTx = async (deposit) => {
 					</Flex>
 					
 					<Text v-else size="13" weight="500" color="primary">
-						{{ `Received deposit of ${spaces(d.amount)} ${(d.asset).toUpperCase()}` }}
+						{{ `Received deposit of ${spaces(d.amount)} ${getAssetName(d.asset)}` }}
 					</Text>
 				</Flex>
 
