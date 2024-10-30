@@ -377,7 +377,7 @@ watch(
 
 @media (max-width: 650px) {
 	.navigation {
-		flex-direction: column;
+		flex-direction: column-reverse;
 		gap: 12px;
 	}
 

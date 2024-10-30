@@ -57,7 +57,7 @@ const handleOpenTx = async (action) => {
 					<Icon name="action" size="13" color="tertiary" />
 
 					<Flex align="center" gap="8">
-						<Text size="13" weight="600" color="primary">
+						<Text size="13" weight="600" color="primary" :class="$style.action_title">
 							{{ getActionTitle(act.type) }}
 						</Text>
 					</Flex>
@@ -292,17 +292,17 @@ const handleOpenTx = async (action) => {
 
 					<LinkToEntity :entity="{ title: spaces(act.height), type: 'block', id: act.height }" color="secondary" :class="$style.link" />
 
-					<div :class="$style.dot" />
+					<div :class="[$style.dot, $style.hide_mobile]" />
 
 					<Flex v-if="act.fee" align="center" gap="8">
 						<Text size="12" color="tertiary">Fee</Text>
 						<Text size="12" color="secondary"> {{ spaces(act.fee.amount) }} </Text>
 						<Text size="12" color="secondary"> {{ getAssetName(act.fee.asset) }} </Text>
 
-						<div :class="$style.dot" />
+						<div :class="[$style.dot, $style.hide_mobile]" />
 					</Flex>
 
-					<Text size="12" color="tertiary"> {{ DateTime.fromISO(act.time).setLocale("en").toFormat("tt, LLL d, y") }} </Text>
+					<Text size="12" color="tertiary" :class="$style.hide_mobile"> {{ DateTime.fromISO(act.time).setLocale("en").toFormat("tt, LLL d, y") }} </Text>
 					
 				</Flex>
 			</Flex>
@@ -361,6 +361,13 @@ const handleOpenTx = async (action) => {
 	}
 }
 
+.action_title {
+
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
 .description {
 	max-width: 700px;
 	padding-left: 8px;
@@ -416,7 +423,21 @@ const handleOpenTx = async (action) => {
 	}
 }
 
-@media (max-width: 600px) {
+@media (max-width: 750px) {
+	.wrapper {
+		width: 100%;
+	}
+
+	.row {
+		width: 100%;
+	}
+
+	.description {
+		width: 350px;
+	}
+}
+
+@media (max-width: 650px) {
 	.wrapper {
 		width: 100%;
 	}
@@ -427,6 +448,10 @@ const handleOpenTx = async (action) => {
 
 	.description {
 		width: 180px;
+	}
+
+	.hide_mobile {
+		display: none;
 	}
 }
 </style>

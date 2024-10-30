@@ -43,7 +43,7 @@ const props = defineProps({
 					<LinkToEntity :entity="{ title: midHash(bridge.rollup), type: 'rollup', id: getRollupHashSafeURL(bridge.rollup)}" color="primary" />
 				</Flex>
 
-				<Flex align="center" gap="8">
+				<Flex align="center" gap="8" :class="$style.sub_title">
 					<Text size="12" weight="500" color="tertiary">Sudo</Text>
 
 					<LinkToEntity :entity="{ title: midHash(bridge.sudo), type: 'account', id: bridge.sudo}" color="secondary" />
@@ -103,6 +103,9 @@ const props = defineProps({
 	padding: 0 16px;
 
 	transition: all 0.2s ease;
+
+	overflow: hidden;
+	white-space: nowrap;
 
 	&:hover {
 		background: var(--op-5);

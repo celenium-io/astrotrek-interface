@@ -117,6 +117,9 @@ const props = defineProps({
 
 	transition: all 0.2s ease;
 
+	overflow: hidden;
+	white-space: nowrap;
+
 	&:hover {
 		background: var(--op-5);
 	}
