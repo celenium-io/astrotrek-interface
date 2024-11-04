@@ -239,8 +239,10 @@ const updateRouteQuery = () => {
 	})
 }
 
-await fetchData()
-updateRouteQuery()
+if (account.value?.hash) {
+	await fetchData()
+	updateRouteQuery()
+}
 
 const isUpdatingPaage = ref(false)
 watch(

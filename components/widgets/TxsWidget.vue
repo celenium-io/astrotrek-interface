@@ -9,9 +9,7 @@ import { fetchSeries } from "@/services/api/stats"
 const prevDaySeries = ref([])
 const series = ref([])
 
-const showTooltip = ref(false)
-const tooltipText = ref("")
-const tooltipDate = ref("")
+const tooltip = ref({ show: false })
 
 const txsChartEl = ref()
 const test = ref()
@@ -29,18 +27,19 @@ const getTxsSeries = async ({ from, to }) => {
 const prepareTxsSeries = async () => {
 	const data = (
 		await getTxsSeries({
-			from: parseInt(DateTime.now().minus({ hours: 48 }).set({ hours: 0, minutes: 0, seconds: 0 }).ts / 1_000),
+			from: parseInt(DateTime.now().minus({ hours: 48 }).ts / 1_000),
 		})
 	).reverse()
-	prevDaySeries.value = data.slice(0, 25).map((s) => ({ date: DateTime.fromISO(s.time).toJSDate(), value: parseFloat(s.value) }))
-	series.value = data.slice(25, data.length).map((s) => ({ date: DateTime.fromISO(s.time).toJSDate(), value: parseFloat(s.value) }))
+	
+	prevDaySeries.value = data.slice(0, 24).map((s) => ({ date: DateTime.fromISO(s.time).toJSDate(), value: parseFloat(s.value) }))
+	series.value = data.slice(24, data.length).map((s) => ({ date: DateTime.fromISO(s.time).toJSDate(), value: parseFloat(s.value) }))
 	
 	while (series.value.length < 24) {
 		series.value.push({
 			date: DateTime.fromJSDate(series.value[series.value.length - 1].date)
 				.plus({ hours: 1 })
 				.toJSDate(),
-			value: null,
+			value: 0,
 		})
 	}
 
@@ -80,15 +79,19 @@ const buildChart = (chart, data, color, onEnter, onLeave) => {
 
 	const bisect = d3.bisector((d) => d.date).center
 	const onPointermoved = (event) => {
-		showTooltip.value = true
+		onEnter()
 
 		const idx = bisect(data, xScaleEfficiency.invert(d3.pointer(event)[0]))
 
-		tooltipText.value = series.value[idx].value || 0
-		tooltipDate.value = DateTime.fromJSDate(data[idx].date).toFormat("hh:mm a")
+		tooltip.value.x = x(data[idx].date)
+		tooltip.value.y = y(data[idx].value)
+		tooltip.value.currentValue = series.value[idx].value || 0
+		tooltip.value.prevValue = prevDaySeries.value[idx].value || 0
+		tooltip.value.currentDate = DateTime.fromJSDate(data[idx].date).toFormat("hh:mm a")
+		
 	}
 	const onPointerleft = () => {
-		showTooltip.value = false
+		onLeave()
 	}
 
 	/** SVG Container */
@@ -129,8 +132,20 @@ const buildChart = (chart, data, color, onEnter, onLeave) => {
 
 onMounted(async () => {
 	await prepareTxsSeries()
-	buildChart(txsChartEl.value.wrapper, series.value, "var(--brand)")
-	buildChart(test.value.wrapper, prevDaySeries.value, "var(--op-10)")
+
+	buildChart(
+		txsChartEl.value.wrapper,
+		series.value,
+		"var(--brand)",
+		() => (tooltip.value.show = true),
+		() => (tooltip.value.show = false),
+	)
+
+	buildChart(
+		test.value.wrapper,
+		prevDaySeries.value,
+		"var(--op-10)"
+	)
 })
 
 const todayTxs = computed(() => {
@@ -146,19 +161,34 @@ const todayTxs = computed(() => {
 				<Text size="14" weight="500" color="tertiary">Compared to the previous day</Text>
 			</Flex>
 
-			<Flex v-if="!showTooltip" direction="column" gap="6" align="end">
+			<Flex v-if="!tooltip.show" direction="column" gap="6" align="end">
 				<Text size="16" weight="600" color="secondary">{{ todayTxs }}</Text>
 				<Text size="13" weight="500" color="tertiary"> Today</Text>
 			</Flex>
 			<Flex v-else direction="column" gap="6" align="end">
-				<Text size="16" weight="600" color="secondary">
-					{{ tooltipText }}
-				</Text>
-				<Text size="13" weight="500" color="tertiary"> {{ tooltipDate }} </Text>
+				<Flex>
+					<Text size="16" weight="600" color="secondary">
+						{{ `${tooltip.currentValue}` }}
+					</Text>
+					<Text size="16" weight="600" color="tertiary">
+						{{ `&nbsp/ ${tooltip.prevValue}` }}
+					</Text>
+				</Flex>
+				<Text size="13" weight="500" color="tertiary"> {{ tooltip.currentDate }} </Text>
 			</Flex>
 		</Flex>
 
 		<Flex :class="$style.chart_wrapper">
+			<Transition name="fastfade">
+				<div v-if="tooltip.show" :class="$style.tooltip_wrapper">
+					<div
+						:style="{ transform: `translate(${tooltip.x - 2}px, ${tooltip.y - 2}px)` }"
+						:class="$style.dot"
+					/>
+					<div :style="{ transform: `translateX(${tooltip.x - 2}px)` }" :class="$style.line" />
+				</div>
+			</Transition>
+
 			<Flex ref="test" wide :class="$style.chart" />
 			<Flex ref="txsChartEl" wide :class="$style.chart" />
 
@@ -205,6 +235,36 @@ const todayTxs = computed(() => {
 
 	& svg {
 		overflow: visible;
+	}
+}
+
+.tooltip_wrapper {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+
+	& .dot {
+		width: 4px;
+		height: 4px;
+		border-radius: 50px;
+		background: var(--brand);
+
+		box-shadow: 0 0 0 2px rgba(222, 116, 10, 0.27);
+
+		transition: all 0.15s ease;
+	}
+
+	& .line {
+		position: absolute;
+		top: 0;
+		bottom: 32px;
+
+		border-left: 2px dashed var(--op-20);
+
+		transition: all 0.15s ease;
+		/* will-change: transform; */
 	}
 }
 
