@@ -294,6 +294,27 @@ watch(
 							Bridge account
 						</template>
 					</Tooltip>
+
+					<Tooltip v-if="account?.is_sudo || account?.is_ibc_sudo">
+						<Icon name="role" size="14" color="brand" />
+
+						<template #content>
+							{{ `Has
+								${account?.is_sudo ? ' Sudo' : ''}
+								${account?.is_ibc_sudo
+									? account?.is_sudo ? ' and IBC Sudo roles' : ' IBC Sudo role'
+									: 'role'}`
+							}}
+						</template>
+					</Tooltip>
+
+					<Tooltip v-if="account?.is_ibc_relayer">
+						<Icon name="relayer" size="18" color="brand" />
+
+						<template #content>
+							IBC Relayer
+						</template>
+					</Tooltip>
 				</Flex>
 
 				<RawDataView :entity="account" name="account" />

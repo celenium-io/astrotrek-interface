@@ -47,16 +47,39 @@ const props = defineProps({
 			:class="[$style.row, isLoading && $style.disabled]"
 		>
 			<Flex direction="column" gap="8">
-				<Flex align="center" gap="6">
-					<Icon name="account" size="16" color="secondary" />
+				<Flex align="center" gap="10">
+					<Flex align="center" gap="6">
+						<Icon name="account" size="16" color="secondary" />
 
-					<LinkToEntity :entity="{ title: midHash(account.hash), type: 'account', id: account.hash}" color="primary" />
+						<LinkToEntity :entity="{ title: midHash(account.hash), type: 'account', id: account.hash}" color="primary" />
+					</Flex>
 
-					<Tooltip v-if="account.is_bridge">
+					<Tooltip v-if="account?.is_bridge">
 						<Icon name="bridge" size="18" color="brand" />
 
 						<template #content>
 							Bridge account
+						</template>
+					</Tooltip>
+
+					<Tooltip v-if="account?.is_sudo || account?.is_ibc_sudo">
+						<Icon name="role" size="14" color="brand" />
+
+						<template #content>
+							{{ `Has
+								${account?.is_sudo ? ' Sudo' : ''}
+								${account?.is_ibc_sudo
+									? account?.is_sudo ? ' and IBC Sudo roles' : ' IBC Sudo role'
+									: 'role'}`
+							}}
+						</template>
+					</Tooltip>
+
+					<Tooltip v-if="account?.is_ibc_relayer">
+						<Icon name="relayer" size="18" color="brand" />
+
+						<template #content>
+							IBC Relayer
 						</template>
 					</Tooltip>
 				</Flex>

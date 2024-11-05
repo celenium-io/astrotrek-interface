@@ -3,7 +3,7 @@
 import Tooltip from "~/components/ui/Tooltip.vue"
 
 /** Services */
-import { getActionDescription, getActionTitle } from "@/services/utils/actions.js"
+import { getActionDescription, getActionTitle, getAssetName } from "@/services/utils/actions.js"
 import { spaces } from "@/services/utils"
 
 const props = defineProps({
@@ -27,12 +27,12 @@ const props = defineProps({
 				</Flex>
 
 				<Tooltip v-if="act.fee" side="left">
-					<Text size="12" weight="500" color="tertiary" :class="$style.fee"> {{ `${spaces(act.fee.amount)} ${act.fee.asset.toUpperCase()}` }} </Text>
+					<Text size="12" weight="500" color="tertiary" :class="$style.fee"> {{ `${spaces(act.fee.amount)} ${getAssetName(act.fee.asset)}` }} </Text>
 
 					<template #content>
 						<Flex align="start" direction="column" gap="4">
 							<Text size="12" weight="500" color="tertiary"> Action fee: </Text>
-							<Text size="12" weight="500" color="tertiary"> {{ `${spaces(act.fee.amount)} ${act.fee.asset.toUpperCase()}` }} </Text>
+							<Text size="12" weight="500" color="tertiary"> {{ `${spaces(act.fee.amount)} ${getAssetName(act.fee.asset)}` }} </Text>
 						</Flex>
 					</template>
 				</Tooltip>
