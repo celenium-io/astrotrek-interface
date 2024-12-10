@@ -68,7 +68,7 @@ useHead({
 })
 
 const apps = ref([])
-const isLoading = ref(false)
+const isLoading = ref(true)
 
 const limit = ref(15)
 const getApps = async () => {
@@ -101,9 +101,9 @@ const getApps = async () => {
 			"max_size": 1000,
 			"min_size": 1000,
 			"name": "Application name",
-			"native_bridge": "astria1phym4uktjn6gjle226009ge7u82w0dgtszs8x2",
+			"native_bridge": "astria12saluecm8dd7hkutk83eavkl2p70lf5w7txezg",
 			"provider": "provider",
-			"rollup": "O0Ia+lPYYMf3iFfxBaWXCSdlhphc6d4ZoBXINov6Tjc=",
+			"rollup": "xuzPaQ1qQbu1wl5oBdEiP+Xl977xEmJOVjVpqNrktnU=",
 			"size": 1000,
 			"slug": "app_1",
 			"stack": "op_stack",
@@ -132,9 +132,9 @@ const getApps = async () => {
 			"max_size": 1000,
 			"min_size": 1000,
 			"name": "Application name",
-			"native_bridge": "astria1phym4uktjn6gjle226009ge7u82w0dgtszs8x2",
+			"native_bridge": "astria12saluecm8dd7hkutk83eavkl2p70lf5w7txezg",
 			"provider": "provider",
-			"rollup": "O0Ia+lPYYMf3iFfxBaWXCSdlhphc6d4ZoBXINov6Tjc=",
+			"rollup": "xuzPaQ1qQbu1wl5oBdEiP+Xl977xEmJOVjVpqNrktnU=",
 			"size": 1000,
 			"slug": "app_1",
 			"stack": "op_stack",

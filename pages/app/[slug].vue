@@ -16,6 +16,7 @@ import Tooltip from "~/components/ui/Tooltip.vue"
 
 /** Services */
 import { capitalize, capitalizeAndReplaceUnderscore } from "~/services/utils"
+import { getRollupHashSafeURL } from "~/services/utils/rollups"
 
 /** API */
 import { fetchAccountTransactions } from "~/services/api/account.js"
@@ -87,9 +88,9 @@ const fetchApp = async () => {
 			"max_size": 1000,
 			"min_size": 1000,
 			"name": "Application name",
-			"native_bridge": "astria1j5qvhwgp8uc6hdddqcx4rem79895qpycyzy6gr",
+			"native_bridge": "astria12saluecm8dd7hkutk83eavkl2p70lf5w7txezg",
 			"provider": "provider",
-			"rollup": "vZ3F942sn62DpgQye_Kb82i4kh-M7fs9NnPvvh9OtEk=",
+			"rollup": "xuzPaQ1qQbu1wl5oBdEiP+Xl977xEmJOVjVpqNrktnU=",
 			"size": 100000,
 			"slug": "app_1",
 			"stack": "OP Stack",
@@ -137,7 +138,6 @@ const fetchAppBridgeTxs = async () => {
 	
 	bridgeTxs.value = data.value
 	handleNextCondition.value = bridgeTxs.value?.length < limit.value
-	console.log('bridgeTxs', bridgeTxs.value);
 	
 	isLoading.value = false
 }
@@ -146,7 +146,7 @@ const fetchAppRollupActions = async () => {
 	isLoading.value = true
 
 	const { data } = await fetchRollupActions({
-		hash: app.value?.rollup,
+		hash: getRollupHashSafeURL(app.value?.rollup),
 		bridge_actions: true,
 		rollup_actions: true,
 		limit: limit.value,
@@ -162,7 +162,7 @@ const fetchAppRollupActions = async () => {
 const fetchRollup = async () => {
 	isLoading.value = true
 
-	const { data } = await fetchRollupByHash(app.value?.rollup)
+	const { data } = await fetchRollupByHash(getRollupHashSafeURL(app.value?.rollup))
 	rollup.value = data.value
 
 	isLoading.value = false

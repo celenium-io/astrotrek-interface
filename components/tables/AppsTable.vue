@@ -145,6 +145,7 @@ watch(
 				</Flex>
 			</NuxtLink>
 		</Flex>
+
 		<EmptyHolder v-else-if="!isLoading" title="There are no apps" :style="{ borderTop: '1px solid var(--op-5)' }" />
 	</Flex>
 </template>
@@ -158,47 +159,8 @@ watch(
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	transform: translateY(-50%) translateX(-50%);
+	transform: translateY(-30%) translateX(-50%);
 }
-
-/* .row_1 {
-	height: 60px;
-
-	border-top: 1px solid var(--op-5);
-
-	cursor: pointer;
-
-	padding: 0 16px;
-
-	transition: all 0.2s ease;
-
-	overflow: hidden;
-	white-space: nowrap;
-
-	&:hover {
-		background: var(--op-5);
-	}
-
-	&:first-child {
-		border-top-left-radius: 8px;
-		border-top-right-radius: 8px;
-		border-top: none;
-	}
-
-	&:last-child {
-		border-bottom-left-radius: 8px;
-		border-bottom-right-radius: 8px;
-	}
-
-	&:active {
-		background: var(--op-10);
-	}
-
-	&.disabled {
-		pointer-events: none;
-		opacity: 0.2;
-	}
-} */
 
 .row {
 	height: 60px;

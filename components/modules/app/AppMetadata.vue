@@ -6,6 +6,7 @@ import { DateTime } from "luxon"
 import { getNativeAsset, spaces } from "@/services/utils"
 import { getAssetName } from "@/services/utils/actions.js"
 import { capitalize, capitalizeAndReplaceUnderscore, formatBytes } from "~/services/utils"
+import { getRollupHashSafeURL } from "~/services/utils/rollups"
 
 /** UI */
 import Button from "@/components/ui/Button.vue"
@@ -106,19 +107,25 @@ const showMore = ref(false)
 		<Flex align="center" :class="$style.item">
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Native Bridge</Text>
 
-			<Flex align="center" gap="8" :class="$style.value">
-				<CopyButton :text="app.native_bridge" />
-				<Text size="13" weight="600" color="primary" mono :class="$style.overflow"> {{ app.native_bridge }} </Text>
-			</Flex>
+			<NuxtLink :to="`/account/${app.native_bridge}`">
+				<Flex align="center" gap="6" :class="$style.value">
+					<CopyButton :text="app.native_bridge" />
+					<Text size="13" weight="600" color="primary" mono :class="$style.overflow"> {{ app.native_bridge }} </Text>
+					<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
+				</Flex>
+			</NuxtLink>
 		</Flex>
 
 		<Flex align="center" :class="$style.item">
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Rollup</Text>
 
-			<Flex align="center" gap="8" :class="$style.value">
-				<CopyButton :text="app.rollup" />
-				<Text size="13" weight="600" color="primary" mono :class="$style.overflow"> {{ app.rollup }} </Text>
-			</Flex>
+			<NuxtLink :to="`/rollup/${getRollupHashSafeURL(app.rollup)}`">
+				<Flex align="center" gap="6" :class="$style.value">
+					<CopyButton :text="app.rollup" />
+					<Text size="13" weight="600" color="primary" mono :class="$style.overflow"> {{ app.rollup }} </Text>
+					<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
+				</Flex>
+			</NuxtLink>
 		</Flex>
 
 		<Flex v-if="app.links?.length" align="start" :class="$style.item" :style="{ padding: '6px 12px' }">
@@ -215,7 +222,7 @@ const showMore = ref(false)
 	cursor: pointer;
 }
 
-@media (max-width: 650px) {
+@media (max-width: 750px) {
 	.item {
 		min-height: 54px;
 
