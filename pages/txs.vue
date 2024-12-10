@@ -116,14 +116,18 @@ watch(
 			<Flex justify="between" align="start" wide :class="$style.top">
 				<Text size="16" weight="600" color="primary">Transactions</Text>
 
-				<Flex align="center" gap="6">
-					<Button @click="handlePrev" size="mini" type="secondary" :disabled="page === 1 || isLoading">
-						<Icon name="chevron" size="14" color="primary" style="transform: rotate(90deg)" />
-					</Button>
-					<Button size="mini" type="secondary">Page {{ page }}</Button>
-					<Button @click="handleNext" size="mini" type="secondary" :disabled="isLoading || handleNextCondition">
-						<Icon name="chevron" size="14" color="primary" style="transform: rotate(-90deg)" />
-					</Button>
+				<Flex align="center" gap="12">
+					<Filter />
+
+					<Flex align="center" gap="6">
+						<Button @click="handlePrev" size="mini" type="secondary" :disabled="page === 1 || isLoading">
+							<Icon name="chevron" size="14" color="primary" style="transform: rotate(90deg)" />
+						</Button>
+						<Button size="mini" type="secondary">Page {{ page }}</Button>
+						<Button @click="handleNext" size="mini" type="secondary" :disabled="isLoading || handleNextCondition">
+							<Icon name="chevron" size="14" color="primary" style="transform: rotate(-90deg)" />
+						</Button>
+					</Flex>
 				</Flex>
 			</Flex>
 

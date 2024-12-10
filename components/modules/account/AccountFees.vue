@@ -30,7 +30,5 @@ const props = defineProps({
 	border-radius: 8px;
 	box-shadow: inset 0 0 0 1px var(--op-5);
 	background: var(--op-3);
-
-	/* padding: 8px 0 8px 0; */
 }
 </style>

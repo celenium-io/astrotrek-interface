@@ -116,6 +116,7 @@ onMounted(async () => {
 .modules {
 	max-height: 800px;
 	overflow: auto;
+	overscroll-behavior: contain;
 }
 
 .module {
