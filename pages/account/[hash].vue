@@ -4,6 +4,7 @@ import AccountActions from "~/components/modules/account/AccountActions.vue"
 import AccountBridgeInfo from "~/components/modules/account/AccountBridgeInfo.vue"
 import AccountBridgeRoles from "~/components/modules/account/AccountBridgeRoles.vue"
 import AccountDeposits from "~/components/modules/account/AccountDeposits.vue"
+import AccountFees from "~/components/modules/account/AccountFees.vue"
 import AccountMetadata from "~/components/modules/account/AccountMetadata.vue"
 import AccountRollups from "~/components/modules/account/AccountRollups.vue"
 import AccountTransactions from "~/components/modules/account/AccountTransactions.vue"
@@ -19,7 +20,15 @@ import Tooltip from "~/components/ui/Tooltip.vue"
 import { capitalizeAndReplaceUnderscore, shortHash } from "@/services/utils"
 
 /** API */
-import { fetchAccountActions, fetchAccountBridgeRoles, fetchAccountByHash, fetchAccountDeposits, fetchAccountRollups, fetchAccountTransactions } from "~/services/api/account.js"
+import {
+	fetchAccountActions,
+	fetchAccountBridgeRoles,
+	fetchAccountByHash,
+	fetchAccountDeposits,
+	fetchAccountFees,
+	fetchAccountRollups,
+	fetchAccountTransactions
+} from "~/services/api/account.js"
 
 definePageMeta({
 	layout: "default",
@@ -30,6 +39,7 @@ const router = useRouter()
 
 const account = ref()
 const actions = ref([])
+const fees = ref([])
 const bridgeRoles = ref([])
 const deposits = ref([])
 const rollups = ref([])
@@ -73,6 +83,20 @@ const fetchActions = async () => {
 	})
 	actions.value = data.value
 	handleNextCondition.value = actions.value.length < limit.value
+
+	isLoading.value = false
+}
+
+const fetchFees = async () => {
+	isLoading.value = true
+
+	const { data } = await fetchAccountFees({
+		hash: account.value?.hash,
+		limit: limit.value,
+		offset: (page.value - 1) * limit.value,
+	})
+	fees.value = data.value
+	handleNextCondition.value = fees.value.length < limit.value
 
 	isLoading.value = false
 }
@@ -150,6 +174,9 @@ const fetchData = async () => {
 		case "actions":
 			fetchActions()
 			break
+		case "fees_paid":
+			fetchFees()
+			break
 		case "rollups":
 			fetchRollups()
 			break
@@ -224,6 +251,7 @@ const tabs = ref(
 	[
 		{ name: "transactions", visible: true },
 		{ name: "actions", visible: true },
+		{ name: "fees_paid", visible: true },
 		{ name: "rollups", visible: true },
 		{ name: "bridge_roles", visible: true },
 		{ name: "deposits", visible: account.value?.is_bridge },
@@ -354,6 +382,8 @@ watch(
 			<AccountTransactions v-if="activeTab === 'transactions'" :txs="txs" :isLoading="isLoading" />
 
 			<AccountActions v-if="activeTab === 'actions'" :actions="actions" :isLoading="isLoading" />
+
+			<AccountFees v-if="activeTab === 'fees_paid'" :fees="fees" :isLoading="isLoading" />
 
 			<AccountRollups v-if="activeTab === 'rollups'" :rollups="rollups" :isLoading="isLoading" />
 

@@ -3,10 +3,11 @@
 import { DateTime } from "luxon"
 
 /** API */
-import { fetchTxActions } from "@/services/api/tx"
+import { fetchTxActions, fetchTxByHash } from "@/services/api/tx"
 
 /** Services */
-import { capitalize, midHash, shortHash, space, spaces } from "@/services/utils"
+import { capitalize, midHash, shortHash, spaces } from "@/services/utils"
+import { getAssetName } from "@/services/utils/actions.js"
 
 /** UI */
 import Button from "@/components/ui/Button.vue"
@@ -16,12 +17,6 @@ import Sidebar from "@/components/ui/Sidebar.vue"
 /** Components */
 import ActionsList from "@/components/tables/ActionsList.vue"
 import LinkToEntity from "@/components/shared/LinkToEntity.vue"
-
-/** Store */
-import { useCacheStore } from "@/store/cache"
-import { useModalsStore } from "@/store/modals"
-const cacheStore = useCacheStore()
-const modalsStore = useModalsStore()
 
 const props = defineProps({
 	tx: {
@@ -39,13 +34,11 @@ const emit = defineEmits(["onClose"])
 const isLoadingActions = ref(true)
 const actions = ref([])
 
+const isLoadingFees = ref(true)
+const fees = ref([])
+
 const getActions = async () => {
 	isLoadingActions.value = true
-
-	if (props.tx.actions_count === 0) {
-		isLoadingActions.value = false
-		return
-	}
 
 	const { data } = await fetchTxActions({ hash: props.tx.hash })
 	actions.value = data.value || []
@@ -53,13 +46,31 @@ const getActions = async () => {
 	isLoadingActions.value = false
 }
 
+const getFees = async () => {
+	if (props.tx.fees) {
+		fees.value = props.tx.fees
+		return
+	}
+
+	isLoadingFees.value = true
+
+	const { data } = await fetchTxByHash(props.tx.hash, true)
+	if (data.value) {
+		fees.value = data.value.fees
+	}
+
+	isLoadingFees.value = false
+}
+
 watch(
 	() => props.show,
 	() => {
 		if (props.show) {
 			getActions()
+			getFees()
 		} else {
 			actions.value = []
+			fees.value = []
 		}
 	},
 )
@@ -142,9 +153,27 @@ watch(
 					<Text size="12" weight="600" color="primary">Details</Text>
 
 					<Flex align="center" justify="between">
+						<Text size="13" weight="600" color="tertiary">Total Fee</Text>
+
+						<Skeleton v-if="isLoadingFees" w="40" h="12" />
+						<Flex v-else-if="fees?.length" align="center" direction="column" gap="4">
+							<Flex v-for="fee in fees" align="center" gap="4">
+								<Text size="13" weight="600" color="primary"> {{ spaces(fee.amount) }} </Text>
+								<Text size="13" weight="600" color="secondary"> {{ getAssetName(fee.asset) }} </Text>
+							</Flex>
+						</Flex>
+						<Flex v-else align="center">
+							<Text size="13" weight="600" color="primary">0</Text>
+						</Flex>
+					</Flex>
+
+					<Flex align="center" justify="between">
 						<Text size="13" weight="600" color="tertiary">Nonce</Text>
 
-						<Text size="13" weight="600" color="primary"> {{ tx.nonce }} </Text>
+						<Flex align="center" gap="6">
+							<Text size="13" weight="600" color="primary"> {{ tx.nonce }} </Text>
+							<CopyButton :text="tx.nonce" />
+						</Flex>
 					</Flex>
 
 					<Flex align="center" justify="between">

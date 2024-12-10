@@ -1,0 +1,229 @@
+<script setup>
+/** UI */
+import Button from "~/components/ui/Button.vue"
+
+/** Components */
+import AppsTable from "@/components/tables/AppsTable.vue"
+
+/** API */
+import { fetchApps } from "@/services/api/app"
+
+/** Store */
+import { useAppStore } from "@/store/app"
+const appStore = useAppStore()
+
+definePageMeta({
+	layout: "default",
+})
+
+useHead({
+	title: "Applications - Astria Explorer",
+	link: [
+		{
+			rel: "canonical",
+			href: "https://astrotrek.io/apps",
+		},
+	],
+	meta: [
+		{
+			name: "description",
+			content:
+				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks, rollups and applications.",
+		},
+		{
+			property: "og:title",
+			content: "Applications - Astria Explorer",
+		},
+		{
+			property: "og:description",
+			content:
+				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks, rollups and applications.",
+		},
+		{
+			property: "og:url",
+			content: `https://astrotrek.io/apps`,
+		},
+		{
+			property: "og:image",
+			content: "/img/seo/apps.png",
+		},
+		{
+			name: "twitter:title",
+			content: "Applications - Astria Explorer",
+		},
+		{
+			name: "twitter:description",
+			content:
+				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks, rollups and applications.",
+		},
+		{
+			name: "twitter:card",
+			content: "summary_large_image",
+		},
+		{
+			name: "twitter:image",
+			content: "https://astrotrek.io/img/seo/applications.png",
+		},
+	],
+})
+
+const apps = ref([])
+const isLoading = ref(false)
+
+const limit = ref(15)
+const getApps = async () => {
+	isLoading.value = true
+
+	const { data } = await fetchApps({
+		limit: limit.value,
+		offset: (page.value - 1) * limit.value,
+	})
+	apps.value = data.value
+	
+	apps.value = [
+		{
+			"actions_count": 2,
+			"avg_size": 1000,
+			"category": "nft",
+			"description": "Looooooooooooooooooong rollup description",
+			"explorer": "https://phoenix.lightlink.io",
+			"first_message_time": "2023-07-04T03:10:57+00:00",
+			"github": "https://github.com/lightlink-network/hummingbird-client",
+			"id": 321,
+			"l2_beat": "https://l2beat.com/bridges/projects/lightlink",
+			"last_message_time": "2023-07-04T03:10:57+00:00",
+			"links": [
+				"https://docs.lightlink.io/lightlink-protocol",
+				"https://bridge.lightlink.io/",
+				"https://t.me/lightlinkLL"
+			],
+			"logo": "https://celenium.fra1.cdn.digitaloceanspaces.com/rollups/LightLink.webp",
+			"max_size": 1000,
+			"min_size": 1000,
+			"name": "Application name",
+			"native_bridge": "astria1phym4uktjn6gjle226009ge7u82w0dgtszs8x2",
+			"provider": "provider",
+			"rollup": "O0Ia+lPYYMf3iFfxBaWXCSdlhphc6d4ZoBXINov6Tjc=",
+			"size": 1000,
+			"slug": "app_1",
+			"stack": "op_stack",
+			"twitter": "https://x.com/LightLinkChain",
+			"type": "settled",
+			"vm": "evm",
+			"website": "https://lightlink.io"	
+		},
+		{
+			"actions_count": 2,
+			"avg_size": 1000,
+			"category": "nft",
+			"description": "Looooooooooooooooooong rollup description",
+			"explorer": "https://phoenix.lightlink.io",
+			"first_message_time": "2023-07-04T03:10:57+00:00",
+			"github": "https://github.com/lightlink-network/hummingbird-client",
+			"id": 321,
+			"l2_beat": "https://l2beat.com/bridges/projects/lightlink",
+			"last_message_time": "2023-07-04T03:10:57+00:00",
+			"links": [
+				"https://docs.lightlink.io/lightlink-protocol",
+				"https://bridge.lightlink.io/",
+				"https://t.me/lightlinkLL"
+			],
+			"logo": "https://celenium.fra1.cdn.digitaloceanspaces.com/rollups/LightLink.webp",
+			"max_size": 1000,
+			"min_size": 1000,
+			"name": "Application name",
+			"native_bridge": "astria1phym4uktjn6gjle226009ge7u82w0dgtszs8x2",
+			"provider": "provider",
+			"rollup": "O0Ia+lPYYMf3iFfxBaWXCSdlhphc6d4ZoBXINov6Tjc=",
+			"size": 1000,
+			"slug": "app_1",
+			"stack": "op_stack",
+			"twitter": "https://x.com/LightLinkChain",
+			"type": "settled",
+			"vm": "evm",
+			"website": "https://lightlink.io"	
+		},
+	]
+	handleNextCondition.value = apps.value.length < limit.value
+
+	isLoading.value = false
+}
+
+/** Pagination */
+const page = ref(1)
+const handleNextCondition = ref(false)
+
+const handleNext = () => {
+	page.value += 1
+}
+const handlePrev = () => {
+	if (page.value === 1) return
+	page.value -= 1
+}
+
+getApps()
+
+watch(
+	() => page.value,
+	() => {
+		getApps()
+	},
+)
+</script>
+
+<template>
+	<Flex direction="column" gap="40" wide :class="$style.wrapper">
+		<Breadcrumbs
+			:items="[
+				{ link: '/', name: 'Explore' },
+				{ link: '/apps', name: 'Applications' },
+			]"
+		/>
+
+		<Flex direction="column" :class="$style.card">
+			<Flex justify="between" align="start" wide :class="$style.top">
+				<Text size="16" weight="600" color="primary">Applications</Text>
+
+				<Flex align="center" gap="6">
+					<Button @click="handlePrev" size="mini" type="secondary" :disabled="page === 1 || isLoading">
+						<Icon name="chevron" size="14" color="primary" style="transform: rotate(90deg)" />
+					</Button>
+					<Button size="mini" type="secondary">Page {{ page }}</Button>
+					<Button @click="handleNext" size="mini" type="secondary" :disabled="isLoading || handleNextCondition">
+						<Icon name="chevron" size="14" color="primary" style="transform: rotate(-90deg)" />
+					</Button>
+				</Flex>
+			</Flex>
+
+			<AppsTable :apps="apps" :isLoading="isLoading" />
+		</Flex>
+	</Flex>
+</template>
+
+<style module>
+.wrapper {
+	max-width: calc(var(--base-width) + 48px);
+
+	padding: 0 24px;
+	margin-top: 24px;
+	margin-bottom: 120px;
+}
+
+.card {
+	border-radius: 8px;
+	background: var(--op-3);
+
+	padding: 16px 0 0 0;
+}
+
+.top {
+	margin-bottom: 20px;
+	padding: 0 16px;
+}
+
+@media (max-width: 500px) {
+	.wrapper {
+		padding: 0 12px;
+	}
+}
+</style>
