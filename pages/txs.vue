@@ -5,8 +5,15 @@ import Button from "~/components/ui/Button.vue"
 /** Components */
 import TransactionsTable from "@/components/tables/TransactionsTable.vue"
 
+/** Services */
+import { arraysAreEqual, capitalizeAndReplaceUnderscore } from "@/services/utils"
+
 /** API */
 import { fetchTransactions } from "@/services/api/tx"
+
+/** Store */
+import { useEnumStore } from "@/store/enums"
+const enumStore = useEnumStore()
 
 definePageMeta({
 	layout: "default",
@@ -64,6 +71,7 @@ useHead({
 })
 
 const transactions = ref([])
+const actionTypes = ref("")
 const isLoading = ref(false)
 const limit = ref(15)
 
@@ -71,12 +79,13 @@ const getTransactions = async () => {
 	isLoading.value = true
 
 	const { data } = await fetchTransactions({
+		action_types: actionTypes.value,
 		limit: limit.value,
 		offset: (page.value - 1) * limit.value,
 		sort: "desc",
 	})
 	transactions.value = data.value
-	handleNextCondition.value = transactions.value.length < limit.value
+	handleNextCondition.value = transactions.value?.length < limit.value
 
 	isLoading.value = false
 }
@@ -93,6 +102,54 @@ const handlePrev = () => {
 	page.value -= 1
 }
 
+/** Filters */
+const filters = ref([])
+const isFilterActive = computed(() => actionTypes.value.length > 0)
+function initFilters() {
+	actionTypes.value = ""
+	
+	let res = [
+		{
+			name: "Action Types",
+			values: {},
+			displayName: capitalizeAndReplaceUnderscore,
+			type: "multiselect"
+		}
+	]
+
+	let types = enumStore.enums?.actionTypes || []
+	types.sort().forEach(type => {
+		res[0].values[type] = false
+	})
+
+	filters.value = res
+}
+
+const handleFilterUpdate = (event) => {
+	if (arraysAreEqual(filters.value, event)) return
+
+	if (!event.length) {
+		initFilters()
+		getTransactions()
+
+		return
+	}
+
+	filters.value = event	
+
+	let resActionTypes = []
+	let filteredActionTypes = filters.value.find(f => f.name === "Action Types")?.values
+	
+	Object.keys(filteredActionTypes).forEach(actType => {
+		if (filteredActionTypes[actType]) {
+			resActionTypes.push(actType)
+		}
+	})
+
+	actionTypes.value = resActionTypes.join(",")
+	getTransactions()
+}
+
 getTransactions()
 
 watch(
@@ -101,6 +158,10 @@ watch(
 		getTransactions()
 	},
 )
+
+onMounted(() => {
+	initFilters()
+})
 </script>
 
 <template>
@@ -117,7 +178,7 @@ watch(
 				<Text size="16" weight="600" color="primary">Transactions</Text>
 
 				<Flex align="center" gap="12">
-					<Filter />
+					<Filter @onUpdate="handleFilterUpdate" :filters="filters" :isActive="isFilterActive" />
 
 					<Flex align="center" gap="6">
 						<Button @click="handlePrev" size="mini" type="secondary" :disabled="page === 1 || isLoading">

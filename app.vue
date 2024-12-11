@@ -11,11 +11,15 @@ import { fetchHead } from "@/services/api/main"
 
 /** Store */
 import { useAppStore } from "@/store/app"
+import { useEnumStore } from "@/store/enums"
 const appStore = useAppStore()
+const enumStore = useEnumStore()
 
 onMounted(async () => {
 	const head = await fetchHead()
 	if (head) appStore.lastHead = head
+	
+	enumStore.init()
 
 	Socket.init()
 

@@ -136,3 +136,14 @@ export const getNativeAsset = () => {
 			return "nria"
 	}
 }
+
+export function arraysAreEqual(arr1, arr2) {
+    if (arr1.length !== arr2.length) {
+        return false
+    }
+
+    return arr1.every((obj1, index) => {
+        const obj2 = arr2[index];
+        return JSON.stringify(obj1) === JSON.stringify(obj2);
+    })
+}

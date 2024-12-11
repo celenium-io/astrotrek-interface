@@ -19,7 +19,21 @@ const props = defineProps({
 	},
 	side: {
 		type: String,
-		default: "left",
+		default: "bottom",
+		validator: (value) => {
+			return ["right", "bottom", "left"].includes(value)
+		},
+	},
+	position: {
+		type: String,
+		default: "start",
+		validator: (value) => {
+			return ["start", "center", "end"].includes(value)
+		},
+	},
+	blockOutside: {
+		type: Boolean,
+		default: false,
 	},
 })
 const emit = defineEmits(["onClose"])
@@ -43,16 +57,32 @@ watch(
 		if (props.open) {
 			const triggerRect = triggerEl.value.getBoundingClientRect()
 
-			popoverStyles.top = `${triggerRect.y + triggerRect.height + 8}px`
-			switch (props.side) {
-				case "left":
-					popoverStyles[props.side] = `${triggerRect.x}px`
-					break
-				case "right":
-					popoverStyles[props.side] = `${window.innerWidth - triggerRect.x - triggerRect.width}px`
+			switch (props.position) {
+				case "start":
+					popoverStyles.right = `${window.innerWidth - triggerRect.x - triggerRect.width}px`
 					break
 				case "center":
-					popoverStyles.left = `${Math.round(triggerRect.x / 2)}px`
+					popoverStyles.left = `${triggerRect.x - Math.round(props.width / 2) + Math.round(triggerRect.width / 2)}px`
+					break
+				case "end":
+					popoverStyles.left = `${triggerRect.x}px`
+					break
+			}
+
+			switch (props.side) {
+				case "bottom":
+					popoverStyles.top = `${triggerRect.y + triggerRect.height + 8}px`
+					break
+				
+				case "right":
+					delete popoverStyles.right
+					popoverStyles.top = `${triggerRect.top}px`
+					popoverStyles.left = `${triggerRect.right + 16}px`
+					break
+				case "left":
+					delete popoverStyles.left
+					popoverStyles.top = `${triggerRect.top}px`
+					popoverStyles.right = `${window.innerWidth - triggerRect.x + 16}px` //`${triggerRect.left}px`
 					break
 			}
 
@@ -71,11 +101,29 @@ watch(
 		}
 	},
 )
+
+watch(
+	() => props.blockOutside,
+	() => {
+		if (props.blockOutside) {
+			document.removeEventListener("scroll", onClose)
+			document.removeEventListener("keydown", onKeydown)
+			removeOutside()
+		} else {
+			document.addEventListener("scroll", onClose)
+			document.addEventListener("keydown", onKeydown)
+
+			nextTick(() => {
+				removeOutside = useOutside(cardEl.value, onClose)
+			})
+		}
+	}
+)
 </script>
 
 <template>
 	<Flex>
-		<div ref="triggerEl">
+		<div ref="triggerEl" :style="{width: '100%'}">
 			<slot />
 		</div>
 
@@ -85,7 +133,7 @@ watch(
 
 				<Transition name="fastfade">
 					<div v-if="open" :style="popoverStyles" :class="$style.popover">
-						<div ref="cardEl" :style="{ width: `${width}px`, height: `${height}px` }" :class="$style.card">
+						<div ref="cardEl" :style="{ width: `${width}px`, maxHeight: `${height}px` }" :class="$style.card">
 							<slot name="content" />
 						</div>
 					</div>
@@ -108,6 +156,7 @@ watch(
 }
 
 .card {
+	display: flex;
 	overflow: hidden;
 
 	border-radius: 6px;
