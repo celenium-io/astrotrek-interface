@@ -105,7 +105,7 @@ const handlePrev = () => {
 /** Filters */
 const filters = ref([])
 const isFilterActive = computed(() => actionTypes.value.length > 0)
-function initFilters() {
+async function initFilters() {
 	actionTypes.value = ""
 	
 	let res = [
@@ -122,18 +122,21 @@ function initFilters() {
 		res[0].values[type] = false
 	})
 
-	filters.value = res
+	if (arraysAreEqual(filters.value, res)) {
+		filters.value = res
+	} else {
+		filters.value = res
+		await getTransactions()
+	}
 }
 
 const handleFilterUpdate = (event) => {
-	if (arraysAreEqual(filters.value, event)) return
-
 	if (!event.length) {
 		initFilters()
-		getTransactions()
-
 		return
 	}
+
+	if (arraysAreEqual(filters.value, event)) return
 
 	filters.value = event	
 
@@ -159,8 +162,8 @@ watch(
 	},
 )
 
-onMounted(() => {
-	initFilters()
+onMounted( async () => {
+	await initFilters()
 })
 </script>
 
