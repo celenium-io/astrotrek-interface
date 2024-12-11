@@ -18,7 +18,7 @@ onMounted(async () => {
 	if (head) appStore.lastHead = head
 
 	Socket.init()
-	
+
 	window.onbeforeunload = function () {
 		Socket.close()
 	}
@@ -33,6 +33,7 @@ onMounted(async () => {
 		<div id="tooltip" />
 		<div id="modal" />
 		<div id="dropdown" />
+		<div id="popover" />
 
 		<ClientOnly>
 			<ModalsManager />
