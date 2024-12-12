@@ -1,4 +1,8 @@
 <script setup>
+/** Vendor */
+import { cloneDeep } from "lodash"
+
+/** Components */
 import Button from "@/components/ui/Button.vue"
 import Checkbox from "@/components/ui/Checkbox.vue"
 import { Dropdown, DropdownItem } from "@/components/ui/Dropdown"
@@ -50,7 +54,8 @@ const handleOpen = (filter) => {
 		blockMainPopover.value = true
 		filter.open = true
 	} else {
-		selectedFilters.value = JSON.parse(JSON.stringify(props.filters))
+		selectedFilters.value = cloneDeep(props.filters)
+
 		isOpen.value = true
 	}
 }
@@ -117,7 +122,7 @@ const handleClear = () => {
 										>
 											<Text size="12" :color="f.values[v] ? 'primary' : 'secondary'"> {{ getDisplayName(v, index) }} </Text>
 
-											<Checkbox v-model="f.values[v]" :class="$style.value" />
+											<Checkbox :checked="f.values[v]" :class="$style.value" />
 										</Flex>
 									</Flex>
 								</template>
@@ -143,7 +148,7 @@ const handleClear = () => {
 							>
 								<Text size="12" :color="selectedFilters[0].values[v] ? 'primary' : 'secondary'"> {{ getDisplayName(v, 0) }} </Text>
 
-								<Checkbox v-model="selectedFilters[0].values[v]" :class="$style.value" />
+								<Checkbox :checked="selectedFilters[0].values[v]" :class="$style.value" />
 							</Flex>
 						</Flex>
 					</Flex>

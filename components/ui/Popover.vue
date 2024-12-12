@@ -10,11 +10,11 @@ const props = defineProps({
 		default: false,
 	},
 	width: {
-		type: String,
+		type: [String, Number],
 		default: null,
 	},
 	height: {
-		type: String,
+		type: [String, Number],
 		default: null,
 	},
 	side: {

@@ -122,7 +122,23 @@ async function initFilters() {
 	]
 
 	let types = enumStore.enums?.actionTypes || []
-	types.sort().forEach(type => {
+
+	const priorityOrder = ["rollup_data_submission", "bridge_lock", "ibc_relay", "ics20_withdrawal"];
+	const sortedTypes = types.sort((a, b) => {
+		const aIndex = priorityOrder.indexOf(a);
+		const bIndex = priorityOrder.indexOf(b);
+
+		if (aIndex !== -1 && bIndex !== -1) {
+			return aIndex - bIndex
+		} else if (aIndex !== -1) {
+			return -1
+		} else if (bIndex !== -1) {
+			return 1
+		}
+
+		return a.localeCompare(b)
+	})
+	sortedTypes.forEach(type => {
 		res[0].values[type] = false
 	})
 
