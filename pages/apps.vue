@@ -173,12 +173,21 @@ watch(
 
 <template>
 	<Flex direction="column" gap="40" wide :class="$style.wrapper">
-		<Breadcrumbs
-			:items="[
-				{ link: '/', name: 'Explore' },
-				{ link: '/apps', name: 'Applications' },
-			]"
-		/>
+		<Flex align="start" justify="between">
+			<Breadcrumbs
+				:items="[
+					{ link: '/', name: 'Explore' },
+					{ link: '/apps', name: 'Applications' },
+				]"
+			/>
+
+			<NuxtLink to="https://forms.gle/dfR6QJJah9kfPe3N6" target="blank" :class="$style.register_app_btn">
+				<Flex align="center" gap="6">
+					<Icon name="application" color="brand" size="12" />
+					<Text size="12">Register your app</Text>
+				</Flex>
+			</NuxtLink>
+		</Flex>
 
 		<Flex direction="column" :class="$style.card">
 			<Flex justify="between" align="start" wide :class="$style.top">
@@ -219,6 +228,19 @@ watch(
 .top {
 	margin-bottom: 20px;
 	padding: 0 16px;
+}
+
+.register_app_btn {
+	border-radius: 6px;
+	cursor: pointer;
+	background: var(--op-5);
+	border: 1px solid var(--brand);
+	color: var(--brand);
+
+	padding: 6px 8px;
+
+	transition: all 0.2s ease;
+
 }
 
 @media (max-width: 500px) {
