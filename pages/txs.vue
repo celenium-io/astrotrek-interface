@@ -70,6 +70,9 @@ useHead({
 	],
 })
 
+const route = useRoute()
+const router = useRouter()
+
 const transactions = ref([])
 const actionTypes = ref("")
 const isLoading = ref(false)
@@ -90,8 +93,9 @@ const getTransactions = async () => {
 	isLoading.value = false
 }
 
+const isUpdatingPaage = ref(false)
 /** Pagination */
-const page = ref(1)
+const page = ref(route.query.page ? parseInt(route.query.page) : 1)
 const handleNextCondition = ref(true)
 
 const handleNext = () => {
@@ -126,7 +130,10 @@ async function initFilters() {
 		filters.value = res
 	} else {
 		filters.value = res
+		isUpdatingPaage.value = true
+		page.value = 1
 		await getTransactions()
+		isUpdatingPaage.value = false
 	}
 }
 
@@ -150,7 +157,10 @@ const handleFilterUpdate = (event) => {
 	})
 
 	actionTypes.value = resActionTypes.join(",")
+	isUpdatingPaage.value = true
+	page.value = 1
 	getTransactions()
+	isUpdatingPaage.value = false
 }
 
 getTransactions()
@@ -158,7 +168,11 @@ getTransactions()
 watch(
 	() => page.value,
 	() => {
-		getTransactions()
+		if (!isUpdatingPaage.value) {
+			getTransactions()
+		}
+
+		router.replace({ query: { page: page.value } })
 	},
 )
 

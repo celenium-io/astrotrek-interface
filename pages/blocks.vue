@@ -63,6 +63,9 @@ useHead({
 	],
 })
 
+const route = useRoute()
+const router = useRouter()
+
 const blocks = ref([])
 const isLoading = ref(false)
 const limit = ref(15)
@@ -80,7 +83,7 @@ const getBlocks = async () => {
 }
 
 /** Pagination */
-const page = ref(1)
+const page = ref(route.query.page ? parseInt(route.query.page) : 1)
 const handleNextCondition = ref(true)
 
 const handleNext = () => {
@@ -97,6 +100,7 @@ watch(
 	() => page.value,
 	() => {
 		getBlocks()
+		router.replace({ query: { page: page.value } })
 	},
 )
 </script>
