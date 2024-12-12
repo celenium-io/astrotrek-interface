@@ -13,7 +13,19 @@ const props = defineProps({
 	isActive: {
 		tyep: Boolean,
 		default: false,
-	}
+	},
+	showClear: {
+		type: Boolean,
+		default: true,
+	},
+	width: {
+		type: [Number, String],
+		default: 220,
+	},
+	height: {
+		type: [Number, String],
+		default: 300,
+	},
 })
 
 const emit = defineEmits(["onUpdate"])
@@ -66,7 +78,7 @@ const handleClear = () => {
 </script>
 
 <template>
-	<Popover :open="isOpen" :blockOutside="blockMainPopover" @on-close="handleClose()" width="220" height="300" position="start">
+	<Popover :open="isOpen" :blockOutside="blockMainPopover" @on-close="handleClose()" :width="width" :height="height" position="start">
 		<Button @click="handleOpen()" type="secondary" size="mini" :disabled="!filters.length">
 			<Icon name="filter" size="14" :color="isActive ? 'brand' : 'tertiary'" />
 		</Button>
@@ -77,7 +89,7 @@ const handleClear = () => {
 				<Flex v-if="selectedFilters.length > 1" align="center" direction="column" gap="8" wide>
 					<template v-for="(f, index) in selectedFilters" :class="$style.filter">
 						<Flex v-if="f.type === 'toggle'" align="center" justify="between" gap="6" wide>
-							<Text size="12" color="secondary"> {{ f.name }} </Text>
+							<Text size="12" color="secondary"> {{ getDisplayName(f.name, index) }} </Text>
 							<Toggle v-model="f.value" color="var(--brand)" />
 						</Flex>
 						
@@ -142,7 +154,7 @@ const handleClear = () => {
 						<Text size="12" color="primary">Apply</Text>
 					</Button>
 
-					<Button @click="handleClear" type="secondary" size="mini" wide>
+					<Button v-if="showClear" @click="handleClear" type="secondary" size="mini" wide>
 						<Text size="12" color="primary">Clear</Text>
 					</Button>
 				</Flex>

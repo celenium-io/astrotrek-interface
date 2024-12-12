@@ -32,8 +32,9 @@ export const fetchRollupActions = async ({hash, bridge_actions, rollup_actions, 
 	try {
 		const url = new URL(`${useServerURL()}/rollup/${hash}/all_actions`)
 
-        if (bridge_actions) url.searchParams.append("bridge_actions", bridge_actions)
-        if (rollup_actions) url.searchParams.append("rollup_actions", rollup_actions)
+        url.searchParams.append("bridge_actions", bridge_actions)
+        url.searchParams.append("rollup_actions", rollup_actions)
+		
         if (limit) url.searchParams.append("limit", limit)
 		if (offset) url.searchParams.append("offset", offset)
 		if (sort) url.searchParams.append("sort", sort)

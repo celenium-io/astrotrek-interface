@@ -16,7 +16,7 @@ import { Dropdown, DropdownItem } from "@/components/ui/Dropdown"
 import Tooltip from "~/components/ui/Tooltip.vue"
 
 /** Services */
-import { capitalize } from "~/services/utils"
+import { arraysAreEqual, capitalize, capitalizeAndReplaceUnderscore } from "~/services/utils"
 
 /** API */
 import { fetchRollupActions, fetchRollupBridges, fetchRollupByHash, fetchRollupDeposits } from "~/services/api/rollup"
@@ -52,8 +52,8 @@ const fetchActions = async () => {
 
 	const { data } = await fetchRollupActions({
 		hash: rollupHashSafeURL.value,
-		bridge_actions: true,
-		rollup_actions: true,
+		bridge_actions: bridgeActions.value,
+		rollup_actions: rollupActions.value,
 		limit: limit.value,
 		offset: (page.value - 1) * limit.value,
 		sort: "desc",
@@ -106,6 +106,49 @@ const fetchData = async () => {
 			await fetchDeposits()
 			break
 	}
+}
+
+/** Filters */
+const bridgeActions = ref(true)
+const rollupActions = ref(true)
+const filters = ref([])
+async function initFilters() {
+	let res = [
+		{
+			name: "bridge_actions",
+			value: true,
+			displayName: "Bridge Actions",
+			type: "toggle"
+		},
+		{
+			name: "rollup_actions",
+			value: true,
+			displayName: "Rollup Actions",
+			type: "toggle"
+		}
+	]
+
+	if (arraysAreEqual(filters.value, res)) {
+		filters.value = res
+	} else {
+		filters.value = res
+		await fetchData()
+	}
+}
+
+const handleFilterUpdate = async (event) => {
+	if (!event.length) {
+		initFilters()
+		return
+	}
+
+	if (arraysAreEqual(filters.value, event)) return
+
+	filters.value = event
+	bridgeActions.value = filters.value.find(f => f.name === "bridge_actions")?.value
+	rollupActions.value = filters.value.find(f => f.name === "rollup_actions")?.value
+	
+	await fetchData()
 }
 
 /** Pagination */
@@ -215,7 +258,8 @@ const periods = ref([
 	},
 ])
 
-await fetchData()
+// await fetchData()
+await initFilters()
 updateRouteQuery()
 
 const isUpdatingPaage = ref(false)
@@ -240,6 +284,11 @@ watch(
 		await fetchData()
 	},
 )
+
+onMounted( async () => {
+	// await initFilters()
+	// updateRouteQuery()
+})
 </script>
 
 <template>
@@ -291,16 +340,20 @@ watch(
 					</Text>
 				</Flex>
 
-				<Flex v-if="activeTab !== 'analytics'" align="center" gap="6" :class="$style.pagination">
-					<Button @click="handlePrev" size="mini" type="secondary" :disabled="page === 1 || isLoading">
-						<Icon name="chevron" size="14" color="primary" style="transform: rotate(90deg)" />
-					</Button>
-					<Button size="mini" type="secondary">Page {{ page }}</Button>
-					<Button @click="handleNext" size="mini" type="secondary" :disabled="isLoading || handleNextCondition">
-						<Icon name="chevron" size="14" color="primary" style="transform: rotate(-90deg)" />
-					</Button>
+				<Flex v-if="activeTab !== 'analytics'" align="center" gap="12" :class="$style.pagination">
+					<Filter v-if="activeTab === 'actions'" @onUpdate="handleFilterUpdate" :filters="filters" :showClear="false" width="170" />
+
+					<Flex align="center" gap="6">
+						<Button @click="handlePrev" size="mini" type="secondary" :disabled="page === 1">
+							<Icon name="chevron" size="14" color="primary" style="transform: rotate(90deg)" />
+						</Button>
+						<Button size="mini" type="secondary">Page {{ page }}</Button>
+						<Button @click="handleNext" size="mini" type="secondary" :disabled="handleNextCondition">
+							<Icon name="chevron" size="14" color="primary" style="transform: rotate(-90deg)" />
+						</Button>
+					</Flex>
 				</Flex>
-				
+
 				<Flex v-else align="center" gap="6" :class="$style.pagination">
 					<Dropdown>
 						<Button size="mini" type="secondary">
