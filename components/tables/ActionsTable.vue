@@ -310,7 +310,7 @@ const handleOpenTx = async (action) => {
 			<Button v-if="txLink" @click.prevent.stop="handleOpenTx(act)" size="mini" type="tertiary" :class="$style.extBtn">
 				<Icon name="tx" color="brand" />
 
-				<Text color="brand">View Tx</Text>
+				<Text color="brand" :class="$style.hide_mobile">View Tx</Text>
 			</Button>
 		</Flex>
 	</Flex>
@@ -451,6 +451,40 @@ const handleOpenTx = async (action) => {
 	}
 
 	.hide_mobile {
+		display: none;
+	}
+}
+
+@media (max-width: 450px) {
+	.wrapper {
+		width: 100%;
+	}
+
+	.row {
+		width: 100%;
+	}
+
+	.description {
+		width: 120px;
+	}
+}
+
+@media (max-width: 450px) {
+	.wrapper {
+		width: 100%;
+	}
+
+	.row {
+		width: 100%;
+	}
+
+	.description {
+		width: 120px;
+	}
+}
+
+@media (max-width: 400px) {
+	.description {
 		display: none;
 	}
 }

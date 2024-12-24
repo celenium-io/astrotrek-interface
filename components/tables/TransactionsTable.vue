@@ -85,7 +85,7 @@ const props = defineProps({
 				</Flex>
 			</Flex>
 
-			<Flex direction="column" align="end" gap="8">
+			<Flex direction="column" align="end" gap="8" :class="$style.hide_mobile">
 				<Text size="12" weight="500" color="tertiary">
 					{{ DateTime.fromISO(t.time).toRelative({ locale: "en", style: "short" }) }}
 				</Text>
@@ -214,6 +214,12 @@ const props = defineProps({
 @media (max-width: 1000px) {
 	.wrapper {
 		width: 100%;
+	}
+}
+
+@media (max-width: 450px) {
+	.hide_mobile {
+		display: none;
 	}
 }
 </style>

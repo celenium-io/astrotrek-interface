@@ -10,7 +10,7 @@ import EmptyHolder from "~/components/shared/EmptyHolder.vue"
 import LinkToEntity from "@/components/shared/LinkToEntity.vue"
 
 /** Services */
-import { capitalize, formatBytes, midHash, spaces } from "@/services/utils"
+import { capitalize, formatBytes, isMobile, midHash, spaces } from "@/services/utils"
 import { getRollupHashSafeURL } from "~/services/utils/rollups"
 
 /** Store */
@@ -113,7 +113,7 @@ watch(
 								<LinkToEntity :entity="{ title: midHash(app.rollup), type: 'rollup', id: getRollupHashSafeURL(app.rollup)}" color="primary" /> -->
 							</Flex>
 
-							<Flex align="center" gap="8">
+							<Flex v-if="!isMobile" align="center" gap="8">
 								<Flex v-for="tag in app.tags" align="center" gap="8">
 									<Text size="12" color="secondary">
 										{{ tag.value }}
