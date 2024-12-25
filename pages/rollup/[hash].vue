@@ -16,7 +16,7 @@ import { Dropdown, DropdownItem } from "@/components/ui/Dropdown"
 import Tooltip from "~/components/ui/Tooltip.vue"
 
 /** Services */
-import { arraysAreEqual, capitalize, capitalizeAndReplaceUnderscore } from "~/services/utils"
+import { arraysAreEqual, capitalize, isMobile, shortHash } from "~/services/utils"
 
 /** API */
 import { fetchRollupActions, fetchRollupBridges, fetchRollupByHash, fetchRollupDeposits } from "~/services/api/rollup"
@@ -307,7 +307,7 @@ onMounted( async () => {
 					<Icon name="rollup" size="14" color="primary" />
 
 					<Text size="14" weight="500" color="primary">
-						Rollup <Text weight="600">{{ rollup?.hash }}</Text>
+						Rollup <Text weight="600">{{ !isMobile() ? rollup?.hash : shortHash(rollup?.hash) }}</Text>
 					</Text>
 
 					<Tooltip v-if="rollup?.bridge_count">

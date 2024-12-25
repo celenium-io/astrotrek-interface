@@ -113,7 +113,7 @@ watch(
 								<LinkToEntity :entity="{ title: midHash(app.rollup), type: 'rollup', id: getRollupHashSafeURL(app.rollup)}" color="primary" /> -->
 							</Flex>
 
-							<Flex v-if="!isMobile" align="center" gap="8">
+							<Flex v-if="!isMobile()" align="center" gap="8">
 								<Flex v-for="tag in app.tags" align="center" gap="8">
 									<Text size="12" color="secondary">
 										{{ tag.value }}

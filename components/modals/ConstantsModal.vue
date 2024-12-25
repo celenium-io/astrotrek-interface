@@ -147,4 +147,16 @@ onMounted(async () => {
 .copy_constants {
 	cursor: pointer;
 }
+
+@media (max-height: 900px) {
+	.modules {
+		max-height: 600px;
+	}
+}
+
+@media (max-height: 750px) {
+	.modules {
+		max-height: 400px;
+	}
+}
 </style>
