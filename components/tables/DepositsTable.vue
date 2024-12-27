@@ -56,7 +56,7 @@ const handleOpenTx = async (deposit) => {
 							:entity="{ title: midHash(d.bridge), type: 'account', id: d.bridge }"
 							color="primary"
 							size="13"
-							:class="$style.link"
+							:class="[$style.overflow, $style.address]"
 						/>
 					</Flex>
 					
@@ -68,7 +68,7 @@ const handleOpenTx = async (deposit) => {
 				<Flex align="center" gap="8">
 					<Text size="12" color="tertiary">Block</Text>
 
-					<LinkToEntity :entity="{ title: spaces(d.height), type: 'block', id: d.height }" color="secondary" :class="$style.link" />
+					<LinkToEntity :entity="{ title: spaces(d.height), type: 'block', id: d.height }" color="secondary" :class="$style.overflow" />
 
 					<div :class="$style.dot" />
 
@@ -180,9 +180,15 @@ const handleOpenTx = async (deposit) => {
 	background: var(--op-10);
 }
 
-.link {
+.overflow {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+	.address {
+		max-width: calc(110px - (70 * (480px - 100vw) / 90));
+	}
 }
 </style>
