@@ -1,4 +1,5 @@
 <script setup>
+import { isMobile, midHash } from "@/services/utils"
 import { getCeleniumLink } from "@/services/constants"
 
 const props = defineProps({
@@ -59,8 +60,13 @@ const handleClick = (event) => {
 
 <template>
 	<Flex align="center" :class="isDisable && $style.disabled">
-		<Text v-if="mode === 'row'" @click.prevent.stop="handleClick" :size="size" :color="color" :weight="weight" :height="height" :class="$style.link"> {{ entity.title }} </Text>
-		<Text v-else-if="mode === 'sidebar'" @click="handleClick" :size="size" :color="color" :weight="weight" :height="height" :class="$style.link"> {{ entity.title }} </Text>
+		<Text v-if="mode === 'row'" @click.prevent.stop="handleClick" :size="size" :color="color" :weight="weight" :height="height" :class="$style.link">
+			{{ !isMobile() ? entity.title : midHash(entity.title) }}
+		</Text>
+
+		<Text v-else-if="mode === 'sidebar'" @click="handleClick" :size="size" :color="color" :weight="weight" :height="height" :class="$style.link">
+			{{ entity.title }}
+		</Text>
 	</Flex>
 </template>
 

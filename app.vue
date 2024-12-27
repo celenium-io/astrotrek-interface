@@ -11,14 +11,18 @@ import { fetchHead } from "@/services/api/main"
 
 /** Store */
 import { useAppStore } from "@/store/app"
+import { useEnumStore } from "@/store/enums"
 const appStore = useAppStore()
+const enumStore = useEnumStore()
 
 onMounted(async () => {
 	const head = await fetchHead()
 	if (head) appStore.lastHead = head
+	
+	enumStore.init()
 
 	Socket.init()
-	
+
 	window.onbeforeunload = function () {
 		Socket.close()
 	}
@@ -33,6 +37,7 @@ onMounted(async () => {
 		<div id="tooltip" />
 		<div id="modal" />
 		<div id="dropdown" />
+		<div id="popover" />
 
 		<ClientOnly>
 			<ModalsManager />

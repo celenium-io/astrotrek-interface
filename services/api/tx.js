@@ -65,9 +65,11 @@ export const fetchTxsCount = async () => {
 	}
 }
 
-export const fetchTxByHash = async (hash) => {
+export const fetchTxByHash = async (hash, fee = false) => {
 	try {
 		const url = new URL(`${useServerURL()}/tx/${hash}`)
+
+		if (fee) url.searchParams.append("fee", fee)
 
 		const data = await useFetch(url.href)
 		return data
@@ -82,6 +84,19 @@ export const fetchTxActions = async ({hash, limit, offset}) => {
 
         if (limit) url.searchParams.append("limit", limit)
 		if (offset) url.searchParams.append("offset", offset)
+
+		const data = await useFetch(url.href)
+		return data
+	} catch (error) {
+		console.error(error)
+	}
+}
+
+export const fetchTxFees = async ({hash, limit = 100}) => {
+	try {
+		const url = new URL(`${useServerURL()}/tx/${hash}/fees`)
+
+        if (limit) url.searchParams.append("limit", limit)
 
 		const data = await useFetch(url.href)
 		return data

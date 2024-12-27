@@ -26,7 +26,7 @@ const tx = ref()
 const actions = ref([])
 const isLoading = ref(false)
 
-const { data } = await fetchTxByHash(route.params.hash)
+const { data } = await fetchTxByHash(route.params.hash, true)
 if (!data.value) {
 	navigateTo({
 		path: "/",

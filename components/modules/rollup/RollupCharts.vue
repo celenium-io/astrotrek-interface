@@ -20,12 +20,16 @@ const props = defineProps({
 		type: Object,
 		required: true,
 	},
+	hide: {
+		type: Array,
+		default: [],
+	}
 })
 
 const getRollupSeries = async (name) => {
 	const resultData = []
 	const rawData = await fetchRollupSeries({
-		id: getRollupHashSafeURL(props.rollup.hash),
+		id: getRollupHashSafeURL(props.rollup?.hash),
 		name: name,
 		timeframe: props.period.timeframe,
 		from: parseInt(
@@ -60,8 +64,13 @@ const sizeSeries = ref([])
 const actionsSeries = ref([])
 
 const fetchData = async () => {
-	getRollupSeries('size').then((res) => sizeSeries.value = res)
-	getRollupSeries('actions_count').then((res) => actionsSeries.value = res)
+	if (!props.hide.includes("size")) {
+		getRollupSeries("size").then((res) => sizeSeries.value = res)
+	}
+	
+	if (!props.hide.includes("actions_count")) {
+		getRollupSeries("actions_count").then((res) => actionsSeries.value = res)
+	}
 }
 
 await fetchData()

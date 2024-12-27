@@ -59,6 +59,20 @@ export const fetchAccountActions = async ({hash, limit, offset, sort}) => {
 	}
 }
 
+export const fetchAccountFees = async ({hash, limit, offset}) => {
+	try {
+		const url = new URL(`${useServerURL()}/address/${hash}/fees`)
+
+        if (limit) url.searchParams.append("limit", limit)
+		if (offset) url.searchParams.append("offset", offset)
+
+		const data = await useFetch(url.href)
+		return data
+	} catch (error) {
+		console.error(error)
+	}
+}
+
 export const fetchAccountRollups = async ({hash, limit, offset, sort}) => {
 	try {
 		const url = new URL(`${useServerURL()}/address/${hash}/rollups`)

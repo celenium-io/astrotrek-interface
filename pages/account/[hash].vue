@@ -4,6 +4,7 @@ import AccountActions from "~/components/modules/account/AccountActions.vue"
 import AccountBridgeInfo from "~/components/modules/account/AccountBridgeInfo.vue"
 import AccountBridgeRoles from "~/components/modules/account/AccountBridgeRoles.vue"
 import AccountDeposits from "~/components/modules/account/AccountDeposits.vue"
+import AccountFees from "~/components/modules/account/AccountFees.vue"
 import AccountMetadata from "~/components/modules/account/AccountMetadata.vue"
 import AccountRollups from "~/components/modules/account/AccountRollups.vue"
 import AccountTransactions from "~/components/modules/account/AccountTransactions.vue"
@@ -19,7 +20,15 @@ import Tooltip from "~/components/ui/Tooltip.vue"
 import { capitalizeAndReplaceUnderscore, shortHash } from "@/services/utils"
 
 /** API */
-import { fetchAccountActions, fetchAccountBridgeRoles, fetchAccountByHash, fetchAccountDeposits, fetchAccountRollups, fetchAccountTransactions } from "~/services/api/account.js"
+import {
+	fetchAccountActions,
+	fetchAccountBridgeRoles,
+	fetchAccountByHash,
+	fetchAccountDeposits,
+	fetchAccountFees,
+	fetchAccountRollups,
+	fetchAccountTransactions
+} from "~/services/api/account.js"
 
 definePageMeta({
 	layout: "default",
@@ -30,6 +39,7 @@ const router = useRouter()
 
 const account = ref()
 const actions = ref([])
+const fees = ref([])
 const bridgeRoles = ref([])
 const deposits = ref([])
 const rollups = ref([])
@@ -73,6 +83,20 @@ const fetchActions = async () => {
 	})
 	actions.value = data.value
 	handleNextCondition.value = actions.value.length < limit.value
+
+	isLoading.value = false
+}
+
+const fetchFees = async () => {
+	isLoading.value = true
+
+	const { data } = await fetchAccountFees({
+		hash: account.value?.hash,
+		limit: limit.value,
+		offset: (page.value - 1) * limit.value,
+	})
+	fees.value = data.value
+	handleNextCondition.value = fees.value.length < limit.value
 
 	isLoading.value = false
 }
@@ -150,6 +174,9 @@ const fetchData = async () => {
 		case "actions":
 			fetchActions()
 			break
+		case "fees_paid":
+			fetchFees()
+			break
 		case "rollups":
 			fetchRollups()
 			break
@@ -224,12 +251,33 @@ const tabs = ref(
 	[
 		{ name: "transactions", visible: true },
 		{ name: "actions", visible: true },
+		{ name: "fees_paid", visible: true },
 		{ name: "rollups", visible: true },
 		{ name: "bridge_roles", visible: true },
 		{ name: "deposits", visible: account.value?.is_bridge },
 	]
 )
+
 const activeTab = ref(route.query.tab && tabs.value.map((tab) => tab.name).includes(route.query.tab) ? route.query.tab : tabs.value[0].name)
+const tabsEl = ref(null)
+const handleTabSelect = (name) => {
+	activeTab.value = name
+
+	let tabCenter = 0
+	
+	for (let i = 0; i < tabsEl.value.wrapper.children.length; i++) {
+		if (tabsEl.value.wrapper.children[i].id === name) {
+			tabCenter = tabsEl.value.wrapper.children[i].offsetLeft + tabsEl.value.wrapper.children[i].offsetWidth / 2
+			break
+		}
+	}
+
+	if (tabCenter) {
+		let wrapperCenter = tabsEl.value.wrapper.offsetLeft + tabsEl.value.wrapper.offsetWidth / 2
+
+		tabsEl.value.wrapper.scroll({ left: tabCenter - wrapperCenter })
+	}
+}
 
 const updateRouteQuery = () => {
 	router.replace({
@@ -248,6 +296,8 @@ const isUpdatingPaage = ref(false)
 watch(
 	() => activeTab.value,
 	async () => {
+		if (!activeTab.value) return
+
 		isUpdatingPaage.value = true
 
 		page.value = 1
@@ -266,6 +316,12 @@ watch(
 		await fetchData()
 	},
 )
+
+onMounted(() => {
+	if (activeTab.value) {
+		handleTabSelect(activeTab.value)
+	}
+})
 </script>
 
 <template>
@@ -327,13 +383,14 @@ watch(
 
 		<Flex direction="column" gap="12">
 			<Flex align="center" justify="between" :class="$style.navigation">
-				<Flex align="center" gap="8" :class="$style.tabs">
+				<Flex align="center" gap="8" :class="$style.tabs" ref="tabsEl">
 					<Text
 						v-for="tab in tabs.filter(t => t.visible)"
-						@click="activeTab = tab.name"
+						@click="handleTabSelect(tab.name)"
 						size="13"
 						weight="600"
 						color="secondary"
+						:id="tab.name"
 						:class="[$style.tab, activeTab === tab.name && $style.active]"
 					>
 						{{ capitalizeAndReplaceUnderscore(tab.name) }}
@@ -355,6 +412,8 @@ watch(
 
 			<AccountActions v-if="activeTab === 'actions'" :actions="actions" :isLoading="isLoading" />
 
+			<AccountFees v-if="activeTab === 'fees_paid'" :fees="fees" :isLoading="isLoading" />
+
 			<AccountRollups v-if="activeTab === 'rollups'" :rollups="rollups" :isLoading="isLoading" />
 
 			<AccountBridgeRoles v-if="activeTab === 'bridge_roles'" :roles="bridgeRoles" :isLoading="isLoading" />
@@ -375,6 +434,7 @@ watch(
 }
 
 .tab {
+	text-wrap: nowrap;
 	border-radius: 6px;
 	cursor: pointer;
 	background: var(--op-5);
@@ -407,6 +467,12 @@ watch(
 	.tabs {
 		width: 100%;
 		justify-content: start;
+		overflow-x: auto;
+		scroll-behavior: smooth;
+		
+		&::-webkit-scrollbar {
+			display: none;
+		}
 	}
 
 	.pagination {

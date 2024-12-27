@@ -30,8 +30,8 @@ const props = defineProps({
 			align="center"
 			:class="[$style.row, isLoading && $style.disabled]"
 		>
-			<Flex direction="column" gap="8">
-				<Flex align="center" gap="6">
+			<Flex direction="column" gap="8" :style="{width: '100%'}">
+				<Flex align="center" gap="6" :class="$style.overflow">
 					<Icon name="bridge" size="16" color="secondary" />
 
 					<Text size="12" weight="500" color="primary">Bridge</Text>
@@ -43,7 +43,7 @@ const props = defineProps({
 					<LinkToEntity :entity="{ title: midHash(bridge.rollup), type: 'rollup', id: getRollupHashSafeURL(bridge.rollup)}" color="primary" />
 				</Flex>
 
-				<Flex align="center" gap="8" :class="$style.sub_title">
+				<Flex align="center" gap="8" :class="[$style.sub_title, $style.overflow]">
 					<Text size="12" weight="500" color="tertiary">Sudo</Text>
 
 					<LinkToEntity :entity="{ title: midHash(bridge.sudo), type: 'account', id: bridge.sudo}" color="secondary" />
@@ -132,41 +132,17 @@ const props = defineProps({
 	}
 }
 
-.row_general_list {
-	height: 60px;
-
-	border-top: 1px solid var(--op-5);
-
-	cursor: pointer;
-
-	padding: 0 16px;
-
-	transition: all 0.2s ease;
-
-	&:hover {
-		background: var(--op-5);
-	}
-	
-	&:last-child {
-		border-bottom-left-radius: 8px;
-		border-bottom-right-radius: 8px;
-	}
-
-	&:active {
-		background: var(--op-10);
-	}
-
-	&.disabled {
-		pointer-events: none;
-		opacity: 0.2;
-	}
-}
-
 .dot {
 	width: 4px;
 	height: 4px;
 
 	border-radius: 50%;
 	background: var(--op-10);
+}
+
+.overflow {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 </style>

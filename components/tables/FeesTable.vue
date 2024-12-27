@@ -5,32 +5,34 @@ import { DateTime } from "luxon"
 /** Components */
 import LinkToEntity from "@/components/shared/LinkToEntity.vue";
 
-/** UI */
-import ActionsRow from "@/components/shared/ActionsRow.vue"
-
 /** Services */
-import { midHash, spaces, splitAddress } from "@/services/utils"
+import { midHash, spaces } from "@/services/utils"
+import { getAssetName } from "@/services/utils/actions.js"
+
+/** API */
+import { fetchTxByHash } from "~/services/api/tx"
 
 /** Store */
 import { useSidebarsStore } from "@/store/sidebars"
 const sidebarsStore = useSidebarsStore()
 
 const props = defineProps({
-	txs: {
+	fees: {
 		type: Array,
 	},
 	isLoading: {
 		type: Boolean,
 	},
-	recentTxs: {
-		type: Boolean,
-		default: false,
-	},
-	generalTxsList: {
-		type: Boolean,
-		default: false,
-	},
 })
+
+const handleOpenTransaction = async (tx_hash) => {
+	if (!tx_hash) return
+
+	const { data } = await fetchTxByHash(tx_hash)
+	if (data.value) {
+		sidebarsStore.open("tx", data.value)
+	}
+}
 </script>
 
 <template>
@@ -41,7 +43,7 @@ const props = defineProps({
 					<Spinner size="16" />
 
 					<Flex direction="column" align="center" gap="8">
-						<Text size="14" weight="500" color="primary">Fetching transactions...</Text>
+						<Text size="14" weight="500" color="primary">Fetching fees...</Text>
 						<Text size="13" weight="500" color="tertiary">It's almost done</Text>
 					</Flex>
 				</Flex>
@@ -49,45 +51,44 @@ const props = defineProps({
 		</ClientOnly>
 
 		<Flex
-			v-if="txs"
-			v-for="t in txs"
-			@click="sidebarsStore.open('tx', t)"
+			v-if="fees"
+			v-for="fee in fees"
+			@click="handleOpenTransaction(fee.tx_hash)"
 			justify="between"
 			align="center"
-			:class="[!recentTxs && !generalTxsList && $style.row, recentTxs && $style.row_recent_txs, generalTxsList && $style.row_general_list, isLoading && $style.disabled]"
+			:class="[$style.row, isLoading && $style.disabled]"
 		>
 			<Flex direction="column" gap="8">
 				<Flex align="center" gap="6">
-					<Icon name="tx-circle" size="16" :color="t.status === 'success' ? 'light-green' : 'red'" />
+					<Icon name="coin" size="13" color="tertiary" />
+					<!-- The transaction paid a $100 fee -->
+					<Flex align="center" gap="4">
+						<LinkToEntity :entity="{ title: midHash(fee.tx_hash), type: 'tx', id: fee.tx_hash}" size="13" color="primary" weight="600" />
 
-					<Flex align="center" gap="8">
-						<LinkToEntity :entity="{ title: midHash(t.hash), type: 'tx', id: t.hash}" size="13" color="primary" weight="600" />
+						<Text size="13" color="secondary">paid</Text>
 
-						<ActionsRow :actions="t.action_types" />
+						<Text size="13" color="primary">
+							{{ `${spaces(fee.amount)} ${getAssetName(fee.asset)}` }}
+						</Text>
+
+						<Text size="13" color="secondary">fee</Text>
 					</Flex>
 				</Flex>
 
 				<Flex align="center" gap="8">
 					<Text size="12" weight="500" color="tertiary">Block</Text>
 
-					<LinkToEntity :entity="{ title: spaces(t.height), type: 'block', id: t.height}" color="secondary" />
+					<LinkToEntity :entity="{ title: spaces(fee.height), type: 'block', id: fee.height}" color="secondary" />
 
 					<div :class="$style.dot" />
 
-					<Text size="12" weight="500" color="tertiary">Signer</Text>
-
-					<LinkToEntity :entity="{ title: splitAddress(t.signer, 4), type: 'account', id: t.signer}" color="secondary" />
-
-					<div :class="$style.dot" />
-
-					<Text size="12" weight="500" color="tertiary">Actions</Text>
-					<Text size="12" weight="500" color="secondary"> {{ t.actions_count }} </Text>
+					<Text size="12" color="tertiary"> {{ DateTime.fromISO(fee.time).setLocale("en").toFormat("tt, LLL d, y") }} </Text>
 				</Flex>
 			</Flex>
 
-			<Flex direction="column" align="end" gap="8" :class="$style.hide_mobile">
+			<Flex direction="column" align="end" gap="8">
 				<Text size="12" weight="500" color="tertiary">
-					{{ DateTime.fromISO(t.time).toRelative({ locale: "en", style: "short" }) }}
+					{{ DateTime.fromISO(fee.time).toRelative({ locale: "en", style: "short" }) }}
 				</Text>
 			</Flex>
 		</Flex>
@@ -214,12 +215,6 @@ const props = defineProps({
 @media (max-width: 1000px) {
 	.wrapper {
 		width: 100%;
-	}
-}
-
-@media (max-width: 450px) {
-	.hide_mobile {
-		display: none;
 	}
 }
 </style>

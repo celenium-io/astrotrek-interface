@@ -29,8 +29,8 @@ const props = defineProps({
 			align="center"
 			:class="[$style.row, isLoading && $style.disabled]"
 		>
-			<Flex direction="column" gap="8">
-				<Flex align="center" gap="6">
+			<Flex direction="column" gap="8" :style="{width: '100%'}">
+				<Flex align="center" gap="6" :class="$style.description">
 					<Icon name="role" size="16" color="secondary" />
 
 					<Text size="12" weight="500" color="primary">Account</Text>
@@ -143,6 +143,14 @@ const props = defineProps({
 		pointer-events: none;
 		opacity: 0.2;
 	}
+}
+
+.description {
+	width: 100%;
+
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .dot {

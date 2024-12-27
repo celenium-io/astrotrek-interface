@@ -116,6 +116,7 @@ onMounted(async () => {
 .modules {
 	max-height: 800px;
 	overflow: auto;
+	overscroll-behavior: contain;
 }
 
 .module {
@@ -145,5 +146,17 @@ onMounted(async () => {
 
 .copy_constants {
 	cursor: pointer;
+}
+
+@media (max-height: 900px) {
+	.modules {
+		max-height: 600px;
+	}
+}
+
+@media (max-height: 750px) {
+	.modules {
+		max-height: 400px;
+	}
 }
 </style>

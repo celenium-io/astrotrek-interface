@@ -37,7 +37,7 @@ const showMore = ref(false)
 			<Flex v-if="block.proposer" align="center" gap="8" :class="$style.value">
 				<CopyButton :text="block.proposer.address" />
 
-				<NuxtLink :to="`/validator/${block.proposer.id}`">
+				<NuxtLink :to="`/validator/${block.proposer.id}`" :style="{width: '100%'}">
 					<Flex align="center" gap="4">
 						<Text size="13" weight="600" color="primary" mono :class="$style.overflow">
 							{{ block.proposer.name }}

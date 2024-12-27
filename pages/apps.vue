@@ -3,54 +3,58 @@
 import Button from "~/components/ui/Button.vue"
 
 /** Components */
-import BlocksTable from "@/components/tables/BlocksTable.vue"
+import AppsTable from "@/components/tables/AppsTable.vue"
 
 /** API */
-import { fetchBlocks } from "@/services/api/block"
+import { fetchApps } from "@/services/api/app"
+
+/** Store */
+import { useAppStore } from "@/store/app"
+const appStore = useAppStore()
 
 definePageMeta({
 	layout: "default",
 })
 
 useHead({
-	title: "Blocks - Astria Explorer",
+	title: "Applications - Astria Explorer",
 	link: [
 		{
 			rel: "canonical",
-			href: "https://astrotrek.io/blocks",
+			href: "https://astrotrek.io/apps",
 		},
 	],
 	meta: [
 		{
 			name: "description",
 			content:
-				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
+				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks, rollups and applications.",
 		},
 		{
 			property: "og:title",
-			content: "Blocks - Astria Explorer",
+			content: "Applications - Astria Explorer",
 		},
 		{
 			property: "og:description",
 			content:
-				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
+				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks, rollups and applications.",
 		},
 		{
 			property: "og:url",
-			content: `https://astrotrek.io/blocks`,
+			content: `https://astrotrek.io/apps`,
 		},
 		{
 			property: "og:image",
-			content: "/img/seo/blocks.png",
+			content: "/img/seo/apps.png",
 		},
 		{
 			name: "twitter:title",
-			content: "Blocks - Astria Explorer",
+			content: "Applications - Astria Explorer",
 		},
 		{
 			name: "twitter:description",
 			content:
-				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
+				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks, rollups and applications.",
 		},
 		{
 			name: "twitter:card",
@@ -58,33 +62,32 @@ useHead({
 		},
 		{
 			name: "twitter:image",
-			content: "https://astrotrek.io/img/seo/blocks.png",
+			content: "https://astrotrek.io/img/seo/applications.png",
 		},
 	],
 })
 
-const route = useRoute()
-const router = useRouter()
+const apps = ref([])
+const isLoading = ref(true)
 
-const blocks = ref([])
-const isLoading = ref(false)
 const limit = ref(15)
-const getBlocks = async () => {
+const getApps = async () => {
 	isLoading.value = true
 
-	const { data } = await fetchBlocks({
+	const { data } = await fetchApps({
 		limit: limit.value,
 		offset: (page.value - 1) * limit.value,
 	})
-	blocks.value = data.value
-	handleNextCondition.value = blocks.value.length < limit.value
+	apps.value = data.value
+	
+	handleNextCondition.value = apps.value.length < limit.value
 
 	isLoading.value = false
 }
 
 /** Pagination */
-const page = ref(route.query.page ? parseInt(route.query.page) : 1)
-const handleNextCondition = ref(true)
+const page = ref(1)
+const handleNextCondition = ref(false)
 
 const handleNext = () => {
 	page.value += 1
@@ -94,29 +97,37 @@ const handlePrev = () => {
 	page.value -= 1
 }
 
-getBlocks()
+getApps()
 
 watch(
 	() => page.value,
 	() => {
-		getBlocks()
-		router.replace({ query: { page: page.value } })
+		getApps()
 	},
 )
 </script>
 
 <template>
 	<Flex direction="column" gap="40" wide :class="$style.wrapper">
-		<Breadcrumbs
-			:items="[
-				{ link: '/', name: 'Explore' },
-				{ link: '/blocks', name: 'Blocks' },
-			]"
-		/>
+		<Flex align="start" justify="between">
+			<Breadcrumbs
+				:items="[
+					{ link: '/', name: 'Explore' },
+					{ link: '/apps', name: 'Applications' },
+				]"
+			/>
+
+			<NuxtLink to="https://forms.gle/dfR6QJJah9kfPe3N6" target="blank" :class="$style.register_app_btn">
+				<Flex align="center" gap="6">
+					<Icon name="app" color="brand" size="12" />
+					<Text size="12">Register your app</Text>
+				</Flex>
+			</NuxtLink>
+		</Flex>
 
 		<Flex direction="column" :class="$style.card">
 			<Flex justify="between" align="start" wide :class="$style.top">
-				<Text size="16" weight="600" color="primary">Blocks</Text>
+				<Text size="16" weight="600" color="primary">Applications</Text>
 
 				<Flex align="center" gap="6">
 					<Button @click="handlePrev" size="mini" type="secondary" :disabled="page === 1 || isLoading">
@@ -129,7 +140,7 @@ watch(
 				</Flex>
 			</Flex>
 
-			<BlocksTable :blocks="blocks" :isLoading="isLoading" :minHeight="900" generalBlocksList />
+			<AppsTable :apps="apps" :isLoading="isLoading" />
 		</Flex>
 	</Flex>
 </template>
@@ -151,9 +162,21 @@ watch(
 }
 
 .top {
-	padding: 0 16px;
-
 	margin-bottom: 20px;
+	padding: 0 16px;
+}
+
+.register_app_btn {
+	border-radius: 6px;
+	cursor: pointer;
+	background: var(--op-5);
+	border: 1px solid var(--brand);
+	color: var(--brand);
+
+	padding: 6px 8px;
+
+	transition: all 0.2s ease;
+
 }
 
 @media (max-width: 500px) {

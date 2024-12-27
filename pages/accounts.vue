@@ -70,6 +70,9 @@ useHead({
 	],
 })
 
+const route = useRoute()
+const router = useRouter()
+
 const accounts = ref([])
 const asset = ref(getNativeAsset())
 const isLoading = ref(false)
@@ -90,7 +93,7 @@ const getAccounts = async () => {
 }
 
 /** Pagination */
-const page = ref(1)
+const page = ref(route.query.page ? parseInt(route.query.page) : 1)
 const handleNextCondition = computed(() => lastHead.value.total_accounts - (limit.value * page.value) <= 0)
 
 const handleNext = () => {
@@ -107,6 +110,7 @@ watch(
 	() => page.value,
 	() => {
 		getAccounts()
+		router.replace({ query: { page: page.value } })
 	},
 )
 </script>

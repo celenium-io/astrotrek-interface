@@ -3,54 +3,54 @@
 import Button from "~/components/ui/Button.vue"
 
 /** Components */
-import BlocksTable from "@/components/tables/BlocksTable.vue"
+import AssetsTable from "@/components/tables/AssetsTable.vue"
 
 /** API */
-import { fetchBlocks } from "@/services/api/block"
+import { fetchAssets } from "@/services/api/main.js"
 
 definePageMeta({
 	layout: "default",
 })
 
 useHead({
-	title: "Blocks - Astria Explorer",
+	title: "Assets - Astria Explorer",
 	link: [
 		{
 			rel: "canonical",
-			href: "https://astrotrek.io/blocks",
+			href: "https://astrotrek.io/assets",
 		},
 	],
 	meta: [
 		{
 			name: "description",
 			content:
-				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
+				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks, assets and rollups.",
 		},
 		{
 			property: "og:title",
-			content: "Blocks - Astria Explorer",
+			content: "Assets - Astria Explorer",
 		},
 		{
 			property: "og:description",
 			content:
-				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
+				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks, assets and rollups.",
 		},
 		{
 			property: "og:url",
-			content: `https://astrotrek.io/blocks`,
+			content: `https://astrotrek.io/assets`,
 		},
 		{
 			property: "og:image",
-			content: "/img/seo/blocks.png",
+			content: "/img/seo/assets.png",
 		},
 		{
 			name: "twitter:title",
-			content: "Blocks - Astria Explorer",
+			content: "Assets - Astria Explorer",
 		},
 		{
 			name: "twitter:description",
 			content:
-				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
+				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks, assets and rollups.",
 		},
 		{
 			name: "twitter:card",
@@ -58,32 +58,38 @@ useHead({
 		},
 		{
 			name: "twitter:image",
-			content: "https://astrotrek.io/img/seo/blocks.png",
+			content: "https://astrotrek.io/img/seo/assets.png",
 		},
 	],
 })
 
-const route = useRoute()
-const router = useRouter()
-
-const blocks = ref([])
+const assets = ref([])
 const isLoading = ref(false)
 const limit = ref(15)
-const getBlocks = async () => {
+const sort = ref({
+	by: "supply",
+	dir: "asc",
+})
+const getAssets = async () => {
 	isLoading.value = true
 
-	const { data } = await fetchBlocks({
+	const data = await fetchAssets({
 		limit: limit.value,
 		offset: (page.value - 1) * limit.value,
+		sort_by: sort.value.by,
+		sort: sort.value.dir,
 	})
-	blocks.value = data.value
-	handleNextCondition.value = blocks.value.length < limit.value
+	assets.value = data
+	handleNextCondition.value = assets.value?.length < limit.value
 
 	isLoading.value = false
 }
+const handleOnSort = (event) => {
+	sort.value = event
+}
 
 /** Pagination */
-const page = ref(route.query.page ? parseInt(route.query.page) : 1)
+const page = ref(1)
 const handleNextCondition = ref(true)
 
 const handleNext = () => {
@@ -94,13 +100,19 @@ const handlePrev = () => {
 	page.value -= 1
 }
 
-getBlocks()
+getAssets()
 
 watch(
 	() => page.value,
 	() => {
-		getBlocks()
-		router.replace({ query: { page: page.value } })
+		getAssets()
+	},
+)
+
+watch(
+	() => sort.value,
+	() => {
+		getAssets()
 	},
 )
 </script>
@@ -110,13 +122,13 @@ watch(
 		<Breadcrumbs
 			:items="[
 				{ link: '/', name: 'Explore' },
-				{ link: '/blocks', name: 'Blocks' },
+				{ link: '/assets', name: 'Assets' },
 			]"
 		/>
 
 		<Flex direction="column" :class="$style.card">
 			<Flex justify="between" align="start" wide :class="$style.top">
-				<Text size="16" weight="600" color="primary">Blocks</Text>
+				<Text size="16" weight="600" color="primary">Assets</Text>
 
 				<Flex align="center" gap="6">
 					<Button @click="handlePrev" size="mini" type="secondary" :disabled="page === 1 || isLoading">
@@ -129,7 +141,7 @@ watch(
 				</Flex>
 			</Flex>
 
-			<BlocksTable :blocks="blocks" :isLoading="isLoading" :minHeight="900" generalBlocksList />
+			<AssetsTable @onSort="handleOnSort" :assets="assets" :sort="sort" :isLoading="isLoading" />
 		</Flex>
 	</Flex>
 </template>

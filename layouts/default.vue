@@ -2,6 +2,7 @@
 	<Flex direction="column">
 		<Flex direction="column" align="center" :class="$style.wrapper">
 			<TheHeader />
+			<Feed />
 
 			<slot />
 		</Flex>
