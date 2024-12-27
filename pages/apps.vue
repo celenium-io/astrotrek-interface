@@ -80,70 +80,6 @@ const getApps = async () => {
 	})
 	apps.value = data.value
 	
-	apps.value = [
-		{
-			"actions_count": 2,
-			"avg_size": 1000,
-			"category": "nft",
-			"description": "Looooooooooooooooooong rollup description",
-			"explorer": "https://phoenix.lightlink.io",
-			"first_message_time": "2023-07-04T03:10:57+00:00",
-			"github": "https://github.com/lightlink-network/hummingbird-client",
-			"id": 321,
-			"l2_beat": "https://l2beat.com/bridges/projects/lightlink",
-			"last_message_time": "2023-07-04T03:10:57+00:00",
-			"links": [
-				"https://docs.lightlink.io/lightlink-protocol",
-				"https://bridge.lightlink.io/",
-				"https://t.me/lightlinkLL"
-			],
-			"logo": "https://celenium.fra1.cdn.digitaloceanspaces.com/rollups/LightLink.webp",
-			"max_size": 1000,
-			"min_size": 1000,
-			"name": "Application name",
-			"native_bridge": "astria12saluecm8dd7hkutk83eavkl2p70lf5w7txezg",
-			"provider": "provider",
-			"rollup": "xuzPaQ1qQbu1wl5oBdEiP+Xl977xEmJOVjVpqNrktnU=",
-			"size": 1000,
-			"slug": "app_1",
-			"stack": "op_stack",
-			"twitter": "https://x.com/LightLinkChain",
-			"type": "settled",
-			"vm": "evm",
-			"website": "https://lightlink.io"	
-		},
-		{
-			"actions_count": 2,
-			"avg_size": 1000,
-			"category": "nft",
-			"description": "Looooooooooooooooooong rollup description",
-			"explorer": "https://phoenix.lightlink.io",
-			"first_message_time": "2023-07-04T03:10:57+00:00",
-			"github": "https://github.com/lightlink-network/hummingbird-client",
-			"id": 321,
-			"l2_beat": "https://l2beat.com/bridges/projects/lightlink",
-			"last_message_time": "2023-07-04T03:10:57+00:00",
-			"links": [
-				"https://docs.lightlink.io/lightlink-protocol",
-				"https://bridge.lightlink.io/",
-				"https://t.me/lightlinkLL"
-			],
-			"logo": "https://celenium.fra1.cdn.digitaloceanspaces.com/rollups/LightLink.webp",
-			"max_size": 1000,
-			"min_size": 1000,
-			"name": "Application name",
-			"native_bridge": "astria12saluecm8dd7hkutk83eavkl2p70lf5w7txezg",
-			"provider": "provider",
-			"rollup": "xuzPaQ1qQbu1wl5oBdEiP+Xl977xEmJOVjVpqNrktnU=",
-			"size": 1000,
-			"slug": "app_1",
-			"stack": "op_stack",
-			"twitter": "https://x.com/LightLinkChain",
-			"type": "settled",
-			"vm": "evm",
-			"website": "https://lightlink.io"	
-		},
-	]
 	handleNextCondition.value = apps.value.length < limit.value
 
 	isLoading.value = false
@@ -183,7 +119,7 @@ watch(
 
 			<NuxtLink to="https://forms.gle/dfR6QJJah9kfPe3N6" target="blank" :class="$style.register_app_btn">
 				<Flex align="center" gap="6">
-					<Icon name="application" color="brand" size="12" />
+					<Icon name="app" color="brand" size="12" />
 					<Text size="12">Register your app</Text>
 				</Flex>
 			</NuxtLink>

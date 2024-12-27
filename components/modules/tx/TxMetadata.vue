@@ -71,15 +71,18 @@ const showMore = ref(false)
 			</Flex>
 		</NuxtLink>
 
-		<Flex align="center" :class="$style.item">
-			<Text size="13" weight="600" color="secondary" :class="$style.key">Signer</Text>
+		<NuxtLink :to="`/account/${tx.signer}`">
+			<Flex align="center" :class="$style.item">
+				<Text size="13" weight="600" color="secondary" :class="$style.key">Signer</Text>
 
-			<Flex align="center" gap="8" :class="$style.value">
-				<CopyButton :text="tx.signer" />
-				<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ tx.signer }}</Text>
+				<Flex align="center" gap="8" :class="$style.value">
+					<CopyButton :text="tx.signer" />
+					<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ tx.signer }}</Text>
+					<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
+				</Flex>
 			</Flex>
-		</Flex>
-
+		</NuxtLink>
+		
 		<template v-if="showMore">
 				<Flex align="center" :class="$style.item">
 					<Text size="13" weight="600" color="secondary" :class="$style.key">Signature</Text>

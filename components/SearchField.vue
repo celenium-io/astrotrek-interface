@@ -129,9 +129,23 @@ const getResultPath = (result) => {
 			return `/account/${result.body.address}`
 		case "rollup":
 			return `/${result.type}/${getRollupHashSafeURL(result.body.hash)}`
+		case "app":
+			return `/app/${result.body.slug}`
 
 		default:
 			return `/${result.type}/${result.body.hash}`
+	}
+}
+
+const getDisplayName = (item) => {
+	if (!item) return
+
+	switch (item.type) {
+		case "app":
+			return item.body.name
+
+		default:
+			return shortHash(item.body.hash)
 	}
 }
 
@@ -230,7 +244,7 @@ watch(
 								<Flex align="center" gap="6">
 									<Icon name="time" size="12" color="secondary" />
 									<Text size="13" weight="600" color="primary">
-										{{ shortHash(item.body.hash) }}
+										{{ getDisplayName(item) }}
 									</Text>
 								</Flex>
 
@@ -246,7 +260,7 @@ watch(
 								<Flex align="center" gap="6">
 									<Icon :name="result.type === 'address' ? 'account' : result.type" size="12" color="secondary" />
 									<Text size="13" weight="600" color="primary">
-										{{ shortHash(result.body.hash) }}
+										{{ getDisplayName(result) }}
 									</Text>
 								</Flex>
 

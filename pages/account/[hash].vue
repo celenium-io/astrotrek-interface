@@ -257,26 +257,25 @@ const tabs = ref(
 		{ name: "deposits", visible: account.value?.is_bridge },
 	]
 )
+
 const activeTab = ref(route.query.tab && tabs.value.map((tab) => tab.name).includes(route.query.tab) ? route.query.tab : tabs.value[0].name)
 const tabsEl = ref(null)
 const handleTabSelect = (name) => {
-	if (activeTab.value !== name) {
-		activeTab.value = name
+	activeTab.value = name
 
-		let tabCenter = 0
-		
-		for (let i = 0; i < tabsEl.value.wrapper.children.length; i++) {
-			if (tabsEl.value.wrapper.children[i].id === name) {
-				tabCenter = tabsEl.value.wrapper.children[i].offsetLeft + tabsEl.value.wrapper.children[i].offsetWidth / 2
-				break
-			}
+	let tabCenter = 0
+	
+	for (let i = 0; i < tabsEl.value.wrapper.children.length; i++) {
+		if (tabsEl.value.wrapper.children[i].id === name) {
+			tabCenter = tabsEl.value.wrapper.children[i].offsetLeft + tabsEl.value.wrapper.children[i].offsetWidth / 2
+			break
 		}
+	}
 
-		if (tabCenter) {
-			let wrapperCenter = tabsEl.value.wrapper.offsetLeft + tabsEl.value.wrapper.offsetWidth / 2
+	if (tabCenter) {
+		let wrapperCenter = tabsEl.value.wrapper.offsetLeft + tabsEl.value.wrapper.offsetWidth / 2
 
-			tabsEl.value.wrapper.scroll({ left: tabCenter - wrapperCenter })
-		}
+		tabsEl.value.wrapper.scroll({ left: tabCenter - wrapperCenter })
 	}
 }
 
@@ -297,6 +296,8 @@ const isUpdatingPaage = ref(false)
 watch(
 	() => activeTab.value,
 	async () => {
+		if (!activeTab.value) return
+
 		isUpdatingPaage.value = true
 
 		page.value = 1
@@ -315,6 +316,12 @@ watch(
 		await fetchData()
 	},
 )
+
+onMounted(() => {
+	if (activeTab.value) {
+		handleTabSelect(activeTab.value)
+	}
+})
 </script>
 
 <template>

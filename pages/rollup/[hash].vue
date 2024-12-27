@@ -209,7 +209,7 @@ useHead({
 	],
 })
 
-const selectedPeriodIdx = ref(0)
+const selectedPeriodIdx = ref(1)
 const selectedPeriod = computed(() => periods.value[selectedPeriodIdx.value])
 
 const tabs = ref([

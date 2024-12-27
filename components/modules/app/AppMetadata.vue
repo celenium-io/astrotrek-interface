@@ -47,6 +47,8 @@ const appTags = ref([
 	},
 ])
 function getTagValueDisplayName(tagName, tagValue) {
+	if (!tagValue) return ""
+
 	switch (tagName) {
 		case "vm":
 			return tagValue.toUpperCase()
@@ -60,19 +62,11 @@ function getTagValueDisplayName(tagName, tagValue) {
 }
 
 function fillTags() {
-	let arr = [...appTags.value]
-	arr.forEach((tag, index) => {
-		if (props.app[tag.name]) {
-			appTags.value[index].value = getTagValueDisplayName(tag.name, props.app[tag.name])
-		} else {
-			appTags.value.splice(index, 1)
-		}
-	})
+	appTags.value.forEach(tag => tag.value = getTagValueDisplayName(tag.name, props.app[tag.name]))
+	appTags.value = appTags.value.filter(tag => tag.value)
 }
+fillTags()
 
-onMounted(() => {
-	fillTags()
-})
 const showMore = ref(false)
 </script>
 
@@ -83,11 +77,13 @@ const showMore = ref(false)
 
 			<Flex align="center" gap="12" :class="$style.value">
 				<Tooltip v-for="tag in appTags">
-					<Flex align="center" :class="$style.chip">
+					<Flex v-if="tag.value" align="center" :class="$style.chip">
 						<Flex align="center" :class="$style.chip_content">
 							<Text size="12" color="primary"> {{ tag.value }} </Text>
 						</Flex>
 					</Flex>
+
+					<Skeleton v-else w="20" h="12" />
 
 					<template #content>
 						{{ tag.tooltip }}
@@ -107,8 +103,8 @@ const showMore = ref(false)
 		<Flex align="center" :class="$style.item">
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Native Bridge</Text>
 
-			<NuxtLink :to="`/account/${app.native_bridge}`">
-				<Flex align="center" gap="6" :class="$style.value">
+			<NuxtLink :to="`/account/${app.native_bridge}`" :style="{width: '100%'}">
+				<Flex align="center" gap="6" :class="$style.value" :style="{width: '100%'}">
 					<CopyButton :text="app.native_bridge" />
 					<Text size="13" weight="600" color="primary" mono :class="$style.overflow"> {{ app.native_bridge }} </Text>
 					<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
@@ -119,7 +115,7 @@ const showMore = ref(false)
 		<Flex align="center" :class="$style.item">
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Rollup</Text>
 
-			<NuxtLink :to="`/rollup/${getRollupHashSafeURL(app.rollup)}`">
+			<NuxtLink :to="`/rollup/${getRollupHashSafeURL(app.rollup)}`" :style="{width: '100%'}">
 				<Flex align="center" gap="6" :class="$style.value">
 					<CopyButton :text="app.rollup" />
 					<Text size="13" weight="600" color="primary" mono :class="$style.overflow"> {{ app.rollup }} </Text>
@@ -128,7 +124,7 @@ const showMore = ref(false)
 			</NuxtLink>
 		</Flex>
 
-		<Flex v-if="app.links?.length" align="start" :class="$style.item" :style="{ padding: '6px 12px' }">
+		<Flex v-if="app.links?.length" align="start" :class="$style.item" :style="{ padding: '8px 12px' }">
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Related Links</Text>
 
 			<Flex direction="column" gap="14" :class="$style.value">
@@ -208,6 +204,11 @@ const showMore = ref(false)
 
 .chip_content {
     padding: 4px 8px;
+}
+
+.related_link {
+	display: flex;
+	align-items: center;
 }
 
 .related_link:hover {

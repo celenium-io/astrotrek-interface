@@ -15,7 +15,7 @@ import { Dropdown, DropdownItem } from "@/components/ui/Dropdown"
 import Tooltip from "~/components/ui/Tooltip.vue"
 
 /** Services */
-import { capitalize, capitalizeAndReplaceUnderscore } from "~/services/utils"
+import { arraysAreEqual, capitalize, capitalizeAndReplaceUnderscore } from "~/services/utils"
 import { getRollupHashSafeURL } from "~/services/utils/rollups"
 
 /** API */
@@ -64,66 +64,42 @@ const appContactLinks = ref([
 ])
 
 const isLoading = ref(false)
+const { data } = await fetchAppBySlug(route.params.slug)
+if (!data.value) {
+	navigateTo({
+		path: "/",
+	})
+} else {
+	app.value = data.value
 
-const fetchApp = async () => {
-	const { data } = await fetchAppBySlug(route.params.slug)	
-	if (!data.value) {
-		app.value = {
-			"actions_count": 2,
-			"avg_size": 1000,
-			"category": "nft",
-			"description": "Loooooooooooooooo oooooooooooooooooooo ooooooooooooo ooooooooooooooo ooooooooooooooo ooooooooooooooooo oooooo oo oo oooooooo ooooooo ooooooo ooooong rollup description",
-			"explorer": "https://phoenix.lightlink.io",
-			"first_message_time": "2023-07-04T03:10:57+00:00",
-			"github": "https://github.com/lightlink-network/hummingbird-client",
-			"id": 321,
-			"l2_beat": "https://l2beat.com/bridges/projects/lightlink",
-			"last_message_time": "2023-07-04T03:10:57+00:00",
-			"links": [
-				"https://docs.lightlink.io/lightlink-protocol",
-				"https://bridge.lightlink.io/",
-				"https://t.me/lightlinkLL"
-			],
-			"logo": "https://celenium.fra1.cdn.digitaloceanspaces.com/rollups/LightLink.webp",
-			"max_size": 1000,
-			"min_size": 1000,
-			"name": "Application name",
-			"native_bridge": "astria12saluecm8dd7hkutk83eavkl2p70lf5w7txezg",
-			"provider": "provider",
-			"rollup": "xuzPaQ1qQbu1wl5oBdEiP+Xl977xEmJOVjVpqNrktnU=",
-			"size": 100000,
-			"slug": "app_1",
-			"stack": "OP Stack",
-			"twitter": "https://x.com/LightLinkChain",
-			"type": "settled",
-			"vm": "evm",
-			"website": "https://lightlink.io"	
-		}
+	app.value = {
+"id": 1,
+"name": "Flame",
+"description": "Celestia Native DeFi powered by Astria",
+"website": "http://flame.astria.org",
+"twitter": "https://x.com/Flame_evm",
+"logo": "https://astrotrek.fra1.cdn.digitaloceanspaces.com/apps/Flame.png",
+"slug": "flame",
+"stack": "Astria Stack",
+"type": "sovereign",
+"category": "finance",
+"provider": "Astria",
+"native_bridge": "astria13vptdafyttpmlwppt0s844efey2cpc0mevy92p",
+"rollup": "vZ3F942sn62DpgQye/Kb82i4kh+M7fs9NnPvvh9OtEk=",
+"actions_count": 41758,
+"size": 20027329,
+"min_size": 0,
+"max_size": 25033,
+"avg_size": 479,
+"last_message_time": "2024-12-27T11:29:08.075981Z",
+"first_message_time": "2024-10-25T22:45:06.965028Z",
+"links": [
+"https://flame.astria.org/swap", "https://flame.astria.org/swap", "https://flame.astria.org/swap"
+]
+}
 
-		let arr = [...appContactLinks.value]
-		arr.forEach((link, index) => {
-			if (app.value[link.name]) {
-				appContactLinks.value[index].tooltip = app.value[link.name]
-			} else {
-				appContactLinks.value.splice(index, 1)
-			}
-		})
-
-		// navigateTo({
-		// 	path: "/",
-		// })
-	} else {
-		app.value = data.value
-
-		let arr = [...appContactLinks.value]
-		arr.forEach((link, index) => {
-			if (app.value[link.name]) {
-				appContactLinks.value[index].tooltip = app.value[link.name]
-			} else {
-				appContactLinks.value.splice(index, 1)
-			}
-		})
-	}
+	appContactLinks.value.forEach(link => link.tooltip = app.value[link.name])
+	appContactLinks.value = appContactLinks.value.filter(link => link.tooltip)
 }
 
 const limit = ref(15)
@@ -147,8 +123,8 @@ const fetchAppRollupActions = async () => {
 
 	const { data } = await fetchRollupActions({
 		hash: getRollupHashSafeURL(app.value?.rollup),
-		bridge_actions: true,
-		rollup_actions: true,
+		bridge_actions: loadBridgeActions.value,
+		rollup_actions: loadRollupActions.value,
 		limit: limit.value,
 		offset: (page.value - 1) * limit.value,
 		sort: "desc",
@@ -180,6 +156,49 @@ const fetchData = async () => {
 			await fetchRollup()
 			break
 	}
+}
+
+/** Filters */
+const loadBridgeActions = ref(true)
+const loadRollupActions = ref(true)
+const filters = ref([])
+async function initFilters() {
+	let res = [
+		{
+			name: "bridge_actions",
+			value: true,
+			displayName: "Bridge Actions",
+			type: "toggle"
+		},
+		{
+			name: "rollup_actions",
+			value: true,
+			displayName: "Rollup Actions",
+			type: "toggle"
+		}
+	]
+
+	if (arraysAreEqual(filters.value, res)) {
+		filters.value = res
+	} else {
+		filters.value = res
+		await fetchData()
+	}
+}
+
+const handleFilterUpdate = async (event) => {
+	if (!event.length) {
+		initFilters()
+		return
+	}
+
+	if (arraysAreEqual(filters.value, event)) return
+
+	filters.value = event
+	loadBridgeActions.value = filters.value.find(f => f.name === "bridge_actions")?.value
+	loadRollupActions.value = filters.value.find(f => f.name === "rollup_actions")?.value
+	
+	await fetchData()
 }
 
 /** Pagination */
@@ -230,7 +249,7 @@ useHead({
 	],
 })
 
-const selectedPeriodIdx = ref(0)
+const selectedPeriodIdx = ref(1)
 const selectedPeriod = computed(() => periods.value[selectedPeriodIdx.value])
 
 const tabs = ref([
@@ -275,6 +294,11 @@ const periods = ref([
 	},
 ])
 
+if (app.value?.name) {
+	await initFilters()
+	updateRouteQuery()
+}
+
 const isUpdatingPaage = ref(false)
 watch(
 	() => activeTab.value,
@@ -297,20 +321,12 @@ watch(
 		await fetchData()
 	},
 )
-
-onBeforeMount(async () => {
-	await fetchApp()
-	if (app.value) {
-		await fetchData()
-		updateRouteQuery()
-	}
-})
 </script>
 
 <template>
 	<Flex v-if="app" direction="column" gap="24" :class="$style.wrapper">
 		<Flex direction="column" gap="40">
-			<Flex align="start" justify="between">
+			<Flex align="start" justify="between" :class="$style.navigation">
 				<Breadcrumbs
 					:items="[
 						{ link: '/', name: 'Explore' },
@@ -321,7 +337,7 @@ onBeforeMount(async () => {
 
 				<NuxtLink to="https://forms.gle/dfR6QJJah9kfPe3N6" target="blank" :class="$style.register_app_btn">
 					<Flex align="center" gap="6">
-						<Icon name="application" color="brand" size="12" />
+						<Icon name="app" color="brand" size="12" />
 						<Text size="12">Register your app</Text>
 					</Flex>
 				</NuxtLink>
@@ -374,13 +390,17 @@ onBeforeMount(async () => {
 				</Flex>
 
 				<Flex v-if="activeTab !== 'analytics'" align="center" gap="6" :class="$style.pagination">
-					<Button @click="handlePrev" size="mini" type="secondary" :disabled="page === 1 || isLoading">
-						<Icon name="chevron" size="14" color="primary" style="transform: rotate(90deg)" />
-					</Button>
-					<Button size="mini" type="secondary">Page {{ page }}</Button>
-					<Button @click="handleNext" size="mini" type="secondary" :disabled="isLoading || handleNextCondition">
-						<Icon name="chevron" size="14" color="primary" style="transform: rotate(-90deg)" />
-					</Button>
+					<Filter v-if="activeTab === 'rollup_actions'" @onUpdate="handleFilterUpdate" :filters="filters" :showClear="false" width="170" />
+
+					<Flex align="center" gap="6">
+						<Button @click="handlePrev" size="mini" type="secondary" :disabled="page === 1 || isLoading">
+							<Icon name="chevron" size="14" color="primary" style="transform: rotate(90deg)" />
+						</Button>
+						<Button size="mini" type="secondary">Page {{ page }}</Button>
+						<Button @click="handleNext" size="mini" type="secondary" :disabled="isLoading || handleNextCondition">
+							<Icon name="chevron" size="14" color="primary" style="transform: rotate(-90deg)" />
+						</Button>
+					</Flex>
 				</Flex>
 				
 				<Flex v-else align="center" gap="6" :class="$style.pagination">
@@ -428,6 +448,8 @@ onBeforeMount(async () => {
 	padding: 6px 8px;
 
 	transition: all 0.2s ease;
+
+	text-wrap: nowrap;
 
 	&:hover {
 		color: var(--brand);
@@ -480,11 +502,6 @@ onBeforeMount(async () => {
 }
 
 @media (max-width: 650px) {
-	.navigation {
-		flex-direction: column-reverse;
-		gap: 12px;
-	}
-
 	.tabs {
 		width: 100%;
 		justify-content: start;
@@ -493,6 +510,17 @@ onBeforeMount(async () => {
 	.pagination {
 		width: 100%;
 		justify-content: end;
+	}
+}
+
+@media (max-width: 550px) {
+	.navigation {
+		flex-direction: column-reverse;
+		gap: 12px;
+	}
+	
+	.register_app_btn {
+		align-self: end;
 	}
 }
 </style>

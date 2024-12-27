@@ -409,6 +409,20 @@ const handleOpenTx = async (action) => {
 	}
 }
 
+@media (max-width: 900px) {
+	.wrapper {
+		width: 100%;
+	}
+
+	.row {
+		width: 100%;
+	}
+
+	.description {
+		width: 500px;
+	}
+}
+
 @media (max-width: 800px) {
 	.wrapper {
 		width: 100%;
@@ -452,20 +466,6 @@ const handleOpenTx = async (action) => {
 
 	.hide_mobile {
 		display: none;
-	}
-}
-
-@media (max-width: 450px) {
-	.wrapper {
-		width: 100%;
-	}
-
-	.row {
-		width: 100%;
-	}
-
-	.description {
-		width: 120px;
 	}
 }
 

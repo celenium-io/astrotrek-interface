@@ -49,7 +49,7 @@
 
 			<NuxtLink to="/apps">
 				<Flex gap="12" :class="$style.item">
-					<Icon name="application" color="primary" size="20" :class="$style.item_icon" />
+					<Icon name="app" color="primary" size="20" :class="$style.item_icon" />
 
 					<Flex direction="column" gap="6">
 						<Text size="14" weight="600" color="primary">Applications</Text>

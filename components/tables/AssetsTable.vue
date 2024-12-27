@@ -1,12 +1,6 @@
 <script setup>
-/** Vendor */
-import { DateTime } from "luxon"
-
-/** Components */
-import LinkToEntity from "@/components/shared/LinkToEntity.vue";
-
 /** Services */
-import { abbreviate, formatBytes, spaces, splitAddress } from "@/services/utils"
+import { abbreviate } from "@/services/utils"
 import { getAssetName } from "@/services/utils/actions.js"
 
 const props = defineProps({
@@ -159,6 +153,7 @@ const handleSort = (by) => {
 <style module>
 .wrapper {
 	position: relative;
+	overflow-x: auto;
 }
 
 .loading {
@@ -177,7 +172,7 @@ const handleSort = (by) => {
 		
 		& tr {
 			transition: all 0.05s ease;
-			
+
 			&:hover {
 				background: var(--op-5);
 			}
@@ -200,6 +195,8 @@ const handleSort = (by) => {
 		padding-right: 16px;
 		padding-top: 16px;
 		padding-bottom: 12px;
+
+		text-wrap: nowrap;
 
 		&:first-child {
 			padding-left: 16px;
