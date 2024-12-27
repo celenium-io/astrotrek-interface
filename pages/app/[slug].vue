@@ -5,17 +5,13 @@ import AppMetadata from "~/components/modules/app/AppMetadata.vue"
 import RollupActions from "~/components/modules/rollup/RollupActions.vue"
 import RollupCharts from "~/components/modules/rollup/RollupCharts.vue"
 
-
-/** Components */
-import RawDataView from "@/components/shared/RawDataView.vue"
-
 /** UI */
 import Button from "~/components/ui/Button.vue"
 import { Dropdown, DropdownItem } from "@/components/ui/Dropdown"
 import Tooltip from "~/components/ui/Tooltip.vue"
 
 /** Services */
-import { arraysAreEqual, capitalize, capitalizeAndReplaceUnderscore } from "~/services/utils"
+import { arraysAreEqual, capitalizeAndReplaceUnderscore } from "~/services/utils"
 import { getRollupHashSafeURL } from "~/services/utils/rollups"
 
 /** API */
@@ -71,32 +67,6 @@ if (!data.value) {
 	})
 } else {
 	app.value = data.value
-
-	app.value = {
-"id": 1,
-"name": "Flame",
-"description": "Celestia Native DeFi powered by Astria",
-"website": "http://flame.astria.org",
-"twitter": "https://x.com/Flame_evm",
-"logo": "https://astrotrek.fra1.cdn.digitaloceanspaces.com/apps/Flame.png",
-"slug": "flame",
-"stack": "Astria Stack",
-"type": "sovereign",
-"category": "finance",
-"provider": "Astria",
-"native_bridge": "astria13vptdafyttpmlwppt0s844efey2cpc0mevy92p",
-"rollup": "vZ3F942sn62DpgQye/Kb82i4kh+M7fs9NnPvvh9OtEk=",
-"actions_count": 41758,
-"size": 20027329,
-"min_size": 0,
-"max_size": 25033,
-"avg_size": 479,
-"last_message_time": "2024-12-27T11:29:08.075981Z",
-"first_message_time": "2024-10-25T22:45:06.965028Z",
-"links": [
-"https://flame.astria.org/swap", "https://flame.astria.org/swap", "https://flame.astria.org/swap"
-]
-}
 
 	appContactLinks.value.forEach(link => link.tooltip = app.value[link.name])
 	appContactLinks.value = appContactLinks.value.filter(link => link.tooltip)

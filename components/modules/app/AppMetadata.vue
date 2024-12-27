@@ -3,13 +3,10 @@
 import { DateTime } from "luxon"
 
 /** Services */
-import { getNativeAsset, spaces } from "@/services/utils"
-import { getAssetName } from "@/services/utils/actions.js"
-import { capitalize, capitalizeAndReplaceUnderscore, formatBytes } from "~/services/utils"
+import { capitalize, formatBytes } from "~/services/utils"
 import { getRollupHashSafeURL } from "~/services/utils/rollups"
 
 /** UI */
-import Button from "@/components/ui/Button.vue"
 import Tooltip from "~/components/ui/Tooltip.vue"
 
 const props = defineProps({
