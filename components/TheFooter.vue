@@ -38,15 +38,21 @@ const handleViewConstants = () => {
 				>
 
 				<Flex align="center" gap="16">
-					<Flex align="center" justify="center" :class="$style.social">
-						<Icon name="twitter" size="16" color="secondary" />
-					</Flex>
-					<Flex align="center" justify="center" :class="$style.social">
-						<Icon name="github" size="16" color="secondary" />
-					</Flex>
-					<Flex align="center" justify="center" :class="$style.social">
-						<Icon name="discord" size="16" color="secondary" />
-					</Flex>
+					<NuxtLink to="https://x.com/astrotrek_io" target="_blank">
+						<Flex align="center" justify="center" :class="$style.social">
+							<Icon name="twitter" size="16" color="secondary" />
+						</Flex>
+					</NuxtLink>
+					<NuxtLink to="https://github.com/celenium-io/astrotrek-interface" target="_blank">
+						<Flex align="center" justify="center" :class="$style.social">
+							<Icon name="github" size="16" color="secondary" />
+						</Flex>
+					</NuxtLink>
+					<NuxtLink to="https://discord.com/channels/846362414039695391/1168936555302355005" target="_blank">
+						<Flex align="center" justify="center" :class="$style.social">
+							<Icon name="discord" size="16" color="secondary" />
+						</Flex>
+					</NuxtLink>
 				</Flex>
 			</Flex>
 

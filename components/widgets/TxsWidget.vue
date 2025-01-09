@@ -49,7 +49,7 @@ const prepareTxsSeries = async () => {
 }
 
 const buildChart = (chart, data, color, onEnter, onLeave) => {
-	const width = chart.getBoundingClientRect().width
+	const width = chart?.getBoundingClientRect().width || 348
 	const height = 100
 	const marginTop = 0
 	const marginRight = 0
