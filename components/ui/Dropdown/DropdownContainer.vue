@@ -52,6 +52,7 @@ const props = defineProps({
 
 const emit = defineEmits(["onClose"])
 
+const isLoading = ref(true)
 const trigger = ref(null)
 const dropdown = ref(null)
 const isOpen = ref(false)
@@ -67,6 +68,8 @@ watch(
 const toggleDropdown = (event) => {
 	if (event) event.stopPropagation()
 	if (props.disabled) return
+	if (isLoading.value) return
+
 	isOpen.value = !isOpen.value
 }
 const close = (event) => {
@@ -175,6 +178,10 @@ onBeforeUnmount(() => {
 	document.removeEventListener("keydown", onKeydown)
 })
 
+onMounted(() => {
+	isLoading.value = false
+})
+
 const onKeydown = (event) => {
 	if (event.key === "Escape") close()
 	if (event.key === "Enter") {
@@ -206,7 +213,7 @@ const onKeydown = (event) => {
 </script>
 
 <template>
-	<div :class="$style.wrapper">
+	<div :class="[$style.wrapper, (disabled || isLoading) && $style.disabled]">
 		<div ref="trigger" id="trigger" @click="toggleDropdown" :class="$style.trigger">
 			<slot />
 		</div>
@@ -267,5 +274,11 @@ const onKeydown = (event) => {
 
 .dropdown.transform_origin_bottom {
 	transform-origin: bottom center;
+}
+
+.disabled {
+	cursor: default;
+	pointer-events: none;
+	opacity: 0.7;
 }
 </style>
