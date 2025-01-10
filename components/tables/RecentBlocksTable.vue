@@ -33,7 +33,7 @@ watch(
 </script>
 
 <template>
-	<Flex direction="column" :class="$style.wrapper">
+	<Flex direction="column" justify="between" :class="$style.wrapper">
 		<Flex justify="between" align="start" wide :class="$style.top">
 			<Flex direction="column" gap="8">
 				<Text size="16" weight="600" color="primary">Recent Blocks</Text>
