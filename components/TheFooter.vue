@@ -76,10 +76,10 @@ const handleViewConstants = () => {
 					<Text @click="handleViewConstants" size="13" weight="600" color="secondary" :style="{ cursor: 'pointer' }">Constants</Text>
 				</Flex>
 				<Flex align="center" gap="16" :class="$style.links">
-					<a href="https://www.pklab.io/privacy" target="_blank">
+					<a href="/privacy-policy">
 						<Text size="13" weight="600" color="secondary">Privacy Policy</Text>
 					</a>
-					<a href="https://www.pklab.io/terms" target="_blank">
+					<a href="/terms-of-use">
 						<Text size="13" weight="600" color="secondary">Terms of use</Text>
 					</a>
 				</Flex>
@@ -92,9 +92,7 @@ const handleViewConstants = () => {
 	</Flex>
 </template>
 
-<style module>
-.wrapper {
-}
+<style module lang="scss">
 
 .container {
 	max-width: var(--base-width);

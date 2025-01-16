@@ -12,8 +12,16 @@ import { fetchHead } from "@/services/api/main"
 /** Store */
 import { useAppStore } from "@/store/app"
 import { useEnumStore } from "@/store/enums"
+import { useLegalStore } from "@/store/legal"
+import { useNotificationsStore } from "@/store/notifications"
 const appStore = useAppStore()
 const enumStore = useEnumStore()
+const legalStore = useLegalStore()
+const notificationsStore = useNotificationsStore()
+
+legalStore.$subscribe((mutation, state) => {
+	localStorage.setItem("legal", JSON.stringify(state.legal))
+})
 
 onMounted(async () => {
 	const head = await fetchHead()
@@ -22,6 +30,28 @@ onMounted(async () => {
 	enumStore.init()
 
 	Socket.init()
+
+	legalStore.init()
+	if (!legalStore.isAccepted()) {
+		notificationsStore.create({
+			notification: {
+				type: "warning",
+				icon: "info",
+				title: "Just so you know: we use analytics.",
+				description: "privacy",
+				autoDestroy: false,
+				irremovable: true,
+				actions: [
+					{
+						name: "OK",
+						callback: () => {
+							legalStore.acceptLegal()
+						},
+					},
+				],
+			},
+		})
+	}
 
 	window.onbeforeunload = function () {
 		Socket.close()
