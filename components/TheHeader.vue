@@ -22,6 +22,7 @@ let removeOutside = null
 const navigationPopupEl = ref()
 const showPopup = ref(false)
 const lastHead = computed(() => appStore.lastHead)
+const isLoading = computed(() => lastHead.value?.chain_id ? false : true)
 
 const handleViewConstants = () => {
 	modalsStore.open("constants")
@@ -89,7 +90,6 @@ watch(
 					</Flex>
 				</NuxtLink>
 
-				<!-- <Flex @pointerenter="showPopup = true" @pointerleave="showPopup = false" @click="showPopup = !showPopup" align="center" gap="6" :class="$style.link"> -->
 				<Flex @click="showPopup = !showPopup" ref="navigationPopupEl" align="center" gap="6" :class="$style.link">
 					<Text size="13" weight="600" color="primary">Explore</Text>
 					<Icon name="chevron" size="14" color="tertiary" :style="{ transform: `rotate(${showPopup ? '180deg' : '0deg'})` }" />
@@ -128,14 +128,10 @@ watch(
 						>
 							{{ n.name }}
 						</DropdownItem>
-						
-						<!-- <DropdownItem @click="handleNavigate('https://astrotrek.io')">Mainnet</DropdownItem>
-						<DropdownItem @click="handleNavigate('https://dusk.astrotrek.io')">Dusk</DropdownItem>
-						<DropdownItem @click="handleNavigate('https://dawn.astrotrek.io')">Dawn</DropdownItem> -->
 					</template>
 				</Dropdown>
 
-				<SearchField />
+				<SearchField :disabled="isLoading" />
 			</Flex>
 		</Flex>
 	</Flex>

@@ -16,6 +16,13 @@ import { getRollupHashSafeURL } from "~/services/utils/rollups"
 /** API */
 import { search } from "@/services/api/store"
 
+const props = defineProps({
+	disabled: {
+		type: Boolean,
+		default: false,
+	},
+})
+
 const router = useRouter()
 
 let removeOutside = null
@@ -194,7 +201,7 @@ watch(
 </script>
 
 <template>
-	<Flex ref="searchEl" :class="$style.wrapper">
+	<Flex ref="searchEl" :class="[$style.wrapper, disabled && $style.disabled]">
 		<Flex @click="inputEl.focus()" align="center" justify="between" gap="8" :class="$style.field">
 			<Flex align="center" gap="8">
 				<Icon name="search" size="16" color="secondary" />
@@ -409,6 +416,12 @@ watch(
 
 .txt_button {
 	cursor: pointer;
+}
+
+.disabled {
+	cursor: default;
+	pointer-events: none;
+	opacity: 0.7;
 }
 
 @media (max-width: 500px) {
