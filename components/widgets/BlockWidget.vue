@@ -18,6 +18,8 @@ import { useSidebarsStore } from "@/store/sidebars"
 const appStore = useAppStore()
 const sidebarsStore = useSidebarsStore()
 
+const EXTRA_PERCENTAGE = 5 // for visual effect only
+
 const blocks = computed(() => appStore.latestBlocks.slice(0, 44).sort((a, b) => a.height - b.height))
 
 const lastBlock = computed(() => blocks?.value.slice(-1)[0])
@@ -44,7 +46,7 @@ const getAvgBlockTime = async () => {
 }
 
 const calculateHeight = (size) => {
-	return (size / maxSize.value) * 100
+	return Math.ceil((size / maxSize.value) * 100) + EXTRA_PERCENTAGE;
 }
 
 await getAvgBlockTime()
@@ -143,13 +145,16 @@ const marginBar = computed(() => (chartWidth.value - barWidth * 44) / 43)
 .bar_wrapper {
 	height: 32px;
 	background: var(--op-8);
-	border-radius: 50px;
+	border-radius: 1.5px;
+	position: relative;
+	overflow: hidden;
 }
 
 .bar {
+	position: absolute;
+	bottom: 0;
 	background: var(--brand);
-	border-radius: 50px;
-
+	border-radius: 1.5px;
 	transition: all 0.2s ease;
 }
 
