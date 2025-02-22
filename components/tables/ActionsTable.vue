@@ -177,6 +177,30 @@ const handleOpenTx = async (action) => {
 						/>
 					</Flex>
 
+					<Flex v-else-if="act.type === 'bridge_transfer'" gap="4" :class="$style.description">
+						<Text size="13" weight="500" color="secondary">
+							{{ `Transfer ${spaces(act.data.amount)} ${getAssetName(act.data.fee_asset)} from` }}
+						</Text>
+
+						<LinkToEntity
+							:entity="{ title: midHash(act.data.bridge_address), type: 'account', id: act.data.bridge_address }"
+							color="secondary"
+							size="13"
+							:class="$style.link"
+						/>
+
+						<Text size="13" weight="500" color="secondary">
+							to
+						</Text>
+
+						<LinkToEntity
+							:entity="{ title: midHash(act.data.to), type: 'account', id: act.data.to }"
+							color="secondary"
+							size="13"
+							:class="$style.link"
+						/>
+					</Flex>
+
 					<Flex v-else-if="act.type === 'bridge_unlock'" gap="4" :class="$style.description">
 						<Text size="13" weight="500" color="secondary">
 							{{ `Unlock ${spaces(act.data.amount)} ${getAssetName(act.data.fee_asset)} to` }}

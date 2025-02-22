@@ -14,6 +14,7 @@ export const defaultEnums = {
         "fee_asset_change",
         "init_bridge_account",
         "bridge_lock",
+        "bridge_transfer",
         "bridge_unlock",
         "bridge_sudo_change_action",
         "fee_change",

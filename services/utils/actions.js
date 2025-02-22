@@ -68,6 +68,9 @@ export const getActionDescription = (action) => {
 		case "bridge_lock":
 			description = `Transfer ${spaces(data.amount)} ${getAssetName(data.asset)} from sequencer to ${midHash(data.to)}`
 			break;
+		case "bridge_transfer":
+			description = `Transfer ${spaces(data.amount)} ${getAssetName(data.fee_asset)} from ${midHash(data.bridge_address)} to ${midHash(data.to)}`
+			break;
 		case "bridge_unlock":
 			description = `Unlock ${spaces(data.amount)} ${getAssetName(data.fee_asset)} to ${midHash(data.to)}`
 			break;
