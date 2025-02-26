@@ -6,6 +6,7 @@ import { shortHash } from "~/services/utils"
 import ValidatorMetadata from "~/components/modules/validator/ValidatorMetadata.vue"
 import ValidatorBlocks from "~/components/modules/validator/ValidatorBlocks.vue";
 
+
 /** Components */
 import RawDataView from "@/components/shared/RawDataView.vue"
 
