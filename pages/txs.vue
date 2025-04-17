@@ -74,7 +74,16 @@ const route = useRoute()
 const router = useRouter()
 
 const transactions = ref([])
-const actionTypes = ref("")
+const actionTypes = computed(() => enumStore.enums?.actionTypes)
+const actionTypesFilterred = computed(() => {
+	const filteredActionTypes = filters.value?.find(f => f.name === "Action Types")?.values || {}
+
+	const actions = Object.keys(filteredActionTypes)
+		.filter((actType => filteredActionTypes[actType]))
+		.join(",")
+	
+	return actions
+})
 const isLoading = ref(false)
 const limit = ref(15)
 
@@ -82,7 +91,7 @@ const getTransactions = async () => {
 	isLoading.value = true
 
 	const { data } = await fetchTransactions({
-		action_types: actionTypes.value,
+		action_types: actionTypesFilterred.value,
 		limit: limit.value,
 		offset: (page.value - 1) * limit.value,
 		sort: "desc",
@@ -108,10 +117,7 @@ const handlePrev = () => {
 
 /** Filters */
 const filters = ref([])
-const isFilterActive = computed(() => actionTypes.value.length > 0)
 async function initFilters() {
-	actionTypes.value = ""
-	
 	let res = [
 		{
 			name: "Action Types",
@@ -121,10 +127,8 @@ async function initFilters() {
 		}
 	]
 
-	let types = enumStore.enums?.actionTypes || []
-
 	const priorityOrder = ["rollup_data_submission", "bridge_lock", "ibc_relay", "ics20_withdrawal"];
-	const sortedTypes = types.sort((a, b) => {
+	const sortedTypes = actionTypes.value.sort((a, b) => {
 		const aIndex = priorityOrder.indexOf(a);
 		const bIndex = priorityOrder.indexOf(b);
 
@@ -142,37 +146,33 @@ async function initFilters() {
 		res[0].values[type] = false
 	})
 
-	if (arraysAreEqual(filters.value, res)) {
-		filters.value = res
-	} else {
-		filters.value = res
-		isUpdatingPaage.value = true
-		page.value = 1
-		await getTransactions()
-		isUpdatingPaage.value = false
-	}
+	filters.value = res
 }
+const clearFilters = async () => {
+	isUpdatingPaage.value = true
 
+	page.value = 1
+
+	let filteredActionTypes = filters.value.find(f => f.name === "Action Types")?.values
+	Object.keys(filteredActionTypes)
+		.forEach((actType => {
+			filteredActionTypes[actType] = false
+		}))
+
+	await getTransactions()
+
+	isUpdatingPaage.value = false
+}
 const handleFilterUpdate = (event) => {
 	if (!event.length) {
-		initFilters()
+		clearFilters()
 		return
 	}
 
 	if (arraysAreEqual(filters.value, event)) return
 
-	filters.value = event	
+	filters.value = event
 
-	let resActionTypes = []
-	let filteredActionTypes = filters.value.find(f => f.name === "Action Types")?.values
-	
-	Object.keys(filteredActionTypes).forEach(actType => {
-		if (filteredActionTypes[actType]) {
-			resActionTypes.push(actType)
-		}
-	})
-
-	actionTypes.value = resActionTypes.join(",")
 	isUpdatingPaage.value = true
 	page.value = 1
 	getTransactions()
@@ -181,6 +181,12 @@ const handleFilterUpdate = (event) => {
 
 getTransactions()
 
+watch(
+	() => actionTypes.value,
+	() => {
+		initFilters()
+	}
+)
 watch(
 	() => page.value,
 	() => {
@@ -194,6 +200,7 @@ watch(
 
 onMounted( async () => {
 	await initFilters()
+	router.replace({ query: { page: page.value } })
 })
 </script>
 
@@ -211,7 +218,7 @@ onMounted( async () => {
 				<Text size="16" weight="600" color="primary">Transactions</Text>
 
 				<Flex align="center" gap="12">
-					<Filter @onUpdate="handleFilterUpdate" :filters="filters" :isActive="isFilterActive" />
+					<Filter @onUpdate="handleFilterUpdate" :filters="filters" :isActive="!!actionTypesFilterred" />
 
 					<Flex align="center" gap="6">
 						<Button @click="handlePrev" size="mini" type="secondary" :disabled="page === 1 || isLoading">
@@ -225,7 +232,33 @@ onMounted( async () => {
 				</Flex>
 			</Flex>
 
-			<TransactionsTable :txs="transactions" :isLoading="isLoading" generalTxsList />
+			<TransactionsTable v-if="transactions?.length || isLoading" :txs="transactions" :isLoading="isLoading" generalTxsList />
+			<Flex
+				v-else-if="!!actionTypesFilterred"
+				align="center"
+				justify="center"
+				direction="column"
+				gap="20"
+				wide
+				:class="$style.empty"
+			>
+				<Icon name="search" size="24" color="support" />
+
+				<Flex direction="column" gap="8">
+					<Text size="13" weight="600" color="secondary" align="center"> Nothing was found </Text>
+					<Text size="12" weight="500" height="160" color="tertiary" align="center" style="max-width: 220px">
+						Clear filters to see all transactions
+					</Text>
+				</Flex>
+
+				<Button @click="clearFilters" type="secondary" size="small">Clear all filters</Button>
+			</Flex>
+			<Flex v-else direction="column" align="center" justify="center" gap="8" :class="$style.empty">
+				<Text size="13" weight="600" color="secondary" align="center"> No transactions </Text>
+				<Text size="12" weight="500" height="160" color="tertiary" align="center" style="max-width: 220px">
+					This network does not contain any transactions
+				</Text>
+			</Flex>
 		</Flex>
 	</Flex>
 </template>
@@ -250,6 +283,12 @@ onMounted( async () => {
 	padding: 0 16px;
 
 	margin-bottom: 20px;
+}
+
+.empty {
+	flex: 1;
+	padding: 16px 0;
+	border-top: 1px solid var(--op-5);
 }
 
 @media (max-width: 500px) {

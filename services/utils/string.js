@@ -20,3 +20,24 @@ export function capitalizeAndReplaceUnderscore(s) {
     
     return capitalizedWords.join(' ');
 }
+
+export function pluralize(count, singular, plural = null, options) {
+    const {
+        withBe = false,
+        tense = 'past',
+        showCount = true,
+    } = options
+
+    const isSingular = count === 1
+    const noun = isSingular ? singular : plural || singular + 's'
+    let be = ''
+    if (withBe) {
+        if (tense === 'present') {
+            be = isSingular ? 'is' : 'are'
+        } else {
+            be = isSingular ? 'was' : 'were'
+        }
+    }
+
+    return `${showCount ? count : ''} ${noun} ${be}`.trim()
+}

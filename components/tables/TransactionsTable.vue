@@ -37,7 +37,7 @@ const props = defineProps({
 	<Flex direction="column" wide :class="$style.wrapper">
 		<ClientOnly>
 			<Transition name="fade">
-				<Flex v-if="isLoading" direction="column" align="center" gap="16" :class="$style.loading">
+				<Flex v-if="isLoading" direction="column" align="center" justify="center" gap="16" :class="$style.loading" wide>
 					<Spinner size="16" />
 
 					<Flex direction="column" align="center" gap="8">
@@ -100,10 +100,9 @@ const props = defineProps({
 }
 
 .loading {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translateY(-50%) translateX(-50%);
+	flex: 1;
+	border-top: 1px solid var(--op-5);
+	padding: 24px;
 }
 
 .row {

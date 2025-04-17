@@ -1,4 +1,14 @@
-import { base64Decode, capitalize, capitalizeAndReplaceUnderscore, formatBytes, getNativeAsset, midHash, shortHash, spaces, strToHex } from "./index.js";
+import {
+	base64Decode,
+	capitalizeAndReplaceUnderscore,
+	formatBytes,
+	getNativeAsset,
+	midHash,
+	pluralize,
+	shortHash,
+	spaces,
+	strToHex
+} from "./index.js";
 
 export const getActionTitle = (actionType) => {
 	if (!actionType) return "Action"
@@ -100,6 +110,21 @@ export const getActionDescription = (action) => {
 				description = `${midHash(data.addition)} was added for fee payments`
 			} else if (data.removal) {
 				description = `${midHash(data.removal)} was removed for fee payments`
+			}
+			break;
+		case "price_feed":
+			if (data.addition) {
+				description = `${pluralize(data.addition.length, "pair", {withBe: true})} added`
+			} else if (data.removal) {
+				description = `${pluralize(data.removal.length, "pair", {withBe: true})} removed`
+			} else if (data.create) {
+				description = `${data.create.length} market map ${pluralize(data.create.length, "item", {withBe: true, showCount: false})} created`
+			} else if (data.remove) {
+				description = `${data.remove.length} market map ${pluralize(data.remove.length, "item", {withBe: true, showCount: false})} removed`
+			} else if (data.update) {
+				description = `${data.update.length} market map ${pluralize(data.update.length, "item", {withBe: true, showCount: false})} updated`
+			} else if (data.params) {
+				description = "Market configuration was changed"
 			}
 			break;
 		default:
