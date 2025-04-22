@@ -16,20 +16,21 @@ import { useAppStore } from "@/store/app"
 const appStore = useAppStore()
 
 const head = computed(() => appStore.lastHead)
-
 </script>
 
 <template>
 	<Flex tag="section" justify="center" wide :class="$style.wrapper">
 		<Flex align="center" justify="center" gap="24" wide :class="$style.container">
-			<Flex align="center" gap="20" :class="$style.stats">
+			<Flex wide align="center" gap="20" :class="$style.stats">
 				<Tooltip>
 					<Flex align="center" gap="6" :class="$style.stat">
 						<Icon name="tx" size="12" color="secondary" :class="$style.icon" />
 						<Flex align="center" gap="4">
 							<Text size="12" weight="500" color="tertiary" noWrap :class="$style.key">Total Txs:</Text>
 
-							<Text v-if="head.total_tx" size="12" weight="600" noWrap :class="$style.value">{{ abbreviate(head.total_tx) }}</Text>
+							<Text v-if="head.total_tx" size="12" weight="600" noWrap :class="$style.value">{{
+								abbreviate(head.total_tx)
+							}}</Text>
 							<Skeleton v-else w="20" h="12" />
 						</Flex>
 					</Flex>
