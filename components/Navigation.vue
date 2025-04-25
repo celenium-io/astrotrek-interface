@@ -84,7 +84,7 @@ const links = [
 					</NuxtLink>
 				</template>
 			</Dropdown>
-			<Flex wide direction="column" gap="8" :class="$style.tools_list">
+			<Flex wide direction="column" gap="8" style="display: none" :class="$style.tools_list">
 				<Text size="12" weight="600" color="tertiary" style="padding: 0 8px">Tools</Text>
 
 				<NuxtLink to="/hex" :class="$style.link" :active-class="$style.activeLink">
@@ -149,10 +149,6 @@ const links = [
 	}
 }
 
-.tools_list {
-	display: none;
-}
-
 @media (max-width: 600px) {
 	.wrapper {
 		display: none;
@@ -184,7 +180,7 @@ const links = [
 		}
 
 		.tools_list {
-			display: flex;
+			display: flex !important;
 		}
 
 		.tools_dropdown {

@@ -35,21 +35,17 @@ const props = defineProps({
 
 <template>
 	<Flex direction="column" wide :class="$style.wrapper">
-		<ClientOnly>
-			<Transition name="fade">
-				<Flex v-if="isLoading" direction="column" align="center" justify="center" gap="16" :class="$style.loading" wide>
-					<Spinner size="16" />
+		<Flex v-if="isLoading" direction="column" align="center" justify="center" gap="16" :class="$style.loading" wide>
+			<Spinner size="16" />
 
-					<Flex direction="column" align="center" gap="8">
-						<Text size="14" weight="500" color="primary">Fetching transactions...</Text>
-						<Text size="13" weight="500" color="tertiary">It's almost done</Text>
-					</Flex>
-				</Flex>
-			</Transition>
-		</ClientOnly>
+			<Flex direction="column" align="center" gap="8">
+				<Text size="14" weight="500" color="primary">Fetching transactions...</Text>
+				<Text size="13" weight="500" color="tertiary">It's almost done</Text>
+			</Flex>
+		</Flex>
 
 		<Flex
-			v-if="txs"
+			v-else-if="txs.length"
 			v-for="t in txs"
 			@click="sidebarsStore.open('tx', t)"
 			justify="between"

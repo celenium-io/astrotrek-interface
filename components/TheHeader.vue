@@ -49,7 +49,13 @@ const networks = ref([
 					<Icon name="logo" size="18" color="black" :class="$style.logo" />
 				</NuxtLink>
 
-				<Flex @click="appStore.showNavigation = !appStore.showNavigation" align="center" justify="center" :class="$style.menu_btn">
+				<Flex
+					@click="appStore.showNavigation = !appStore.showNavigation"
+					align="center"
+					justify="center"
+					style="display: none"
+					:class="$style.menu_btn"
+				>
 					<Icon :name="appStore.showNavigation ? 'close' : 'menu'" size="16" color="secondary" />
 				</Flex>
 			</Flex>
@@ -105,9 +111,6 @@ const networks = ref([
 }
 
 .menu_btn {
-	display: none;
-	visibility: hidden;
-
 	width: 24px;
 	height: 24px;
 
@@ -173,8 +176,7 @@ const networks = ref([
 
 @media (max-width: 600px) {
 	.menu_btn {
-		display: flex;
-		visibility: visible;
+		display: flex !important;
 	}
 }
 

@@ -74,6 +74,7 @@ const getBlocks = async () => {
 		offset: (page.value - 1) * limit.value,
 	})
 	blocks.value = data.value
+
 	handleNextCondition.value = blocks.value.length < limit.value
 
 	isLoading.value = false
@@ -126,7 +127,7 @@ watch(
 				</Flex>
 			</Flex>
 
-			<BlocksTable :blocks="blocks" :isLoading="isLoading" :minHeight="900" generalBlocksList />
+			<BlocksTable :blocks="blocks" :isLoading="isLoading" generalBlocksList :class="$style.blocks_table" />
 		</Flex>
 	</Flex>
 </template>
@@ -151,6 +152,10 @@ watch(
 	padding: 0 16px;
 
 	margin-bottom: 20px;
+}
+
+.blocks_table {
+	min-height: 900px;
 }
 
 @media (max-width: 500px) {

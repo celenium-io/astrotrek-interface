@@ -141,7 +141,7 @@ watch(
 				</Flex>
 			</Flex>
 
-			<AssetsTable @onSort="handleOnSort" :assets="assets" :sort="sort" :isLoading="isLoading" />
+			<AssetsTable @onSort="handleOnSort" :assets="assets" :sort="sort" :isLoading="isLoading" :class="$style.assets_table" />
 		</Flex>
 	</Flex>
 </template>
@@ -166,6 +166,10 @@ watch(
 	padding: 0 16px;
 
 	margin-bottom: 20px;
+}
+
+.assets_table {
+	min-height: 900px;
 }
 
 @media (max-width: 500px) {

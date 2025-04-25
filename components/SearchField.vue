@@ -306,6 +306,8 @@ watch(
 .wrapper {
 	position: relative;
 	user-select: none;
+
+	transition: opacity 0.2s ease;
 }
 
 .field {

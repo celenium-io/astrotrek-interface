@@ -126,7 +126,7 @@ watch(
 				</Flex>
 			</Flex>
 
-			<ValidatorsTable :validators="validators" :isLoading="isLoading" />
+			<ValidatorsTable :validators="validators" :isLoading="isLoading" :class="$style.validators_table" />
 		</Flex>
 	</Flex>
 </template>
@@ -149,6 +149,10 @@ watch(
 
 .top {
 	padding: 0 16px;
+}
+
+.validators_table {
+	min-height: 900px;
 }
 
 @media (max-width: 500px) {

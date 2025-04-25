@@ -228,7 +228,13 @@ onMounted(async () => {
 				</Flex>
 			</Flex>
 
-			<TransactionsTable v-if="transactions?.length || isLoading" :txs="transactions" :isLoading="isLoading" generalTxsList />
+			<TransactionsTable
+				v-if="transactions?.length || isLoading"
+				:txs="transactions"
+				:isLoading="isLoading"
+				generalTxsList
+				:class="$style.txs_table"
+			/>
 			<Flex v-else-if="!!actionTypesFilterred" align="center" justify="center" direction="column" gap="20" wide :class="$style.empty">
 				<Icon name="search" size="24" color="support" />
 
@@ -277,6 +283,10 @@ onMounted(async () => {
 	flex: 1;
 	padding: 16px 0;
 	border-top: 1px solid var(--op-5);
+}
+
+.txs_table {
+	min-height: 900px;
 }
 
 @media (max-width: 500px) {

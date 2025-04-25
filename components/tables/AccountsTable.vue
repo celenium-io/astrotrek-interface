@@ -25,21 +25,17 @@ const props = defineProps({
 
 <template>
 	<Flex direction="column" :class="$style.wrapper">
-		<ClientOnly>
-			<Transition name="fade">
-				<Flex v-if="isLoading" direction="column" align="center" gap="16" :class="$style.loading">
-					<Spinner size="16" />
+		<Flex v-if="isLoading" direction="column" align="center" gap="16" :class="$style.loading">
+			<Spinner size="16" />
 
-					<Flex direction="column" align="center" gap="8">
-						<Text size="14" weight="500" color="primary">Fetching accounts...</Text>
-						<Text size="13" weight="500" color="tertiary">It's almost done</Text>
-					</Flex>
-				</Flex>
-			</Transition>
-		</ClientOnly>
+			<Flex direction="column" align="center" gap="8">
+				<Text size="14" weight="500" color="primary">Fetching accounts...</Text>
+				<Text size="13" weight="500" color="tertiary">It's almost done</Text>
+			</Flex>
+		</Flex>
 
 		<Flex
-			v-if="accounts"
+			v-else-if="accounts.length"
 			v-for="account in accounts"
 			@click="sidebarsStore.open('account', account)"
 			justify="between"
@@ -51,26 +47,23 @@ const props = defineProps({
 					<Flex align="center" gap="6">
 						<Icon name="account" size="16" color="secondary" />
 
-						<LinkToEntity :entity="{ title: midHash(account.hash), type: 'account', id: account.hash}" color="primary" />
+						<LinkToEntity :entity="{ title: midHash(account.hash), type: 'account', id: account.hash }" color="primary" />
 					</Flex>
 
 					<Tooltip v-if="account?.is_bridge">
 						<Icon name="bridge" size="18" color="brand" />
 
-						<template #content>
-							Bridge account
-						</template>
+						<template #content> Bridge account </template>
 					</Tooltip>
 
 					<Tooltip v-if="account?.is_sudo || account?.is_ibc_sudo">
 						<Icon name="role" size="14" color="brand" />
 
 						<template #content>
-							{{ `Has
-								${account?.is_sudo ? ' Sudo' : ''}
-								${account?.is_ibc_sudo
-									? account?.is_sudo ? ' and IBC Sudo roles' : ' IBC Sudo role'
-									: 'role'}`
+							{{
+								`Has
+								${account?.is_sudo ? " Sudo" : ""}
+								${account?.is_ibc_sudo ? (account?.is_sudo ? " and IBC Sudo roles" : " IBC Sudo role") : "role"}`
 							}}
 						</template>
 					</Tooltip>
@@ -78,9 +71,7 @@ const props = defineProps({
 					<Tooltip v-if="account?.is_ibc_relayer">
 						<Icon name="relayer" size="18" color="brand" />
 
-						<template #content>
-							IBC Relayer
-						</template>
+						<template #content> IBC Relayer </template>
 					</Tooltip>
 				</Flex>
 
@@ -92,10 +83,13 @@ const props = defineProps({
 					</Text>
 
 					<div :class="$style.dot" />
-					
+
 					<Text size="12" weight="500" color="tertiary">First Height&nbsp;</Text>
 
-					<LinkToEntity :entity="{ title: spaces(account.first_height), type: 'block', id: account.first_height}" color="secondary" />
+					<LinkToEntity
+						:entity="{ title: spaces(account.first_height), type: 'block', id: account.first_height }"
+						color="secondary"
+					/>
 				</Flex>
 			</Flex>
 
@@ -143,7 +137,6 @@ const props = defineProps({
 	&:last-child {
 		border-bottom-left-radius: 8px;
 		border-bottom-right-radius: 8px;
-		border-bottom: 1px solid var(--op-5);
 	}
 
 	&:active {

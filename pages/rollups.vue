@@ -127,7 +127,7 @@ watch(
 				</Flex>
 			</Flex>
 
-			<RollupsTable :rollups="rollups" :isLoading="isLoading" generalRollupsList />
+			<RollupsTable :rollups="rollups" :isLoading="isLoading" generalRollupsList :class="$style.rollups_table" />
 		</Flex>
 	</Flex>
 </template>
@@ -151,6 +151,10 @@ watch(
 .top {
 	margin-bottom: 20px;
 	padding: 0 16px;
+}
+
+.rollups_table {
+	min-height: 900px;
 }
 
 @media (max-width: 500px) {

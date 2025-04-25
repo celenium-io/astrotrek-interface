@@ -136,7 +136,7 @@ watch(
 				</Flex>
 			</Flex>
 
-			<AccountsTable :accounts="accounts" :isLoading="isLoading" />
+			<AccountsTable :accounts="accounts" :isLoading="isLoading" :class="$style.accounts_table" />
 		</Flex>
 	</Flex>
 </template>
@@ -159,6 +159,10 @@ watch(
 
 .top {
 	padding: 0 16px;
+}
+
+.accounts_table {
+	min-height: 900px;
 }
 
 @media (max-width: 500px) {

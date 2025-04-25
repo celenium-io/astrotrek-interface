@@ -191,7 +191,7 @@ watch(
 				]"
 			/>
 
-			<Flex align="center" justify="between" wide>
+			<Flex align="center" justify="between" wide :class="$style.top">
 				<Flex align="center" gap="16">
 					<Flex align="center" gap="8">
 						<Icon name="block" size="14" color="primary" />
@@ -206,7 +206,7 @@ watch(
 					<Flex align="center" gap="8">
 						<Button
 							@click="router.push(`/block/${block?.height - 1}`)"
-							type="tertiary"
+							type="secondary"
 							size="mini"
 							:disabled="block?.height === 1"
 						>
@@ -216,7 +216,7 @@ watch(
 
 						<Button
 							@click="router.push(`/block/${block?.height + 1}`)"
-							type="tertiary"
+							type="secondary"
 							size="mini"
 							:disabled="block?.height === lastBlock?.height"
 						>
@@ -296,5 +296,13 @@ watch(
 
 .pagination {
 	padding-bottom: 6px;
+}
+
+@media (max-width: 500px) {
+	.top {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 12px;
+	}
 }
 </style>

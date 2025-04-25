@@ -3,7 +3,7 @@
 import { DateTime } from "luxon"
 
 /** Components */
-import LinkToEntity from "@/components/shared/LinkToEntity.vue";
+import LinkToEntity from "@/components/shared/LinkToEntity.vue"
 
 /** Services */
 import { formatBytes, spaces, splitAddress } from "@/services/utils"
@@ -19,10 +19,6 @@ const props = defineProps({
 	isLoading: {
 		type: Boolean,
 	},
-	minHeight: {
-		type: Number,
-		required: false,
-	},
 	recentBlocks: {
 		type: Boolean,
 		default: false,
@@ -32,37 +28,42 @@ const props = defineProps({
 		default: false,
 	},
 })
-
 </script>
 
 <template>
-	<Flex direction="column" :style="{ minHeight: `${minHeight}px` }" :class="$style.wrapper">
-		<ClientOnly>
-			<Transition name="fade">
-				<Flex v-if="isLoading" direction="column" align="center" gap="16" :class="$style.loading">
-					<Spinner size="16" />
+	<Flex direction="column" :class="$style.wrapper">
+		<Flex v-if="isLoading" direction="column" align="center" gap="16" :class="$style.loading">
+			<Spinner size="16" />
 
-					<Flex direction="column" align="center" gap="8">
-						<Text size="14" weight="500" color="primary">Fetching blocks...</Text>
-						<Text size="13" weight="500" color="tertiary">It's almost done</Text>
-					</Flex>
-				</Flex>
-			</Transition>
-		</ClientOnly>
+			<Flex direction="column" align="center" gap="8">
+				<Text size="14" weight="500" color="primary">Fetching blocks...</Text>
+				<Text size="13" weight="500" color="tertiary">It's almost done</Text>
+			</Flex>
+		</Flex>
 
 		<Flex
-			v-if="blocks"
+			v-else-if="blocks.length"
 			v-for="b in blocks"
 			@click="sidebarsStore.open('block', b)"
 			justify="between"
 			align="center"
-			:class="[!recentBlocks && !generalBlocksList && $style.row, recentBlocks && $style.row_recent_blocks, generalBlocksList && $style.row_general_list, isLoading && $style.disabled]"
+			:class="[
+				!recentBlocks && !generalBlocksList && $style.row,
+				recentBlocks && $style.row_recent_blocks,
+				generalBlocksList && $style.row_general_list,
+				isLoading && $style.disabled,
+			]"
 		>
 			<Flex direction="column" gap="8">
 				<Flex align="center" gap="6">
 					<Icon name="block" size="16" color="secondary" />
 
-					<LinkToEntity :entity="{ title: spaces(b.height), type: 'block', id: b.height}" size="13" color="primary" weight="600" />
+					<LinkToEntity
+						:entity="{ title: spaces(b.height), type: 'block', id: b.height }"
+						size="13"
+						color="primary"
+						weight="600"
+					/>
 				</Flex>
 
 				<Flex align="center" gap="8">
@@ -73,7 +74,7 @@ const props = defineProps({
 						:entity="{
 							title: b.proposer.name ? b.proposer.name : splitAddress(b.proposer.address),
 							type: 'validator',
-							id: b.proposer.id
+							id: b.proposer.id,
 						}"
 						color="secondary"
 					/>
@@ -193,7 +194,7 @@ const props = defineProps({
 	&:hover {
 		background: var(--op-5);
 	}
-	
+
 	&:last-child {
 		border-bottom-left-radius: 8px;
 		border-bottom-right-radius: 8px;
