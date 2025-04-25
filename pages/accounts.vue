@@ -30,8 +30,7 @@ useHead({
 	meta: [
 		{
 			name: "description",
-			content:
-				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
+			content: "Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
 		},
 		{
 			property: "og:title",
@@ -39,8 +38,7 @@ useHead({
 		},
 		{
 			property: "og:description",
-			content:
-				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
+			content: "Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
 		},
 		{
 			property: "og:url",
@@ -56,8 +54,7 @@ useHead({
 		},
 		{
 			name: "twitter:description",
-			content:
-				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
+			content: "Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
 		},
 		{
 			name: "twitter:card",
@@ -88,13 +85,13 @@ const getAccounts = async () => {
 		offset: (page.value - 1) * limit.value,
 	})
 	accounts.value = data.value
-	
+
 	isLoading.value = false
 }
 
 /** Pagination */
 const page = ref(route.query.page ? parseInt(route.query.page) : 1)
-const handleNextCondition = computed(() => lastHead.value.total_accounts - (limit.value * page.value) <= 0)
+const handleNextCondition = computed(() => lastHead.value.total_accounts - limit.value * page.value <= 0)
 
 const handleNext = () => {
 	page.value += 1
@@ -116,7 +113,7 @@ watch(
 </script>
 
 <template>
-	<Flex direction="column" gap="40" wide :class="$style.wrapper">
+	<Flex direction="column" gap="16" wide :class="$style.wrapper">
 		<Breadcrumbs
 			:items="[
 				{ link: '/', name: 'Explore' },

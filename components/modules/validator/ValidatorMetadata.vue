@@ -1,18 +1,11 @@
 <script setup>
-/** Vendor */
-import { DateTime } from "luxon"
-
 /** API */
 import { fetchValidators } from "@/services/api/validator"
 import { fetchValidatorUptime } from "@/services/api/validator.js"
 
-/** Services */
-import { space, spaces } from "@/services/utils"
-
 /** UI */
 import ValidatorUptime from "@/components/modules/validator/ValidatorUptime.vue"
 import Tooltip from "@/components/ui/Tooltip.vue"
-import { capitalize } from "vue";
 
 const props = defineProps({
 	validator: {
@@ -39,20 +32,18 @@ const fetchUptime = async () => {
 }
 
 const totalPower = ref(props.validator.power)
-const validatorShare = computed(() => parseInt(parseFloat(props.validator.power) / totalPower.value * 100))
+const validatorShare = computed(() => parseInt((parseFloat(props.validator.power) / totalPower.value) * 100))
 const getValidators = async () => {
 	const { data } = await fetchValidators({
 		limit: 100,
 	})
 	if (data.value) {
 		totalPower.value = 0
-		data.value.forEach(v => {
+		data.value.forEach((v) => {
 			totalPower.value += parseFloat(v.power)
 		})
 	}
 }
-
-// const showMore = ref(false)
 
 getValidators()
 fetchUptime()
@@ -81,7 +72,6 @@ fetchUptime()
 		<Flex align="center" :class="$style.item">
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Voting Power</Text>
 
-			
 			<Flex align="center" gap="8" :class="$style.value">
 				<Tooltip>
 					<Flex align="center" gap="6">
@@ -91,7 +81,7 @@ fetchUptime()
 					</Flex>
 
 					<template #content>
-						<Flex direction="column" gap="8" :style="{width: '150px'}">
+						<Flex direction="column" gap="8" :style="{ width: '150px' }">
 							<Flex align="center" justify="between">
 								<Text size="12" weight="500" color="tertiary"> Validator Power </Text>
 
@@ -115,7 +105,7 @@ fetchUptime()
 			</Flex>
 		</Flex>
 
-		<Flex align="center" :class="$style.item">
+		<Flex align="center" style="border-bottom: none" :class="$style.item">
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Uptime</Text>
 
 			<Flex align="center" gap="8" :class="$style.value">
@@ -130,42 +120,20 @@ fetchUptime()
 				<ValidatorUptime v-if="uptime.blocks?.length" :blocks="uptime.blocks" openSidebar />
 			</Flex>
 		</Flex>
-
-		<!-- <Flex align="center" :class="$style.item">
-			<Text size="13" weight="600" color="secondary" :class="$style.key">Nonce</Text>
-
-			<Text size="13" weight="600" color="primary" mono :class="$style.value"> {{ account.nonce }} </Text>
-		</Flex> -->
-		
-		<!-- <template v-if="showMore">
-			<Flex align="center" :class="$style.item">
-				<Text size="13" weight="600" color="secondary" :class="$style.key">App Hash</Text>
-
-				<Flex align="center" gap="8" :class="$style.value">
-					<CopyButton :text="block.app_hash" />
-					<Text size="13" weight="600" color="primary" mono :class="$style.overflow">
-						{{ space(block.app_hash) }}
-					</Text>
-				</Flex>
-			</Flex>
-		</template> -->
 	</Flex>
-
-	<!-- <Flex @click="showMore = !showMore" align="center" justify="end" gap="4" :class="$style.show_more">
-		<Icon size="12" name="chevron-double" color="brand" :rotate="showMore ? 180 : 0" />
-		<Text size="12" weight="600" color="brand">Show {{ showMore ? 'Less' : 'More' }}</Text>
-	</Flex> -->
 </template>
 
 <style module>
 .wrapper {
 	border-radius: 8px;
-	box-shadow: inset 0 0 0 1px var(--op-5);
+	box-shadow: 0 0 0 1px var(--op-10);
 	background: var(--op-3);
 }
 
 .item {
 	height: 36px;
+
+	border-bottom: 1px solid var(--op-10);
 
 	padding: 0 12px;
 
@@ -183,9 +151,7 @@ fetchUptime()
 }
 
 .uptime {
-	height: 52px;
-
-	padding: 0 12px 4px 12px;
+	padding: 4px 12px;
 }
 
 .overflow {
@@ -231,7 +197,6 @@ fetchUptime()
 
 		margin: 8px 0 8px 0;
 	}
-
 }
 
 @media (max-width: 400px) {

@@ -6,7 +6,6 @@ import RollupCharts from "~/components/modules/rollup/RollupCharts.vue"
 import RollupDeposits from "~/components/modules/rollup/RollupDeposits.vue"
 import RollupMetadata from "~/components/modules/rollup/RollupMetadata.vue"
 
-
 /** Components */
 import RawDataView from "@/components/shared/RawDataView.vue"
 
@@ -72,7 +71,7 @@ const fetchBridges = async () => {
 		limit: limit.value,
 		offset: (page.value - 1) * limit.value,
 	})
-	
+
 	bridges.value = data.value
 	handleNextCondition.value = bridges.value.length < limit.value
 
@@ -87,7 +86,7 @@ const fetchDeposits = async () => {
 		limit: limit.value,
 		offset: (page.value - 1) * limit.value,
 	})
-	
+
 	deposits.value = data.value
 	handleNextCondition.value = deposits.value.length < limit.value
 
@@ -118,14 +117,14 @@ async function initFilters() {
 			name: "bridge_actions",
 			value: true,
 			displayName: "Bridge Actions",
-			type: "toggle"
+			type: "toggle",
 		},
 		{
 			name: "rollup_actions",
 			value: true,
 			displayName: "Rollup Actions",
-			type: "toggle"
-		}
+			type: "toggle",
+		},
 	]
 
 	if (arraysAreEqual(filters.value, res)) {
@@ -145,9 +144,9 @@ const handleFilterUpdate = async (event) => {
 	if (arraysAreEqual(filters.value, event)) return
 
 	filters.value = event
-	bridgeActions.value = filters.value.find(f => f.name === "bridge_actions")?.value
-	rollupActions.value = filters.value.find(f => f.name === "rollup_actions")?.value
-	
+	bridgeActions.value = filters.value.find((f) => f.name === "bridge_actions")?.value
+	rollupActions.value = filters.value.find((f) => f.name === "rollup_actions")?.value
+
 	await fetchData()
 }
 
@@ -228,7 +227,7 @@ const tabs = ref([
 	{
 		name: "analytics",
 		display: true,
-	}
+	},
 ])
 const activeTab = ref(route.query.tab && tabs.value.map((tab) => tab.name).includes(route.query.tab) ? route.query.tab : tabs.value[0].name)
 
@@ -285,7 +284,7 @@ watch(
 	},
 )
 
-onMounted( async () => {
+onMounted(async () => {
 	// await initFilters()
 	// updateRouteQuery()
 })
@@ -293,43 +292,43 @@ onMounted( async () => {
 
 <template>
 	<Flex v-if="rollup" direction="column" gap="24" :class="$style.wrapper">
-		<Flex direction="column" gap="40">
-			<Breadcrumbs
-				:items="[
-					{ link: '/', name: 'Explore' },
-					{ link: '/rollups', name: 'Rollups' },
-					{ link: route.fullPath, name: `Rollup` },
-				]"
-			/>
+		<Flex direction="column" gap="16">
+			<Flex direction="column" gap="16">
+				<Breadcrumbs
+					:items="[
+						{ link: '/', name: 'Explore' },
+						{ link: '/rollups', name: 'Rollups' },
+						{ link: route.fullPath, name: `Rollup` },
+					]"
+				/>
 
-			<Flex align="center" justify="between" wide>
-				<Flex align="center" gap="8">
-					<Icon name="rollup" size="14" color="primary" />
+				<Flex align="center" justify="between" wide>
+					<Flex align="center" gap="8">
+						<Icon name="rollup" size="14" color="primary" />
 
-					<Text size="14" weight="500" color="primary">
-						Rollup <Text weight="600">{{ !isMobile() ? rollup?.hash : shortHash(rollup?.hash) }}</Text>
-					</Text>
+						<Text size="14" weight="500" color="primary">
+							Rollup <Text weight="600">{{ !isMobile() ? rollup?.hash : shortHash(rollup?.hash) }}</Text>
+						</Text>
 
-					<Tooltip v-if="rollup?.bridge_count">
-						<Icon name="bridge" size="18" color="brand" />
+						<Tooltip v-if="rollup?.bridge_count">
+							<Icon name="bridge" size="18" color="brand" />
 
-						<template #content>
-							Associated with bridge account
-						</template>
-					</Tooltip>
+							<template #content> Associated with bridge account </template>
+						</Tooltip>
+					</Flex>
+
+					<RawDataView :entity="rollup" name="rollup" />
 				</Flex>
-
-				<RawDataView :entity="rollup" name="rollup" />
 			</Flex>
-		</Flex>
 
-		<RollupMetadata :rollup="rollup" />
+			<RollupMetadata :rollup="rollup" />
+		</Flex>
 
 		<Flex direction="column" gap="12">
 			<Flex align="center" justify="between" :class="$style.navigation">
 				<Flex align="center" gap="8" :class="$style.tabs">
 					<Text
-						v-for="tab in tabs.filter(tab => tab.display)"
+						v-for="tab in tabs.filter((tab) => tab.display)"
 						@click="activeTab = tab.name"
 						size="13"
 						weight="600"
@@ -341,7 +340,13 @@ onMounted( async () => {
 				</Flex>
 
 				<Flex v-if="activeTab !== 'analytics'" align="center" gap="12" :class="$style.pagination">
-					<Filter v-if="activeTab === 'actions'" @onUpdate="handleFilterUpdate" :filters="filters" :showClear="false" width="170" />
+					<Filter
+						v-if="activeTab === 'actions'"
+						@onUpdate="handleFilterUpdate"
+						:filters="filters"
+						:showClear="false"
+						width="170"
+					/>
 
 					<Flex align="center" gap="6">
 						<Button @click="handlePrev" size="mini" type="secondary" :disabled="page === 1">

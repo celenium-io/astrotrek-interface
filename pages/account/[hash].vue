@@ -27,7 +27,7 @@ import {
 	fetchAccountDeposits,
 	fetchAccountFees,
 	fetchAccountRollups,
-	fetchAccountTransactions
+	fetchAccountTransactions,
 } from "~/services/api/account.js"
 
 definePageMeta({
@@ -126,12 +126,12 @@ const fetchBridgeRoles = async () => {
 		offset: (page.value - 1) * limit.value,
 	})
 
-	data.value.forEach(r => {
+	data.value.forEach((r) => {
 		if (r.sudo === account.value.hash) {
 			bridgeRoles.value.push({
 				bridge: r.address,
 				account: r.sudo,
-				role: 'admin',
+				role: "admin",
 				rollup: r.rollup,
 			})
 		}
@@ -140,7 +140,7 @@ const fetchBridgeRoles = async () => {
 			bridgeRoles.value.push({
 				bridge: r.address,
 				account: r.withdrawer,
-				role: 'withdrawer',
+				role: "withdrawer",
 				rollup: r.rollup,
 			})
 		}
@@ -247,16 +247,14 @@ useHead({
 	],
 })
 
-const tabs = ref(
-	[
-		{ name: "transactions", visible: true },
-		{ name: "actions", visible: true },
-		{ name: "fees_paid", visible: true },
-		{ name: "rollups", visible: true },
-		{ name: "bridge_roles", visible: true },
-		{ name: "deposits", visible: account.value?.is_bridge },
-	]
-)
+const tabs = ref([
+	{ name: "transactions", visible: true },
+	{ name: "actions", visible: true },
+	{ name: "fees_paid", visible: true },
+	{ name: "rollups", visible: true },
+	{ name: "bridge_roles", visible: true },
+	{ name: "deposits", visible: account.value?.is_bridge },
+])
 
 const activeTab = ref(route.query.tab && tabs.value.map((tab) => tab.name).includes(route.query.tab) ? route.query.tab : tabs.value[0].name)
 const tabsEl = ref(null)
@@ -264,7 +262,7 @@ const handleTabSelect = (name) => {
 	activeTab.value = name
 
 	let tabCenter = 0
-	
+
 	for (let i = 0; i < tabsEl.value.wrapper.children.length; i++) {
 		if (tabsEl.value.wrapper.children[i].id === name) {
 			tabCenter = tabsEl.value.wrapper.children[i].offsetLeft + tabsEl.value.wrapper.children[i].offsetWidth / 2
@@ -312,7 +310,7 @@ watch(
 	() => page.value,
 	async () => {
 		if (isUpdatingPaage.value) return
-		
+
 		await fetchData()
 	},
 )
@@ -326,7 +324,7 @@ onMounted(() => {
 
 <template>
 	<Flex v-if="account" direction="column" gap="24" :class="$style.wrapper">
-		<Flex direction="column" gap="40">
+		<Flex direction="column" gap="16">
 			<Breadcrumbs
 				:items="[
 					{ link: '/', name: 'Explore' },
@@ -346,20 +344,17 @@ onMounted(() => {
 					<Tooltip v-if="account?.is_bridge">
 						<Icon name="bridge" size="18" color="brand" />
 
-						<template #content>
-							Bridge account
-						</template>
+						<template #content> Bridge account </template>
 					</Tooltip>
 
 					<Tooltip v-if="account?.is_sudo || account?.is_ibc_sudo">
 						<Icon name="role" size="14" color="brand" />
 
 						<template #content>
-							{{ `Has
-								${account?.is_sudo ? ' Sudo' : ''}
-								${account?.is_ibc_sudo
-									? account?.is_sudo ? ' and IBC Sudo roles' : ' IBC Sudo role'
-									: 'role'}`
+							{{
+								`Has
+								${account?.is_sudo ? " Sudo" : ""}
+								${account?.is_ibc_sudo ? (account?.is_sudo ? " and IBC Sudo roles" : " IBC Sudo role") : "role"}`
 							}}
 						</template>
 					</Tooltip>
@@ -367,17 +362,15 @@ onMounted(() => {
 					<Tooltip v-if="account?.is_ibc_relayer">
 						<Icon name="relayer" size="18" color="brand" />
 
-						<template #content>
-							IBC Relayer
-						</template>
+						<template #content> IBC Relayer </template>
 					</Tooltip>
 				</Flex>
 
 				<RawDataView :entity="account" name="account" />
 			</Flex>
-		</Flex>
 
-		<AccountMetadata :account="account" />
+			<AccountMetadata :account="account" />
+		</Flex>
 
 		<AccountBridgeInfo v-if="account?.is_bridge" :account="account" />
 
@@ -385,7 +378,7 @@ onMounted(() => {
 			<Flex align="center" justify="between" :class="$style.navigation">
 				<Flex align="center" gap="8" :class="$style.tabs" ref="tabsEl">
 					<Text
-						v-for="tab in tabs.filter(t => t.visible)"
+						v-for="tab in tabs.filter((t) => t.visible)"
 						@click="handleTabSelect(tab.name)"
 						size="13"
 						weight="600"
@@ -469,7 +462,7 @@ onMounted(() => {
 		justify-content: start;
 		overflow-x: auto;
 		scroll-behavior: smooth;
-		
+
 		&::-webkit-scrollbar {
 			display: none;
 		}

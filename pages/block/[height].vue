@@ -123,11 +123,11 @@ useHead({
 
 const tabs = ref([
 	{
-		name: "transactions"
+		name: "transactions",
 	},
 	{
-		name: "actions"
-	}
+		name: "actions",
+	},
 ])
 const activeTab = ref(route.query.tab && tabs.value.map((tab) => tab.name).includes(route.query.tab) ? route.query.tab : tabs.value[0].name)
 
@@ -182,7 +182,7 @@ watch(
 
 <template>
 	<Flex v-if="block" direction="column" gap="24" :class="$style.wrapper">
-		<Flex direction="column" gap="40">
+		<Flex direction="column" gap="16">
 			<Breadcrumbs
 				:items="[
 					{ link: '/', name: 'Explore' },
@@ -204,7 +204,12 @@ watch(
 					</Flex>
 
 					<Flex align="center" gap="8">
-						<Button @click="router.push(`/block/${block?.height - 1}`)" type="tertiary" size="mini" :disabled="block?.height === 1">
+						<Button
+							@click="router.push(`/block/${block?.height - 1}`)"
+							type="tertiary"
+							size="mini"
+							:disabled="block?.height === 1"
+						>
 							<Icon name="arrow-redo-right" size="16" color="secondary" :style="{ transform: 'scaleX(-1)' }" />
 							Prev
 						</Button>
@@ -223,9 +228,9 @@ watch(
 
 				<RawDataView :entity="block" name="block" />
 			</Flex>
-		</Flex>
 
-		<BlockMetadata :block="block" />
+			<BlockMetadata :block="block" />
+		</Flex>
 
 		<Flex direction="column" gap="12">
 			<Flex align="center" justify="between">

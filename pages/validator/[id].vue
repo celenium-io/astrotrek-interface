@@ -4,8 +4,7 @@ import { shortHash } from "~/services/utils"
 
 /** Modules */
 import ValidatorMetadata from "~/components/modules/validator/ValidatorMetadata.vue"
-import ValidatorBlocks from "~/components/modules/validator/ValidatorBlocks.vue";
-
+import ValidatorBlocks from "~/components/modules/validator/ValidatorBlocks.vue"
 
 /** Components */
 import RawDataView from "@/components/shared/RawDataView.vue"
@@ -64,7 +63,9 @@ const handlePrev = () => {
 }
 
 useHead({
-	title: `Validator ${validator.value?.address.toUpperCase().slice(0, 4)} ••• ${validator.value?.address.toUpperCase().slice(-4)} - Astria Explorer`,
+	title: `Validator ${validator.value?.address.toUpperCase().slice(0, 4)} ••• ${validator.value?.address
+		.toUpperCase()
+		.slice(-4)} - Astria Explorer`,
 	link: [
 		{
 			rel: "canonical",
@@ -124,7 +125,7 @@ watch(
 
 <template>
 	<Flex v-if="validator" direction="column" gap="24" :class="$style.wrapper">
-		<Flex direction="column" gap="40">
+		<Flex direction="column" gap="16">
 			<Breadcrumbs
 				:items="[
 					{ link: '/', name: 'Explore' },
@@ -146,9 +147,9 @@ watch(
 
 				<RawDataView :entity="validator" name="validator" />
 			</Flex>
-		</Flex>
 
-		<ValidatorMetadata :validator="validator" />
+			<ValidatorMetadata :validator="validator" />
+		</Flex>
 
 		<Flex direction="column" gap="12">
 			<Flex align="center" justify="between">

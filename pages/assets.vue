@@ -118,7 +118,7 @@ watch(
 </script>
 
 <template>
-	<Flex direction="column" gap="40" wide :class="$style.wrapper">
+	<Flex direction="column" gap="16" wide :class="$style.wrapper">
 		<Breadcrumbs
 			:items="[
 				{ link: '/', name: 'Explore' },
@@ -157,7 +157,7 @@ watch(
 
 .card {
 	border-radius: 8px;
-	background: var(--op-3);
+	background: var(--card-background);
 
 	padding: 16px 0 0 0;
 }

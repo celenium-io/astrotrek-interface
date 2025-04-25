@@ -79,7 +79,7 @@ const getApps = async () => {
 		offset: (page.value - 1) * limit.value,
 	})
 	apps.value = data.value
-	
+
 	handleNextCondition.value = apps.value.length < limit.value
 
 	isLoading.value = false
@@ -108,7 +108,7 @@ watch(
 </script>
 
 <template>
-	<Flex direction="column" gap="40" wide :class="$style.wrapper">
+	<Flex direction="column" gap="16" wide :class="$style.wrapper">
 		<Flex align="start" justify="between">
 			<Breadcrumbs
 				:items="[
@@ -156,7 +156,7 @@ watch(
 
 .card {
 	border-radius: 8px;
-	background: var(--op-3);
+	background: var(--card-background);
 
 	padding: 16px 0 0 0;
 }
@@ -176,7 +176,6 @@ watch(
 	padding: 6px 8px;
 
 	transition: all 0.2s ease;
-
 }
 
 @media (max-width: 500px) {

@@ -96,7 +96,7 @@ watch(
 					<Flex align="center" gap="8">
 						<LinkToEntity
 							@click="emit('onClose')"
-							:entity="{ title: midHash(tx.hash), type: 'tx', id: tx.hash}"
+							:entity="{ title: midHash(tx.hash), type: 'tx', id: tx.hash }"
 							mode="sidebar"
 							color="primary"
 							size="16"
@@ -128,7 +128,7 @@ watch(
 					<Flex justify="between" :class="$style.card">
 						<Flex direction="column" gap="8">
 							<Text size="12" weight="600" color="secondary">Block Height</Text>
-							
+
 							<Text size="12" weight="600" color="tertiary">{{ spaces(tx.height) }}</Text>
 						</Flex>
 
@@ -190,7 +190,9 @@ watch(
 				</Flex>
 			</Flex>
 
-			<Button @click="emit('onClose')" :link="`/tx/${tx.hash}`" type="secondary" size="medium"> Open Transaction </Button>
+			<Button @click="emit('onClose')" :link="`/tx/${tx.hash}`" prefetch="interaction" type="secondary" size="medium">
+				Open Transaction
+			</Button>
 		</Flex>
 	</Sidebar>
 </template>

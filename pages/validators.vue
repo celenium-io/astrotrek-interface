@@ -23,8 +23,7 @@ useHead({
 	meta: [
 		{
 			name: "description",
-			content:
-				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
+			content: "Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
 		},
 		{
 			property: "og:title",
@@ -32,8 +31,7 @@ useHead({
 		},
 		{
 			property: "og:description",
-			content:
-				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
+			content: "Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
 		},
 		{
 			property: "og:url",
@@ -49,8 +47,7 @@ useHead({
 		},
 		{
 			name: "twitter:description",
-			content:
-				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
+			content: "Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
 		},
 		{
 			name: "twitter:card",
@@ -106,7 +103,7 @@ watch(
 </script>
 
 <template>
-	<Flex direction="column" gap="40" wide :class="$style.wrapper">
+	<Flex direction="column" gap="16" wide :class="$style.wrapper">
 		<Breadcrumbs
 			:items="[
 				{ link: '/', name: 'Explore' },
@@ -145,7 +142,7 @@ watch(
 
 .card {
 	border-radius: 8px;
-	background: var(--op-3);
+	background: var(--card-background);
 
 	padding: 16px 0 0 0;
 }
