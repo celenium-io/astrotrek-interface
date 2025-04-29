@@ -1,19 +1,11 @@
 <script setup>
-/** Vendor */
-import { DateTime } from "luxon"
-
-/** UI */
-import Button from "~/components/ui/Button.vue"
-import { Dropdown, DropdownItem } from "@/components/ui/Dropdown"
-
 /** Servies */
 import { fetchQuotes } from "@/services/api/quotes"
 
 /** Components */
+import EmptyHolder from "~/components/shared/EmptyHolder.vue"
+import LoadingHolder from "~/components/shared/LoadingHolder.vue"
 import QuoteCard from "@/components/ui/Charts/QuoteCard.vue"
-import StatsBarChart from "@/components/ui/Charts/StatsBarChart.vue"
-import HighlightCard from "@/components/ui/Charts/HighlightCard.vue"
-import StatsLineChart from "@/components/ui/Charts/StatsLineChart.vue"
 
 definePageMeta({
 	layout: "default",
@@ -71,10 +63,17 @@ useHead({
 })
 
 const quotes = ref([])
+const isLoading = ref(true)
+
 const getQuotes = async () => {
-	const data = await fetchQuotes()
-	if (data.length) {
-		quotes.value = data
+	isLoading.value = true
+	try {
+		const data = await fetchQuotes()
+		if (data.length) {
+			quotes.value = data
+		}
+	} finally {
+		isLoading.value = false
 	}
 }
 const view = ref("cards") // "table"
@@ -93,11 +92,15 @@ onMounted(async () => {
 			]"
 		/>
 
-		<Flex align="center" justify="between">
+		<LoadingHolder v-if="isLoading" title="Loading quotes.." />
+
+		<Flex v-if="quotes.length" align="center" justify="between">
 			<QuoteCard v-for="q in quotes"
 				:quote="q"
 			/>
 		</Flex>
+
+		<EmptyHolder v-else-if="!isLoading" title="Oracle data for currency pair quotes is not available on the current network" />
 	</Flex>
 </template>
 

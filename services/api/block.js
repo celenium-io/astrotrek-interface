@@ -69,7 +69,7 @@ export const fetchBlockTxs = async ({ limit, offset, height }) => {
 	}
 }
 
-export const fetchBlockActions = async ({ limit, offset, height }) => {
+export const fetchBlockActions = async ({ height, limit, offset }) => {
 	try {
 		const url = new URL(`${useServerURL()}/block/${height}/actions`)
 
@@ -77,6 +77,20 @@ export const fetchBlockActions = async ({ limit, offset, height }) => {
 		if (offset) url.searchParams.append("offset", offset)
 
 		const data = await useFetch(url.href)
+		return data
+	} catch (error) {
+		console.error(error)
+	}
+}
+
+export const fetchBlockQuotesUpdates = async ({ height, limit, offset }) => {
+	try {
+		const url = new URL(`${useServerURL()}/block/${height}/prices`)
+
+		if (limit) url.searchParams.append("limit", limit)
+		if (offset) url.searchParams.append("offset", offset)
+		
+		const data = await $fetch(url.href)
 		return data
 	} catch (error) {
 		console.error(error)

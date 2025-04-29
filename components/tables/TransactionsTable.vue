@@ -3,7 +3,7 @@
 import { DateTime } from "luxon"
 
 /** Components */
-import LinkToEntity from "@/components/shared/LinkToEntity.vue";
+import LinkToEntity from "@/components/shared/LinkToEntity.vue"
 
 /** UI */
 import ActionsRow from "@/components/shared/ActionsRow.vue"

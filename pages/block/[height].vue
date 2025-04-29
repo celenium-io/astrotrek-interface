@@ -1,20 +1,21 @@
 <script setup>
 /** Services */
-import { capitalize, spaces } from "~/services/utils"
+import { capitalizeAndReplaceUnderscore, spaces } from "~/services/utils"
 
 /** UI */
 import Button from "~/components/ui/Button.vue"
 
 /** Modules */
+import BlockActions from "@/components/modules/block/BlockActions.vue"
 import BlockMetadata from "@/components/modules/block/BlockMetadata.vue"
 import BlockTransactions from "@/components/modules/block/BlockTransactions.vue"
-import BlockActions from "@/components/modules/block/BlockActions.vue"
+import BlockQuotesUpdates from "@/components/modules/block/BlockQuotesUpdates.vue"
 
 /** Components */
 import RawDataView from "@/components/shared/RawDataView.vue"
 
 /** API */
-import { fetchBlockByHeight, fetchBlockTxs, fetchBlockActions } from "~/services/api/block"
+import { fetchBlockActions, fetchBlockByHeight, fetchBlockQuotesUpdates, fetchBlockTxs } from "~/services/api/block"
 
 /** Store */
 import { useAppStore } from "@/store/app"
@@ -31,6 +32,7 @@ const block = ref()
 const lastBlock = computed(() => appStore.latestBlocks[0])
 const txs = ref([])
 const actions = ref([])
+const quotesUpdates = ref([])
 const isLoading = ref(false)
 
 const { data } = await fetchBlockByHeight(route.params.height)
@@ -74,6 +76,18 @@ const fetchActions = async () => {
 	isLoading.value = false
 }
 
+const gethBlockQuotesUpdates = async () => {
+	isLoading.value = true
+
+	quotesUpdates.value = await fetchBlockQuotesUpdates({
+		height: block.value.height,
+		limit: limit.value,
+		offset: (page.value - 1) * limit.value,
+	})
+	handleNextCondition.value = quotesUpdates.value?.length < limit.value
+
+	isLoading.value = false
+}
 const fetchData = async () => {
 	switch (activeTab.value) {
 		case "transactions":
@@ -81,6 +95,9 @@ const fetchData = async () => {
 			break
 		case "actions":
 			await fetchActions()
+			break
+		case "quotes_updates":
+			await gethBlockQuotesUpdates()
 			break
 	}
 }
@@ -127,7 +144,10 @@ const tabs = ref([
 	},
 	{
 		name: "actions"
-	}
+	},
+	{
+		name: "quotes_updates"
+	},
 ])
 const activeTab = ref(route.query.tab && tabs.value.map((tab) => tab.name).includes(route.query.tab) ? route.query.tab : tabs.value[0].name)
 
@@ -238,7 +258,7 @@ watch(
 						color="secondary"
 						:class="[$style.tab, activeTab === tab.name && $style.active]"
 					>
-						{{ capitalize(tab.name) }}
+						{{ capitalizeAndReplaceUnderscore(tab.name) }}
 					</Text>
 				</Flex>
 
@@ -255,6 +275,7 @@ watch(
 
 			<BlockTransactions v-if="activeTab === 'transactions'" :txs="txs" :isLoading="isLoading" />
 			<BlockActions v-if="activeTab === 'actions'" :actions="actions" :isLoading="isLoading" />
+			<BlockQuotesUpdates v-if="activeTab === 'quotes_updates'" :quotesUpdates="quotesUpdates" :height="block.height" :isLoading="isLoading" />
 		</Flex>
 	</Flex>
 </template>
