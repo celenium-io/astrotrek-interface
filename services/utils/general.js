@@ -36,7 +36,10 @@ export const strToHex = (str) => {
 export const hexToBase64 = (hex) => {
 	if (!hex?.length) return ""
 
-	let binary = hex.match(/.{1,2}/g).map(byte => String.fromCharCode(parseInt(byte, 16))).join('')
+	let binary = hex
+		.match(/.{1,2}/g)
+		.map((byte) => String.fromCharCode(parseInt(byte, 16)))
+		.join("")
 
 	return btoa(binary)
 }
@@ -53,7 +56,7 @@ export const shortHex = (hex) => {
 
 export const shortHash = (hash) => {
 	if (!hash?.length) return ""
-	
+
 	if (hash.length > 16) {
 		if (hash.startsWith("astria")) {
 			return `astria ••• ${hash.slice(-4)}`
@@ -67,13 +70,13 @@ export const shortHash = (hash) => {
 
 export const midHash = (hash) => {
 	if (!hash) return ""
-	
+
 	if (hash.length > 24) {
 		if (hash.startsWith("astria")) {
-			return `astria ••• ${hash.slice(-8,-4)} ${hash.slice(-4)}`
+			return `astria ••• ${hash.slice(-8, -4)} ${hash.slice(-4)}`
 		}
 
-		return `${hash.slice(0, 4)} ${hash.slice(4, 8)} ••• ${hash.slice(-8,-4)} ${hash.slice(-4)}`
+		return `${hash.slice(0, 4)} ${hash.slice(4, 8)} ••• ${hash.slice(-8, -4)} ${hash.slice(-4)}`
 	} else {
 		return hash
 	}
@@ -86,7 +89,6 @@ export const splitAddress = (address, charCount = 4) => {
 
 	return `${address.slice(0, charCount)}...${address.slice(-charCount)}`
 }
-
 
 export const getNetworkName = () => {
 	const { hostname } = useRequestURL()
@@ -121,9 +123,8 @@ export function reverseMapping(obj) {
 }
 
 export function isObject(input) {
-	return typeof input === 'object' && input !== null && !Array.isArray(input)
+	return typeof input === "object" && input !== null && !Array.isArray(input)
 }
-
 
 export const getNativeAsset = () => {
 	let network = getNetworkName()
@@ -138,14 +139,14 @@ export const getNativeAsset = () => {
 }
 
 export function arraysAreEqual(arr1, arr2) {
-    if (arr1.length !== arr2.length) {
-        return false
-    }
+	if (arr1.length !== arr2.length) {
+		return false
+	}
 
-    return arr1.every((obj1, index) => {
-        const obj2 = arr2[index];
-        return JSON.stringify(obj1) === JSON.stringify(obj2);
-    })
+	return arr1.every((obj1, index) => {
+		const obj2 = arr2[index]
+		return JSON.stringify(obj1) === JSON.stringify(obj2)
+	})
 }
 
 const REGEX_MOBILE1 =
