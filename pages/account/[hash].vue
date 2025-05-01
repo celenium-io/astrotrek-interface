@@ -340,7 +340,7 @@ onMounted(() => {
 					<Icon name="account" size="14" color="primary" />
 
 					<Text size="14" weight="500" color="primary">
-						Account <Text weight="600">{{ shortHash(account?.hash) }}</Text>
+						Account <Text weight="600">{{ $getDisplayName('addresses', null, account) }}</Text>
 					</Text>
 
 					<Tooltip v-if="account?.is_bridge">
