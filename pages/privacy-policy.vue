@@ -7,6 +7,53 @@ import { PRIVACY_POLICY_DATE } from "@/services/constants/legal.js"
 
 useHead({
 	title: "Privacy Policy",
+	link: [
+		{
+			rel: "canonical",
+			href: "https://astrotrek.io/privacy-policy",
+		},
+	],
+	meta: [
+		{
+			name: "description",
+			content:
+				"Review Astrotrek’s Privacy Policy to learn how we collect, use, and safeguard your personal information, ensuring transparency, security, and compliance with data protection standards.",
+		},
+		{
+			property: "og:title",
+			content: "Privacy Policy - Astria Explorer",
+		},
+		{
+			property: "og:description",
+			content:
+				"Review Astrotrek’s Privacy Policy to learn how we collect, use, and safeguard your personal information, ensuring transparency, security, and compliance with data protection standards.",
+		},
+		{
+			property: "og:url",
+			content: `https://astrotrek.io/privacy-policy`,
+		},
+		{
+			property: "og:image",
+			content: "/img/seo/privacyPolicy.png",
+		},
+		{
+			name: "twitter:title",
+			content: "Privacy Policy - Astria Explorer",
+		},
+		{
+			name: "twitter:description",
+			content:
+				"Review Astrotrek’s Privacy Policy to learn how we collect, use, and safeguard your personal information, ensuring transparency, security, and compliance with data protection standards.",
+		},
+		{
+			name: "twitter:card",
+			content: "summary_large_image",
+		},
+		{
+			name: "twitter:image",
+			content: "https://astrotrek.io/img/seo/privacyPolicy.png",
+		},
+	],
 })
 
 /**

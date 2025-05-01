@@ -58,13 +58,13 @@
 				</Flex>
 			</NuxtLink>
 
-			<NuxtLink to="/stats">
+			<NuxtLink to="/quotes">
 				<Flex gap="12" :class="$style.item">
-					<Icon name="bar-chart" color="primary" size="20" :class="$style.item_icon" />
+					<Icon name="quotes" color="primary" size="20" :class="$style.item_icon" />
 
 					<Flex direction="column" gap="6">
-						<Text size="14" weight="600" color="primary">Statistics</Text>
-						<Text size="13" weight="500" color="tertiary">Key blockchain metrics</Text>
+						<Text size="14" weight="600" color="primary">Quotes</Text>
+						<Text size="13" weight="500" color="tertiary">On-chain oracle data</Text>
 					</Flex>
 				</Flex>
 			</NuxtLink>
@@ -89,6 +89,17 @@
 					<Flex direction="column" gap="6">
 						<Text size="14" weight="600" color="primary">Validators</Text>
 						<Text size="13" weight="500" color="tertiary">Validators that produce blocks</Text>
+					</Flex>
+				</Flex>
+			</NuxtLink>
+
+			<NuxtLink to="/stats">
+				<Flex gap="12" :class="$style.item">
+					<Icon name="bar-chart" color="primary" size="20" :class="$style.item_icon" />
+
+					<Flex direction="column" gap="6">
+						<Text size="14" weight="600" color="primary">Statistics</Text>
+						<Text size="13" weight="500" color="tertiary">Key blockchain metrics</Text>
 					</Flex>
 				</Flex>
 			</NuxtLink>

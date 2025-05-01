@@ -7,6 +7,53 @@ import { TERMS_OF_USE_DATE } from "@/services/constants/legal.js"
 
 useHead({
 	title: "Terms of Use",
+	link: [
+		{
+			rel: "canonical",
+			href: "https://astrotrek.io/terms-of-use",
+		},
+	],
+	meta: [
+		{
+			name: "description",
+			content:
+				"Review Astrotrek’s Terms of Use to understand the legal agreement, user responsibilities, and guidelines governing your access to.",
+		},
+		{
+			property: "og:title",
+			content: "Terms of use - Astria Explorer",
+		},
+		{
+			property: "og:description",
+			content:
+				"Review Astrotrek’s Terms of Use to understand the legal agreement, user responsibilities, and guidelines governing your access to.",
+		},
+		{
+			property: "og:url",
+			content: `https://astrotrek.io/terms-of-use`,
+		},
+		{
+			property: "og:image",
+			content: "/img/seo/termsOfUse.png",
+		},
+		{
+			name: "twitter:title",
+			content: "Terms of use - Astria Explorer",
+		},
+		{
+			name: "twitter:description",
+			content:
+				"Review Astrotrek’s Terms of Use to understand the legal agreement, user responsibilities, and guidelines governing your access to.",
+		},
+		{
+			name: "twitter:card",
+			content: "summary_large_image",
+		},
+		{
+			name: "twitter:image",
+			content: "https://astrotrek.io/img/seo/termsOfUse.png",
+		},
+	],
 })
 
 /**

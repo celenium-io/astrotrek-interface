@@ -46,13 +46,13 @@ const props = defineProps({
 				<Flex align="center" gap="8" :class="[$style.sub_title, $style.overflow]">
 					<Text size="12" weight="500" color="tertiary">Sudo</Text>
 
-					<LinkToEntity :entity="{ title: midHash(bridge.sudo), type: 'account', id: bridge.sudo}" color="secondary" />
+					<LinkToEntity :entity="{ title: $getDisplayName('addresses', null, bridge.sudo), type: 'account', id: bridge.sudo.hash}" color="secondary" />
 
 					<div :class="$style.dot" />
 
 					<Text size="12" weight="500" color="tertiary">Withdrawer</Text>
 
-					<LinkToEntity :entity="{ title: midHash(bridge.withdrawer), type: 'account', id: bridge.withdrawer}" color="secondary" />
+					<LinkToEntity :entity="{ title: $getDisplayName('addresses', null, bridge.withdrawer), type: 'account', id: bridge.withdrawer.hash}" color="secondary" />
 
 					<div :class="$style.dot" />
 					

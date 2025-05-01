@@ -3,7 +3,7 @@
 import { DateTime } from "luxon"
 
 /** Components */
-import LinkToEntity from "@/components/shared/LinkToEntity.vue";
+import LinkToEntity from "@/components/shared/LinkToEntity.vue"
 
 /** UI */
 import ActionsRow from "@/components/shared/ActionsRow.vue"
@@ -76,7 +76,7 @@ const props = defineProps({
 
 					<Text size="12" weight="500" color="tertiary">Signer</Text>
 
-					<LinkToEntity :entity="{ title: splitAddress(t.signer, 4), type: 'account', id: t.signer}" color="secondary" />
+					<LinkToEntity :entity="{ title: $getDisplayName('addresses', null, t.signer, true, addr => splitAddress(addr, 4)), type: 'account', id: t.signer.hash}" color="secondary" />
 
 					<div :class="$style.dot" />
 

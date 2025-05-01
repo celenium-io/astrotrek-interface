@@ -100,10 +100,10 @@ const showMore = ref(false)
 		<Flex align="center" :class="$style.item">
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Native Bridge</Text>
 
-			<NuxtLink :to="`/account/${app.native_bridge}`" :style="{width: '100%'}">
+			<NuxtLink :to="`/account/${app.native_bridge.hash}`" :style="{width: '100%'}">
 				<Flex align="center" gap="6" :class="$style.value" :style="{width: '100%'}">
-					<CopyButton :text="app.native_bridge" />
-					<Text size="13" weight="600" color="primary" mono :class="$style.overflow"> {{ app.native_bridge }} </Text>
+					<CopyButton :text="app.native_bridge.hash" />
+					<Text size="13" weight="600" color="primary" mono :class="$style.overflow"> {{ $getDisplayName('addresses', null, app.native_bridge) }} </Text>
 					<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
 				</Flex>
 			</NuxtLink>

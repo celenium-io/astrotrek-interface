@@ -127,7 +127,7 @@ const fetchBridgeRoles = async () => {
 	})
 
 	data.value.forEach(r => {
-		if (r.sudo === account.value.hash) {
+		if (r.sudo.hash === account.value.hash) {
 			bridgeRoles.value.push({
 				bridge: r.address,
 				account: r.sudo,
@@ -136,7 +136,7 @@ const fetchBridgeRoles = async () => {
 			})
 		}
 
-		if (r.withdrawer === account.value.hash) {
+		if (r.withdrawer.hash === account.value.hash) {
 			bridgeRoles.value.push({
 				bridge: r.address,
 				account: r.withdrawer,
@@ -340,7 +340,7 @@ onMounted(() => {
 					<Icon name="account" size="14" color="primary" />
 
 					<Text size="14" weight="500" color="primary">
-						Account <Text weight="600">{{ shortHash(account?.hash) }}</Text>
+						Account <Text weight="600">{{ $getDisplayName('addresses', null, account) }}</Text>
 					</Text>
 
 					<Tooltip v-if="account?.is_bridge">
