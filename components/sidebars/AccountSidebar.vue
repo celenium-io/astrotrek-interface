@@ -109,7 +109,7 @@ watch(
 					<Flex align="center" gap="8">
 						<LinkToEntity
 							@click="emit('onClose')"
-							:entity="{ title: midHash(account.hash), type: 'account', id: account.hash}"
+							:entity="{ title: $getDisplayName('addresses', null, account), type: 'account', id: account.hash}"
 							mode="sidebar"
 							color="primary"
 							size="16"
