@@ -36,10 +36,10 @@ const showMore = ref(false)
 		<Flex align="center" :class="$style.item">
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Admin</Text>
 			
-			<NuxtLink :to="`/account/${account.bridge.sudo}`" :class="$style.value">
+			<NuxtLink :to="`/account/${account.bridge.sudo.hash}`" :class="$style.value">
 				<Flex align="center" gap="4">
-					<CopyButton :text="account.bridge.sudo" />
-					<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ account.bridge.sudo }}</Text>
+					<CopyButton :text="account.bridge.sudo.hash" />
+					<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ $getDisplayName('addresses', null, account.bridge.sudo, false) }}</Text>
 					<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
 				</Flex>
 			</NuxtLink>
@@ -48,10 +48,10 @@ const showMore = ref(false)
 		<Flex align="center" :class="$style.item">
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Withdrawer</Text>
 			
-			<NuxtLink :to="`/account/${account.bridge.withdrawer}`" :class="$style.value">
+			<NuxtLink :to="`/account/${account.bridge.withdrawer.hash}`" :class="$style.value">
 				<Flex align="center" gap="4">
-					<CopyButton :text="account.bridge.withdrawer" />
-					<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ account.bridge.withdrawer }}</Text>
+					<CopyButton :text="account.bridge.withdrawer.hash" />
+					<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ $getDisplayName('addresses', null, account.bridge.withdrawer, false) }}</Text>
 					<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
 				</Flex>
 			</NuxtLink>

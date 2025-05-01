@@ -33,7 +33,7 @@ const router = useRouter()
 
 const isDisable = computed(() => {
 	if (props.entity.type === 'account') {
-		return !(props.entity.id.startsWith('astria') || props.entity.id.startsWith('celestia'))
+		return !(props.entity.id?.startsWith('astria') || props.entity.id?.startsWith('celestia'))
 	}
 
 	return false

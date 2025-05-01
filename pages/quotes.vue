@@ -38,10 +38,10 @@ useHead({
 			property: "og:url",
 			content: `https://astrotrek.io/quotes`,
 		},
-		// {
-		// 	property: "og:image",
-		// 	content: "/img/seo/statistics.png",
-		// },
+		{
+			property: "og:image",
+			content: "/img/seo/qoutes.png",
+		},
 		{
 			name: "twitter:title",
 			content: "Quotes - Astria Explorer",
@@ -55,10 +55,10 @@ useHead({
 			name: "twitter:card",
 			content: "summary_large_image",
 		},
-		// {
-		// 	name: "twitter:image",
-		// 	content: "https://astrotrek.io/img/seo/statistics.png",
-		// },
+		{
+			name: "twitter:image",
+			content: "https://astrotrek.io/img/seo/qoutes.png",
+		},
 	],
 })
 

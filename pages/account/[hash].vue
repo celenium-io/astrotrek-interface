@@ -127,7 +127,7 @@ const fetchBridgeRoles = async () => {
 	})
 
 	data.value.forEach(r => {
-		if (r.sudo === account.value.hash) {
+		if (r.sudo.hash === account.value.hash) {
 			bridgeRoles.value.push({
 				bridge: r.address,
 				account: r.sudo,
@@ -136,7 +136,7 @@ const fetchBridgeRoles = async () => {
 			})
 		}
 
-		if (r.withdrawer === account.value.hash) {
+		if (r.withdrawer.hash === account.value.hash) {
 			bridgeRoles.value.push({
 				bridge: r.address,
 				account: r.withdrawer,
