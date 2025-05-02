@@ -10,6 +10,6 @@ const modalsStore = useModalsStore()
 </script>
 
 <template>
-    <ConstantsModal :show="modalsStore.modals.constants" @onClose="modalsStore.close('constants')" />
-    <RawDataModal :show="modalsStore.modals.rawData" @onClose="modalsStore.close('rawData')" />
+	<ConstantsModal :show="modalsStore.modals.constants" @onClose="modalsStore.close('constants')" />
+	<RawDataModal :show="modalsStore.modals.rawData" @onClose="modalsStore.close('rawData')" />
 </template>

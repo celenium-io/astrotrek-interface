@@ -27,39 +27,41 @@ const showMore = ref(false)
 		</Flex>
 
 		<Flex align="center" :class="$style.item">
-			<Text size="13" weight="600" color="secondary" :class="$style.key"> {{ rollup.bridge_count > 0 ? 'Rollup ' : '' }} Actions Count </Text>
+			<Text size="13" weight="600" color="secondary" :class="$style.key">
+				{{ rollup.bridge_count > 0 ? "Rollup " : "" }} Actions Count
+			</Text>
 
 			<Text size="13" weight="600" color="primary" mono :class="$style.value"> {{ rollup.actions_count }} </Text>
 		</Flex>
 
-		<Flex align="center" :class="$style.item">
-			<Text size="13" weight="600" color="secondary" :class="$style.key">First Height</Text>
-			
-			<NuxtLink :to="`/block/${rollup.first_height}`">
+		<NuxtLink :to="`/block/${rollup.first_height}`" :class="[$style.item, $style.link]">
+			<Flex align="center">
+				<Text size="13" weight="600" color="secondary" :class="$style.key">First Height</Text>
+
 				<Flex align="center" gap="4" :class="$style.value">
 					<Text size="13" weight="600" color="primary" mono>{{ spaces(rollup.first_height) }}</Text>
 
 					<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
 				</Flex>
-			</NuxtLink>
-		</Flex>
-		
-		<Flex align="center" :class="$style.item">
-			<Text size="13" weight="600" color="secondary" :class="$style.key">Celestia Namespace ID</Text>
-			
-			<Flex align="center" gap="8" :class="$style.value">
-				<CopyButton :text="namespaceID" />
+			</Flex>
+		</NuxtLink>
 
-				<NuxtLink :to="namespaceLink" target="_blank">
+		<NuxtLink :to="namespaceLink" target="_blank" :class="[$style.item, $style.link]">
+			<Flex align="center">
+				<Text size="13" weight="600" color="secondary" :class="$style.key">Celestia Namespace ID</Text>
+
+				<Flex align="center" gap="8" :class="$style.value">
+					<CopyButton :text="namespaceID" />
+
 					<Flex align="center" gap="4">
 						<Text size="13" weight="600" color="primary" mono>{{ space(namespaceID) }}</Text>
 
 						<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
 					</Flex>
-				</NuxtLink>
+				</Flex>
 			</Flex>
-		</Flex>
-		
+		</NuxtLink>
+
 		<Flex align="center" :class="$style.item">
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Size</Text>
 
@@ -67,7 +69,7 @@ const showMore = ref(false)
 		</Flex>
 
 		<template v-if="showMore">
-				<!-- <Flex align="center" :class="$style.item">
+			<!-- <Flex align="center" :class="$style.item">
 					<Text size="13" weight="600" color="secondary" :class="$style.key">Signer</Text>
 
 					<Flex align="center" gap="8" :class="$style.value">
@@ -87,14 +89,27 @@ const showMore = ref(false)
 <style module>
 .wrapper {
 	border-radius: 8px;
-	box-shadow: inset 0 0 0 1px var(--op-5);
+	box-shadow: 0 0 0 1px var(--op-10);
 	background: var(--op-3);
 }
 
 .item {
 	height: 36px;
 
+	border-bottom: 1px solid var(--op-10);
+
 	padding: 0 12px;
+
+	&.link {
+		display: flex;
+		align-items: center;
+
+		transition: all 0.2s ease;
+
+		&:hover {
+			background: var(--op-5);
+		}
+	}
 
 	&:last-child {
 		border-bottom: none;

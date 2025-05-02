@@ -30,8 +30,8 @@ const props = defineProps({
 		required: false,
 	},
 	prefetch: {
-		type: Boolean,
-		default: false,
+		type: String,
+		default: null,
 	},
 	target: {
 		type: String,
@@ -58,7 +58,7 @@ const getStyles = () => {
 <template>
 	<component
 		:is="link ? NuxtLink : 'button'"
-		v-bind="{ to: link ? link : null, prefetch: prefetch, prefetchOn: prefetch }"
+		v-bind="{ to: link ? link : null, prefetch: prefetch ? true : null, prefetchOn: prefetch }"
 		:target="target"
 		:class="[...getStyles(), loading && $style.loading]"
 	>

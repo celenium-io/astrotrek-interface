@@ -72,7 +72,7 @@ const links = [
 				</NuxtLink>
 			</Flex>
 
-			<Dropdown :class="$style.tools_dropdown">
+			<!-- <Dropdown :class="$style.tools_dropdown">
 				<Flex align="center" gap="6" :class="$style.link">
 					<Text size="13" weight="600" color="secondary">Tools</Text>
 					<Icon name="chevron" size="14" color="primary" />
@@ -93,7 +93,7 @@ const links = [
 						<Text size="13" weight="600">Hex Viewer</Text>
 					</Flex>
 				</NuxtLink>
-			</Flex>
+			</Flex> -->
 		</Flex>
 	</Flex>
 </template>

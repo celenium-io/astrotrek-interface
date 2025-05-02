@@ -76,7 +76,7 @@ const showMore = ref(false)
 
 				<Flex align="center" gap="8" :class="$style.value">
 					<CopyButton :text="tx.signer" />
-					<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ tx.signer }}</Text>
+					<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ tx.signer.hash }}</Text>
 					<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
 				</Flex>
 			</Flex>

@@ -87,22 +87,24 @@ onBeforeUnmount(() => {
 const onScroll = (e) => {
 	e.preventDefault()
 
-	const delta = e.wheelDeltaY
+	let delta = Number(`${e.deltaY < 0 ? "-" : ""}${Math.max(1, Math.round(Math.abs(e.deltaY) / 2))}`)
 
-	if (e.deltaY === 0) return
+	if (delta === 0) return
+	if (delta > 15) delta = 15
 	if (props.hex.length <= 32) return
-	if (e.deltaY < 0 && scrollOffset.value <= 0) {
-		if (scrollOffset.value < 0) scrollOffset.value = 0
-		return
-	}
 
-	if (scrollOffset.value - delta / 120 < 0) {
-		scrollOffset.value = 0
-	} else if (scrollOffset.value - delta / 120 + 32 > props.hex.length) {
-		scrollOffset.value = props.hex.length - 32
+	if (delta > 0) {
+		if (scrollOffset.value + delta + 32 > props.hex.length) {
+			scrollOffset.value = props.hex.length - 32
+			return
+		}
 	} else {
-		scrollOffset.value -= delta / 120
+		if (scrollOffset.value + delta < 0) {
+			scrollOffset.value = 0
+			return
+		}
 	}
+	scrollOffset.value += delta
 }
 
 const onMouseEnter = (e) => {
@@ -267,6 +269,7 @@ const clearThumbDraging = () => {
 							parseInt(`0x${byte}`, 16) >= 32 && parseInt(`0x${byte}`, 16) <= 126 && $style.highlight,
 							hoveredByteIdx === (rowIdx - 1) * 16 + byteIdx && $style.hover,
 							byteIdx === 0 && $style.margin,
+							isSelected((rowIdx - 1) * 16 + byteIdx) && $style.selected,
 						]"
 					>
 						{{ decode(byte) }}
@@ -294,12 +297,17 @@ const clearThumbDraging = () => {
 .wrapper {
 	width: 660px;
 	min-width: 660px;
+	height: fit-content;
 	border-radius: 4px;
 	background: var(--card-background);
 	box-shadow: 0 0 0 2px var(--op-10);
 	overflow: hidden;
 
 	user-select: none;
+}
+
+.viewer {
+	flex: 1;
 }
 
 .data {
@@ -374,6 +382,10 @@ const clearThumbDraging = () => {
 		}
 
 		&.hover {
+			background: var(--darken-orange);
+		}
+
+		&.selected {
 			background: var(--darken-orange);
 		}
 	}
