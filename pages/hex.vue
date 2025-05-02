@@ -6,10 +6,14 @@ import { Buffer } from "buffer"
 import HexViewer from "@/components/modules/hex/HexViewer.vue"
 import DataInspector from "@/components/modules/hex/DataInspector.vue"
 
+/** API */
+import { fetchRollupActionByInternalId } from "@/services/api/rollup.js"
+
 /** Store */
 import { useCacheStore } from "@/store/cache"
 const cacheStore = useCacheStore()
 
+const route = useRoute()
 const router = useRouter()
 
 useSeoMeta({
@@ -17,7 +21,10 @@ useSeoMeta({
 })
 
 const data = computed(() => cacheStore.current.action?.data.data)
-if (!data.value) router.push("/")
+if (!data.value) {
+	const { data: action } = await fetchRollupActionByInternalId({ id: route.query.action })
+	if (action) cacheStore.current.action = action
+}
 
 const hex = ref([])
 const size = ref(0)

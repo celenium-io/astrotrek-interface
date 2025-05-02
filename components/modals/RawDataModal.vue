@@ -88,7 +88,7 @@ const handleCopy = () => {
 				<Flex align="center" gap="12">
 					<Button
 						v-if="cacheStore.current.action?.type === 'rollup_data_submission'"
-						link="/hex"
+						:link="`/hex?action=${cacheStore.current.action?.id}`"
 						@click="handleOpenHexViewer"
 						type="secondary"
 						size="medium"
