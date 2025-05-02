@@ -143,6 +143,7 @@ watch(
 .card {
 	border-radius: 8px;
 	background: var(--card-background);
+	overflow: hidden;
 
 	padding: 16px 0 0 0;
 }

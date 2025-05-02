@@ -167,15 +167,6 @@ const handleSort = (by) => {
 			&:hover {
 				background: var(--op-5);
 			}
-
-			&:last-child {
-				& td:first-child {
-					border-bottom-left-radius: 8px;
-				}
-				& td:last-child {
-					border-bottom-right-radius: 8px;
-				}
-			}
 		}
 	}
 

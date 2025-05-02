@@ -145,12 +145,6 @@ const getSharePower = (validator, int = true) => {
 		background: var(--op-5);
 	}
 
-	&:last-child {
-		border-bottom-left-radius: 8px;
-		border-bottom-right-radius: 8px;
-		border-bottom: 1px solid var(--op-5);
-	}
-
 	&:active {
 		background: var(--op-10);
 	}

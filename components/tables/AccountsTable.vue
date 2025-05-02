@@ -134,11 +134,6 @@ const props = defineProps({
 		background: var(--op-5);
 	}
 
-	&:last-child {
-		border-bottom-left-radius: 8px;
-		border-bottom-right-radius: 8px;
-	}
-
 	&:active {
 		background: var(--op-10);
 	}
