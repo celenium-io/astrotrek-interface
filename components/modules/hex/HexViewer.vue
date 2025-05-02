@@ -461,7 +461,6 @@ const clearThumbDraging = () => {
 	position: relative;
 
 	width: 16px;
-	height: 100%;
 	overflow: hidden;
 
 	background: var(--app-background);
