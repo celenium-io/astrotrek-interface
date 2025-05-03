@@ -85,13 +85,11 @@ const balances = computed(() => {
 		</Flex>
 
 		<NuxtLink :to="`/block/${account.first_height}`" :class="[$style.item, $style.link]">
-			<Flex align="center">
-				<Text size="13" weight="600" color="secondary" :class="$style.key">First Height</Text>
+			<Text size="13" weight="600" color="secondary" :class="$style.key">First Height</Text>
 
-				<Flex align="center" gap="4" :class="$style.value">
-					<Text size="13" weight="600" color="primary" mono>{{ spaces(account.first_height) }}</Text>
-					<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
-				</Flex>
+			<Flex align="center" gap="4" :class="$style.value">
+				<Text size="13" weight="600" color="primary" mono>{{ spaces(account.first_height) }}</Text>
+				<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
 			</Flex>
 		</NuxtLink>
 
@@ -163,6 +161,10 @@ const balances = computed(() => {
 		gap: 8px;
 
 		overflow: hidden;
+
+		&.link {
+			align-items: start;
+		}
 	}
 
 	.value {

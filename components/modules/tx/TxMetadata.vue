@@ -60,25 +60,21 @@ const showMore = ref(false)
 		</Flex>
 
 		<NuxtLink :to="`/block/${tx.height}`" :class="[$style.item, $style.link]">
-			<Flex align="center">
-				<Text size="13" weight="600" color="secondary" :class="$style.key">Block Height</Text>
+			<Text size="13" weight="600" color="secondary" :class="$style.key">Block Height</Text>
 
-				<Flex align="center" gap="6" :class="$style.value">
-					<Text size="13" weight="600" color="primary" mono>{{ spaces(tx.height) }}</Text>
-					<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
-				</Flex>
+			<Flex align="center" gap="6" :class="$style.value">
+				<Text size="13" weight="600" color="primary" mono>{{ spaces(tx.height) }}</Text>
+				<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
 			</Flex>
 		</NuxtLink>
 
 		<NuxtLink :to="`/account/${tx.signer}`" :class="[$style.item, $style.link]">
-			<Flex align="center">
-				<Text size="13" weight="600" color="secondary" :class="$style.key">Signer</Text>
+			<Text size="13" weight="600" color="secondary" :class="$style.key">Signer</Text>
 
-				<Flex align="center" gap="8" :class="$style.value">
-					<CopyButton :text="tx.signer" />
-					<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ tx.signer.hash }}</Text>
-					<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
-				</Flex>
+			<Flex align="center" gap="8" :class="$style.value">
+				<CopyButton :text="tx.signer" />
+				<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ tx.signer.hash }}</Text>
+				<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
 			</Flex>
 		</NuxtLink>
 
@@ -169,6 +165,10 @@ const showMore = ref(false)
 		gap: 8px;
 
 		overflow: hidden;
+
+		&.link {
+			align-items: start;
+		}
 	}
 
 	.value {

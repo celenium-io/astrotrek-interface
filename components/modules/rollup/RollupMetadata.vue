@@ -35,29 +35,25 @@ const showMore = ref(false)
 		</Flex>
 
 		<NuxtLink :to="`/block/${rollup.first_height}`" :class="[$style.item, $style.link]">
-			<Flex align="center">
-				<Text size="13" weight="600" color="secondary" :class="$style.key">First Height</Text>
+			<Text size="13" weight="600" color="secondary" :class="$style.key">First Height</Text>
 
-				<Flex align="center" gap="4" :class="$style.value">
-					<Text size="13" weight="600" color="primary" mono>{{ spaces(rollup.first_height) }}</Text>
+			<Flex align="center" gap="4" :class="$style.value">
+				<Text size="13" weight="600" color="primary" mono>{{ spaces(rollup.first_height) }}</Text>
 
-					<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
-				</Flex>
+				<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
 			</Flex>
 		</NuxtLink>
 
 		<NuxtLink :to="namespaceLink" target="_blank" :class="[$style.item, $style.link]">
-			<Flex align="center">
-				<Text size="13" weight="600" color="secondary" :class="$style.key">Celestia Namespace ID</Text>
+			<Text size="13" weight="600" color="secondary" :class="$style.key">Celestia Namespace ID</Text>
 
-				<Flex align="center" gap="8" :class="$style.value">
-					<CopyButton :text="namespaceID" />
+			<Flex align="center" gap="8" :class="$style.value">
+				<CopyButton :text="namespaceID" />
 
-					<Flex align="center" gap="4">
-						<Text size="13" weight="600" color="primary" mono>{{ space(namespaceID) }}</Text>
+				<Flex align="center" gap="4">
+					<Text size="13" weight="600" color="primary" mono>{{ space(namespaceID) }}</Text>
 
-						<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
-					</Flex>
+					<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
 				</Flex>
 			</Flex>
 		</NuxtLink>
@@ -147,6 +143,10 @@ const showMore = ref(false)
 		gap: 8px;
 
 		overflow: hidden;
+
+		&.link {
+			align-items: start;
+		}
 	}
 
 	.value {
