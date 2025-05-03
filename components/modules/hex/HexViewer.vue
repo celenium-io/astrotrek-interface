@@ -121,6 +121,8 @@ const onTouchStart = (e) => {
 	startPos.value = e.touches[0].clientY
 }
 const onTouchMove = (e) => {
+	if (props.hex.length <= 32) return
+
 	e.preventDefault()
 
 	if (e.changedTouches[0].clientY - startPos.value < 0) {
