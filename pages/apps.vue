@@ -122,7 +122,8 @@ watch(
 
 				<Flex align="center" gap="16">
 					<Button link="https://forms.gle/dfR6QJJah9kfPe3N6" target="_blank" size="mini" type="primary">
-						<Icon name="plus-circle" size="14" color="primary" /> Register Your Application
+						<Icon name="plus-circle" size="14" color="primary" />
+						<div :class="$style.register_btn_text">Register Your Application</div>
 					</Button>
 
 					<Flex align="center" gap="6">
@@ -171,6 +172,10 @@ watch(
 @media (max-width: 500px) {
 	.wrapper {
 		padding: 0 12px;
+	}
+
+	.register_btn_text {
+		display: none;
 	}
 }
 </style>
