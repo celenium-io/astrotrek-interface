@@ -371,6 +371,8 @@ const clearThumbDraging = () => {
 		width: 12px;
 		line-height: 18px;
 
+		text-align: center;
+
 		transition: none;
 
 		&.highlight {
@@ -486,5 +488,51 @@ const clearThumbDraging = () => {
 	background: var(--app-background);
 
 	padding: 10px 12px;
+}
+
+@media (max-width: 720px) {
+	.wrapper {
+		width: initial;
+		min-width: initial;
+	}
+
+	.label {
+		font-size: 10px;
+	}
+
+	.row_id {
+		display: none;
+	}
+
+	.row {
+		& .column_id {
+			font-size: 10px;
+			width: 16px;
+		}
+
+		& .byte {
+			font-size: 10px;
+			width: 16px;
+
+			&.margin {
+				margin: 0;
+			}
+		}
+
+		& .char {
+			font-size: 10px;
+			width: 8px !important;
+		}
+	}
+
+	.data {
+		padding: 4px 0 4px 4px;
+	}
+
+	.bottom {
+		& span {
+			font-size: 10px;
+		}
+	}
 }
 </style>

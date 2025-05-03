@@ -73,7 +73,10 @@ onMounted(() => {
 	<Flex wide :class="$style.wrapper">
 		<ClientOnly>
 			<HexViewer :hex :bytes :cursor :range :size @onSelect="handleBytesSelect" @onCursorSelect="handleSelectCursor" />
-			<DataInspector :bytes="bytes" :range="range" :cursor="cursor" />
+
+			<Flex direction="column" gap="24" :class="$style.sidebar">
+				<DataInspector :bytes="bytes" :range="range" :cursor="cursor" :action="cacheStore.current.action" />
+			</Flex>
 		</ClientOnly>
 	</Flex>
 </template>
@@ -85,5 +88,26 @@ onMounted(() => {
 	margin-top: 24px;
 	margin-bottom: 120px;
 	padding: 0 24px;
+}
+
+.sidebar {
+	margin-left: 16px;
+}
+
+@media (max-width: 900px) {
+	.wrapper {
+		flex-direction: column;
+		gap: 32px;
+	}
+
+	.sidebar {
+		margin: 0;
+	}
+}
+
+@media (max-width: 500px) {
+	.wrapper {
+		padding: 0 12px;
+	}
 }
 </style>

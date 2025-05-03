@@ -12,7 +12,13 @@ const props = defineProps({
 	cursor: {
 		type: Number,
 	},
+	action: {
+		type: Object,
+	},
 })
+
+const showDebugger = ref(true)
+const showActionMetadata = ref(false)
 
 const asciiMap = {
 	0: "NUL - Null",
@@ -63,107 +69,150 @@ const decode = (bytes) => {
 </script>
 
 <template>
-	<Flex direction="column" gap="24" :class="$style.wrapper">
-		<Flex direction="column" gap="8">
-			<Text size="12" weight="600" color="secondary" mono>Debugger</Text>
-			<Text size="12" weight="600" color="tertiary" mono>Little Endian</Text>
+	<Flex direction="column" gap="32" :class="$style.wrapper">
+		<Flex direction="column" gap="16">
+			<Flex @click="showDebugger = !showDebugger" align="center" gap="6" class="clickable">
+				<Text size="12" weight="600" color="primary" mono>Debugger</Text>
+				<Icon name="chevron" size="12" color="secondary" :style="{ transform: !showDebugger ? 'rotate(180deg)' : null }" />
+			</Flex>
+
+			<template v-if="showDebugger">
+				<Flex direction="column" gap="8" :class="$style.field">
+					<Flex align="center" gap="6">
+						<Text size="12" weight="600" color="secondary" mono>Binary</Text>
+						<CopyButton v-if="range.start" :text="bytes[range.start].toString(2).padStart(8, '0')" size="12" />
+					</Flex>
+
+					<Text v-if="range.start" size="13" weight="600" color="primary" mono>
+						{{ bytes[range.start].toString(2).padStart(8, "0") }}
+					</Text>
+					<Text v-else size="13" weight="600" color="tertiary" mono>No bytes selected</Text>
+				</Flex>
+
+				<Flex direction="column" gap="8" :class="$style.field">
+					<Flex align="center" gap="6">
+						<Text size="12" weight="600" color="secondary" mono>Uint8</Text>
+						<CopyButton v-if="range.start" :text="hexToUint8Array(bytes[range.start]).toString()" size="12" />
+					</Flex>
+
+					<Text v-if="range.start" size="13" weight="600" color="primary" mono>
+						{{ hexToUint8Array(bytes[range.start]) }}
+					</Text>
+					<Text v-else size="13" weight="600" color="tertiary" mono>No bytes selected</Text>
+				</Flex>
+
+				<Flex direction="column" gap="8" :class="$style.field">
+					<Text size="12" weight="600" color="secondary" mono>Time</Text>
+
+					<Text v-if="range.start" size="13" weight="600" color="primary" mono>
+						{{ DateTime.fromISO(parseInt(bytes[range.start], 16)) }}
+					</Text>
+					<Text v-else size="13" weight="600" color="tertiary" mono>No bytes selected</Text>
+				</Flex>
+
+				<Flex direction="column" gap="8" :class="$style.field">
+					<Flex align="center" gap="6">
+						<Text size="12" weight="600" color="secondary" mono>ASCII</Text>
+						<CopyButton
+							v-if="range.start"
+							:text="
+								range.start < range.end
+									? bytes
+											.slice(range.start, range.end)
+											.map((byte) => String.fromCharCode(parseInt(byte, 16)))
+											.join('')
+									: bytes
+											.slice(range.end, range.start)
+											.map((byte) => String.fromCharCode(parseInt(byte, 16)))
+											.join('')
+							"
+							size="12"
+						/>
+					</Flex>
+
+					<Text
+						v-if="range.start !== null && range.end !== null"
+						size="13"
+						weight="600"
+						height="140"
+						color="primary"
+						mono
+						:class="$style.ascii"
+					>
+						<template v-if="range.start < range.end">
+							{{ decode(bytes.slice(range.start, range.end)) }}
+						</template>
+						<template v-else-if="range.start > range.end">
+							{{ decode(bytes.slice(range.end, range.start)) }}
+						</template>
+					</Text>
+					<Text v-else size="13" weight="600" height="140" color="tertiary" mono> No bytes selected </Text>
+				</Flex>
+
+				<Flex direction="column" gap="8" :class="$style.field">
+					<Flex align="center" gap="6">
+						<Text size="12" weight="600" color="secondary" mono>UTF-8 Character</Text>
+						<CopyButton v-if="range.start" :text="123" size="12" />
+					</Flex>
+
+					<Text
+						v-if="parseInt(bytes[cursor], 16) >= 0 && parseInt(bytes[cursor], 16) <= 31"
+						size="13"
+						weight="600"
+						height="140"
+						color="secondary"
+						mono
+					>
+						{{ asciiMap[parseInt(bytes[cursor], 16)] }}
+					</Text>
+					<Text v-else size="13" weight="600" height="140" color="primary" mono>
+						{{ decode([bytes[cursor]]) }}
+					</Text>
+				</Flex>
+			</template>
 		</Flex>
 
-		<Flex direction="column" gap="16" :class="$style.content">
-			<Flex direction="column" gap="8" :class="$style.field">
-				<Flex align="center" gap="6">
-					<Text size="12" weight="600" color="secondary" mono>Binary</Text>
-					<CopyButton v-if="range.start" :text="bytes[range.start].toString(2).padStart(8, '0')" size="12" />
-				</Flex>
-
-				<Text v-if="range.start" size="13" weight="600" color="primary" mono>
-					{{ bytes[range.start].toString(2).padStart(8, "0") }}
-				</Text>
-				<Text v-else size="13" weight="600" color="tertiary" mono>No bytes selected</Text>
+		<Flex direction="column" gap="16">
+			<Flex @click="showActionMetadata = !showActionMetadata" align="center" gap="6" class="clickable">
+				<Text size="12" weight="600" color="primary" mono>Action</Text>
+				<Icon name="chevron" size="12" color="secondary" :style="{ transform: !showActionMetadata ? 'rotate(180deg)' : null }" />
 			</Flex>
 
-			<Flex direction="column" gap="8" :class="$style.field">
-				<Flex align="center" gap="6">
-					<Text size="12" weight="600" color="secondary" mono>Uint8</Text>
-					<CopyButton v-if="range.start" :text="hexToUint8Array(bytes[range.start]).toString()" size="12" />
+			<template v-if="showActionMetadata">
+				<Flex direction="column" gap="8" :class="$style.field">
+					<Text size="12" weight="600" color="secondary" mono>Type</Text>
+
+					<Text size="13" weight="600" color="primary" mono>
+						{{ action.type }}
+					</Text>
+				</Flex>
+				<Flex direction="column" gap="8" :class="$style.field">
+					<Flex align="center" gap="6">
+						<Text size="12" weight="600" color="secondary" mono>Transaction</Text>
+						<CopyButton :text="action.tx_hash" size="12" />
+					</Flex>
+
+					<Text size="13" weight="600" color="primary" mono>
+						{{ action.tx_hash.slice(0, 4) }}...{{ action.tx_hash.slice(-4) }}
+					</Text>
 				</Flex>
 
-				<Text v-if="range.start" size="13" weight="600" color="primary" mono>
-					{{ hexToUint8Array(bytes[range.start]) }}
-				</Text>
-				<Text v-else size="13" weight="600" color="tertiary" mono>No bytes selected</Text>
-			</Flex>
+				<Flex direction="column" gap="8" :class="$style.field">
+					<Text size="12" weight="600" color="secondary" mono>Date</Text>
 
-			<Flex direction="column" gap="8" :class="$style.field">
-				<Flex align="center" justify="between">
-					<Text size="12" weight="600" color="secondary" mono>Time</Text>
+					<Text as="pre" size="13" weight="600" color="primary" mono>
+						{{ DateTime.fromISO(action.time) }}
+					</Text>
 				</Flex>
 
-				<Text v-if="range.start" size="13" weight="600" color="primary" mono>
-					{{ DateTime.fromISO(parseInt(bytes[range.start], 16)) }}
-				</Text>
-				<Text v-else size="13" weight="600" color="tertiary" mono>No bytes selected</Text>
-			</Flex>
+				<Flex direction="column" gap="8" :class="$style.field">
+					<Text size="12" weight="600" color="secondary" mono>Block</Text>
 
-			<Flex direction="column" gap="8" :class="$style.field">
-				<Flex align="center" gap="6">
-					<Text size="12" weight="600" color="secondary" mono>ASCII</Text>
-					<CopyButton
-						v-if="range.start"
-						:text="
-							range.start < range.end
-								? bytes
-										.slice(range.start, range.end)
-										.map((byte) => String.fromCharCode(parseInt(byte, 16)))
-										.join('')
-								: bytes
-										.slice(range.end, range.start)
-										.map((byte) => String.fromCharCode(parseInt(byte, 16)))
-										.join('')
-						"
-						size="12"
-					/>
+					<Text as="pre" size="13" weight="600" color="primary" mono>
+						{{ action.height }}
+					</Text>
 				</Flex>
-
-				<Text
-					v-if="range.start !== null && range.end !== null"
-					size="13"
-					weight="600"
-					height="140"
-					color="primary"
-					mono
-					:class="$style.ascii"
-				>
-					<template v-if="range.start < range.end">
-						{{ decode(bytes.slice(range.start, range.end)) }}
-					</template>
-					<template v-else-if="range.start > range.end">
-						{{ decode(bytes.slice(range.end, range.start)) }}
-					</template>
-				</Text>
-				<Text v-else size="13" weight="600" height="140" color="tertiary" mono> No bytes selected </Text>
-			</Flex>
-
-			<Flex direction="column" gap="8" :class="$style.field">
-				<Flex align="center" gap="6">
-					<Text size="12" weight="600" color="secondary" mono>UTF-8 Character</Text>
-					<CopyButton v-if="range.start" :text="123" size="12" />
-				</Flex>
-
-				<Text
-					v-if="parseInt(bytes[cursor], 16) >= 0 && parseInt(bytes[cursor], 16) <= 31"
-					size="13"
-					weight="600"
-					height="140"
-					color="secondary"
-					mono
-				>
-					{{ asciiMap[parseInt(bytes[cursor], 16)] }}
-				</Text>
-				<Text v-else size="13" weight="600" height="140" color="primary" mono>
-					{{ decode([bytes[cursor]]) }}
-				</Text>
-			</Flex>
+			</template>
 		</Flex>
 	</Flex>
 </template>
@@ -171,8 +220,6 @@ const decode = (bytes) => {
 <style module>
 .wrapper {
 	overflow: hidden;
-
-	margin-left: 16px;
 }
 
 .header {
