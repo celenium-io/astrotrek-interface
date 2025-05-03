@@ -113,8 +113,29 @@ const onMouseEnter = (e) => {
 
 const onMouseLeave = (e) => {
 	isSelecting.value = false
-
 	viewerEl.value.wrapper.removeEventListener("wheel", onScroll)
+}
+
+const startPos = ref(0)
+const onTouchStart = (e) => {
+	startPos.value = e.touches[0].clientY
+}
+const onTouchMove = (e) => {
+	e.preventDefault()
+
+	if (e.changedTouches[0].clientY - startPos.value < 0) {
+		if (scrollOffset.value + 1 <= props.hex.length - 32) {
+			scrollOffset.value += 1
+		} else {
+			scrollOffset.value = props.hex.length - 32
+		}
+	} else {
+		if (scrollOffset.value - 1 >= 0) {
+			scrollOffset.value -= 1
+		} else {
+			scrollOffset.value = 0
+		}
+	}
 }
 
 /** Multi-select */
@@ -210,6 +231,8 @@ const clearThumbDraging = () => {
 			@mouseenter="onMouseEnter"
 			@mouseleave="onMouseLeave"
 			@pointerleave="onPointerLeave"
+			@touchstart="onTouchStart"
+			@touchmove="onTouchMove"
 			justify="between"
 			:class="$style.viewer"
 		>
