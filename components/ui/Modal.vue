@@ -15,7 +15,6 @@ const props = defineProps({
 		type: Boolean,
 		default: false,
 	},
-
 	show: {
 		type: Boolean,
 	},
@@ -30,7 +29,6 @@ const props = defineProps({
 		type: Boolean,
 		default: false,
 	},
-
 	required: {
 		type: Boolean,
 	},

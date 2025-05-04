@@ -47,13 +47,13 @@ const handleOpenTx = async (deposit) => {
 				<Flex align="center" gap="6">
 					<Icon name="role" size="16" color="secondary" />
 
-					<Flex v-if="d.bridge" gap="4">
+					<Flex v-if="d.bridge?.hash" gap="4">
 						<Text size="13" weight="500" color="primary">
 							{{ `Wired deposit of ${spaces(d.amount)} ${getAssetName(d.asset)} to` }}
 						</Text>
 
 						<LinkToEntity
-							:entity="{ title: midHash(d.bridge), type: 'account', id: d.bridge }"
+							:entity="{ title: $getDisplayName('addresses', null, d.bridge), type: 'account', id: d.bridge.hash }"
 							color="primary"
 							size="13"
 							:class="[$style.overflow, $style.address]"

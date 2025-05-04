@@ -35,11 +35,11 @@ const props = defineProps({
 
 					<Text size="12" weight="500" color="primary">Account</Text>
 
-					<LinkToEntity :entity="{ title: midHash(role.account), type: 'account', id: role.account}" color="primary" />
+					<LinkToEntity :entity="{ title: $getDisplayName('addresses', null, role.account), type: 'account', id: role.account.hash}" color="primary" />
 
 					<Text size="12" weight="500" color="primary">{{ `has ${capitalize(role.role)} role of` }}</Text>
 
-					<LinkToEntity :entity="{ title: midHash(role.bridge), type: 'account', id: role.bridge}" color="primary" />
+					<LinkToEntity :entity="{ title: $getDisplayName('addresses', null, role.bridge), type: 'account', id: role.bridge.hash}" color="primary" />
 				</Flex>
 
 				<Flex align="center" gap="8">

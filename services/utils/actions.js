@@ -51,7 +51,8 @@ export const getActionDescription = (action) => {
 			description = `Set ${midHash(data.new_address)} as new sudo address`
 			break;
 		case "validator_update":
-			description = `Now validator ${strToHex(base64Decode(data.pubkey))} has power ${data.power}`
+			const name = data.name
+			description = `Now validator ${midHash(strToHex(base64Decode(data.pubkey)))} has power ${data.power}${name ? ` and name ${name}` : ''}`
 			break;
 		case "ibc_relay":
 			if (data.type) {
@@ -112,19 +113,20 @@ export const getActionDescription = (action) => {
 				description = `${midHash(data.removal)} was removed for fee payments`
 			}
 			break;
-		case "price_feed":
+		case "currency_pairs_change":
 			if (data.addition) {
-				description = `${pluralize(data.addition.length, "pair", {withBe: true})} added`
+				description = `${pluralize(data.addition.length, "pair", null, {withBe: true})} added`
 			} else if (data.removal) {
-				description = `${pluralize(data.removal.length, "pair", {withBe: true})} removed`
-			} else if (data.create) {
-				description = `${data.create.length} market map ${pluralize(data.create.length, "item", {withBe: true, showCount: false})} created`
+				description = `${pluralize(data.removal.length, "pair", null, {withBe: true})} removed`
+			}
+			break;
+		case "markets_change":
+			if (data.create) {
+				description = `${data.create.length} market map ${pluralize(data.create.length, "item", null, {withBe: true, showCount: false})} created`
 			} else if (data.remove) {
-				description = `${data.remove.length} market map ${pluralize(data.remove.length, "item", {withBe: true, showCount: false})} removed`
+				description = `${data.remove.length} market map ${pluralize(data.remove.length, "item", null, {withBe: true, showCount: false})} removed`
 			} else if (data.update) {
-				description = `${data.update.length} market map ${pluralize(data.update.length, "item", {withBe: true, showCount: false})} updated`
-			} else if (data.params) {
-				description = "Market configuration was changed"
+				description = `${data.update.length} market map ${pluralize(data.update.length, "item", null, {withBe: true, showCount: false})} updated`
 			}
 			break;
 		default:

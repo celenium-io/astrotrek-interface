@@ -9,6 +9,7 @@ export const useModalsStore = defineStore("modals", () => {
 
 	const lastModal = ref()
 	const modals = reactive({
+		chart: false,
 		constants: false,
 		rawData: false,
 	})

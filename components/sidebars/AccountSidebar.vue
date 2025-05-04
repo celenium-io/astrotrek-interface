@@ -104,7 +104,7 @@ watch(
 					<Flex align="center" gap="8">
 						<LinkToEntity
 							@click="emit('onClose')"
-							:entity="{ title: midHash(account.hash), type: 'account', id: account.hash }"
+							:entity="{ title: $getDisplayName('addresses', null, account), type: 'account', id: account.hash }"
 							mode="sidebar"
 							color="primary"
 							size="16"
@@ -170,11 +170,13 @@ watch(
 						<Text size="13" weight="600" color="tertiary">Admin</Text>
 
 						<Flex align="center" gap="8">
-							<CopyButton :text="account.bridge?.sudo" />
+							<CopyButton :text="account.bridge?.sudo.hash" />
 
-							<NuxtLink :to="`/account/${account.bridge?.sudo}`" target="_blank">
+							<NuxtLink :to="`/account/${account.bridge?.sudo.hash}`" target="_blank">
 								<Flex align="center" gap="4">
-									<Text size="13" weight="600" color="primary">{{ midHash(account.bridge?.sudo) }}</Text>
+									<Text size="13" weight="600" color="primary">{{
+										$getDisplayName("addresses", null, account.bridge?.sudo)
+									}}</Text>
 
 									<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
 								</Flex>
@@ -186,11 +188,13 @@ watch(
 						<Text size="13" weight="600" color="tertiary">Withdrawer</Text>
 
 						<Flex align="center" gap="8">
-							<CopyButton :text="account.bridge?.withdrawer" />
+							<CopyButton :text="account.bridge?.withdrawer.hash" />
 
-							<NuxtLink :to="`/account/${account.bridge?.withdrawer}`" target="_blank">
+							<NuxtLink :to="`/account/${account.bridge?.withdrawer.hash}`" target="_blank">
 								<Flex align="center" gap="4">
-									<Text size="13" weight="600" color="primary">{{ midHash(account.bridge?.withdrawer) }}</Text>
+									<Text size="13" weight="600" color="primary">{{
+										$getDisplayName("addresses", null, account.bridge?.withdrawer)
+									}}</Text>
 
 									<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
 								</Flex>

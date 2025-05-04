@@ -28,7 +28,7 @@ useHead({
 		{
 			name: "description",
 			content:
-				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks, rollups and applications.",
+				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks, assets, rollups and applications.",
 		},
 		{
 			property: "og:title",
@@ -37,7 +37,7 @@ useHead({
 		{
 			property: "og:description",
 			content:
-				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks, rollups and applications.",
+				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks, assets, rollups and applications.",
 		},
 		{
 			property: "og:url",
@@ -54,7 +54,7 @@ useHead({
 		{
 			name: "twitter:description",
 			content:
-				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks, rollups and applications.",
+				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks, assets, rollups and applications.",
 		},
 		{
 			name: "twitter:card",
@@ -62,7 +62,7 @@ useHead({
 		},
 		{
 			name: "twitter:image",
-			content: "https://astrotrek.io/img/seo/applications.png",
+			content: "https://astrotrek.io/img/seo/apps.png",
 		},
 	],
 })

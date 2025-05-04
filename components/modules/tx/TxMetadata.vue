@@ -68,7 +68,7 @@ const showMore = ref(false)
 			</Flex>
 		</NuxtLink>
 
-		<NuxtLink :to="`/account/${tx.signer}`" :class="[$style.item, $style.link]">
+		<NuxtLink :to="`/account/${tx.signer.hash}`" :class="[$style.item, $style.link]">
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Signer</Text>
 
 			<Flex align="center" gap="8" :class="$style.value">
@@ -83,8 +83,11 @@ const showMore = ref(false)
 				<Text size="13" weight="600" color="secondary" :class="$style.key">Signature</Text>
 
 				<Flex align="center" gap="8" :class="$style.value">
-					<CopyButton :text="tx.signature" />
-					<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ space(tx.signature) }}</Text>
+					<CopyButton :text="tx.signer.hash" />
+					<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{
+						$getDisplayName("addresses", null, tx.signer, false)
+					}}</Text>
+					<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
 				</Flex>
 			</Flex>
 

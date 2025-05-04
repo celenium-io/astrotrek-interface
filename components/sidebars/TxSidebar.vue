@@ -112,12 +112,12 @@ watch(
 					{{ DateTime.fromISO(tx.time).setLocale("en").toFormat("LLL d, y, tt") }}
 				</Text>
 
-				<NuxtLink @click="emit('onClose')" :to="`/account/${tx.signer}`">
+				<NuxtLink @click="emit('onClose')" :to="`/account/${tx.signer.hash}`">
 					<Flex justify="between" :class="$style.card">
 						<Flex direction="column" gap="8">
 							<Text size="12" weight="600" color="secondary">Signer</Text>
 
-							<Text size="12" weight="600" color="tertiary">{{ tx.signer }}</Text>
+							<Text size="12" weight="600" color="tertiary">{{ $getDisplayName('addresses', null, tx.signer, false) }}</Text>
 						</Flex>
 
 						<Icon name="arrow-narrow-up-right" size="12" color="secondary" />

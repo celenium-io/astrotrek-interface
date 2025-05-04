@@ -77,7 +77,7 @@ const fetchAppBridgeTxs = async () => {
 	isLoading.value = true
 
 	const { data } = await fetchAccountTransactions({
-		hash: app.value?.native_bridge,
+		hash: app.value?.native_bridge.hash,
 		limit: limit.value,
 		offset: (page.value - 1) * limit.value,
 	})

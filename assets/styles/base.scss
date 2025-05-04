@@ -34,7 +34,7 @@ $grayscale: (
 	--brand: #dd5022;
 	--blue: #228edd;
 	--light-blue: #22ddbb;
-	--red: #eb5757;
+	--red: #f84040;
 	--orange: #ff5a17;
 	--darken-orange: #8e3511;
 	--yellow: #dd9d22;
@@ -221,6 +221,19 @@ body {
 	opacity: 0;
 	transform: translateX(100px);
 	transform-origin: right;
+}
+
+.slide-enter-active,
+.slide-leave-active {
+	transition: transform 0.5s ease;
+}
+.slide-enter-from,
+.slide-leave-to {
+	transform: translateX(-100%);
+}
+.slide-enter-to,
+.slide-leave-from {
+	transform: translateX(0);
 }
 
 .bar {

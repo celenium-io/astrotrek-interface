@@ -47,7 +47,10 @@ const props = defineProps({
 					<Flex align="center" gap="6">
 						<Icon name="account" size="16" color="secondary" />
 
-						<LinkToEntity :entity="{ title: midHash(account.hash), type: 'account', id: account.hash }" color="primary" />
+						<LinkToEntity
+							:entity="{ title: $getDisplayName('addresses', null, account), type: 'account', id: account.hash }"
+							color="primary"
+						/>
 					</Flex>
 
 					<Tooltip v-if="account?.is_bridge">
