@@ -44,16 +44,14 @@ const emit = defineEmits(["onClose"])
 						<Tooltip v-if="rollup.bridge_count">
 							<Icon name="bridge" size="16" color="brand" />
 
-							<template #content>
-								Associated with bridge account
-							</template>
+							<template #content> Associated with bridge account </template>
 						</Tooltip>
 					</Flex>
 
 					<Flex align="center" gap="8">
 						<LinkToEntity
 							@click="emit('onClose')"
-							:entity="{ title: midHash(rollup.hash), type: 'rollup', id: getRollupHashSafeURL(rollup.hash)}"
+							:entity="{ title: midHash(rollup.hash), type: 'rollup', id: getRollupHashSafeURL(rollup.hash) }"
 							mode="sidebar"
 							color="primary"
 							size="16"
@@ -97,9 +95,7 @@ const emit = defineEmits(["onClose"])
 						<Tooltip>
 							<Text size="13" weight="600" color="tertiary">Namespace</Text>
 
-							<template #content>
-								Celestia Namespace ID
-							</template>
+							<template #content> Celestia Namespace ID </template>
 						</Tooltip>
 
 						<Flex align="center" gap="8">
@@ -117,7 +113,14 @@ const emit = defineEmits(["onClose"])
 				</Flex>
 			</Flex>
 
-			<Button @click="emit('onClose')" :link="`/rollup/${getRollupHashSafeURL(rollup.hash)}`" type="secondary" size="medium">Open Rollup</Button>
+			<Button
+				@click="emit('onClose')"
+				:link="`/rollup/${getRollupHashSafeURL(rollup.hash)}`"
+				prefetch="interaction"
+				type="secondary"
+				size="medium"
+				>Open Rollup</Button
+			>
 		</Flex>
 	</Sidebar>
 </template>

@@ -118,7 +118,7 @@ watch(
 </script>
 
 <template>
-	<Flex direction="column" gap="40" wide :class="$style.wrapper">
+	<Flex direction="column" gap="16" wide :class="$style.wrapper">
 		<Breadcrumbs
 			:items="[
 				{ link: '/', name: 'Explore' },
@@ -141,7 +141,7 @@ watch(
 				</Flex>
 			</Flex>
 
-			<AssetsTable @onSort="handleOnSort" :assets="assets" :sort="sort" :isLoading="isLoading" />
+			<AssetsTable @onSort="handleOnSort" :assets="assets" :sort="sort" :isLoading="isLoading" :class="$style.assets_table" />
 		</Flex>
 	</Flex>
 </template>
@@ -157,7 +157,8 @@ watch(
 
 .card {
 	border-radius: 8px;
-	background: var(--op-3);
+	background: var(--card-background);
+	overflow: hidden;
 
 	padding: 16px 0 0 0;
 }
@@ -166,6 +167,10 @@ watch(
 	padding: 0 16px;
 
 	margin-bottom: 20px;
+}
+
+.assets_table {
+	min-height: 900px;
 }
 
 @media (max-width: 500px) {

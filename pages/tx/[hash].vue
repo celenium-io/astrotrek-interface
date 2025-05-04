@@ -123,7 +123,7 @@ watch(
 
 <template>
 	<Flex v-if="tx" direction="column" gap="16" :class="$style.wrapper">
-		<Flex direction="column" gap="40">
+		<Flex direction="column" gap="16">
 			<Breadcrumbs
 				:items="[
 					{ link: '/', name: 'Explore' },

@@ -75,9 +75,9 @@ const debouncedSearch = useDebounceFn(async (e) => {
 	const { data } = await search(searchTerm.value?.trim())
 
 	if (data.value.length) {
-		results.value = data.value.map(item => {
+		results.value = data.value.map((item) => {
 			let newItem = { ...item }
-			if (newItem.type === 'validator' || newItem.type === 'bridge') {
+			if (newItem.type === "validator" || newItem.type === "bridge") {
 				newItem.body.hash = newItem.body.address
 			}
 
@@ -305,16 +305,18 @@ watch(
 <style module>
 .wrapper {
 	position: relative;
+	user-select: none;
+
+	transition: opacity 0.2s ease;
 }
 
 .field {
-	width: 200px;
+	width: 450px;
 	height: 32px;
 
 	border-radius: 6px;
 	background: var(--op-8);
 	cursor: text;
-	box-shadow: inset 0 0 0 1px var(--op-5);
 
 	padding: 0 8px;
 
@@ -424,7 +426,7 @@ watch(
 	opacity: 0.7;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
 	.field {
 		width: 150px;
 	}

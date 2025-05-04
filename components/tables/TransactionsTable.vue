@@ -35,33 +35,34 @@ const props = defineProps({
 
 <template>
 	<Flex direction="column" wide :class="$style.wrapper">
-		<ClientOnly>
-			<Transition name="fade">
-				<Flex v-if="isLoading" direction="column" align="center" justify="center" gap="16" :class="$style.loading" wide>
-					<Spinner size="16" />
+		<Flex v-if="isLoading" direction="column" align="center" justify="center" gap="16" :class="$style.loading" wide>
+			<Spinner size="16" />
 
-					<Flex direction="column" align="center" gap="8">
-						<Text size="14" weight="500" color="primary">Fetching transactions...</Text>
-						<Text size="13" weight="500" color="tertiary">It's almost done</Text>
-					</Flex>
-				</Flex>
-			</Transition>
-		</ClientOnly>
+			<Flex direction="column" align="center" gap="8">
+				<Text size="14" weight="500" color="primary">Fetching transactions...</Text>
+				<Text size="13" weight="500" color="tertiary">It's almost done</Text>
+			</Flex>
+		</Flex>
 
 		<Flex
-			v-if="txs"
+			v-else-if="txs.length"
 			v-for="t in txs"
 			@click="sidebarsStore.open('tx', t)"
 			justify="between"
 			align="center"
-			:class="[!recentTxs && !generalTxsList && $style.row, recentTxs && $style.row_recent_txs, generalTxsList && $style.row_general_list, isLoading && $style.disabled]"
+			:class="[
+				!recentTxs && !generalTxsList && $style.row,
+				recentTxs && $style.row_recent_txs,
+				generalTxsList && $style.row_general_list,
+				isLoading && $style.disabled,
+			]"
 		>
 			<Flex direction="column" gap="8">
 				<Flex align="center" gap="6">
 					<Icon name="tx-circle" size="16" :color="t.status === 'success' ? 'light-green' : 'red'" />
 
 					<Flex align="center" gap="8">
-						<LinkToEntity :entity="{ title: midHash(t.hash), type: 'tx', id: t.hash}" size="13" color="primary" weight="600" />
+						<LinkToEntity :entity="{ title: midHash(t.hash), type: 'tx', id: t.hash }" size="13" color="primary" weight="600" />
 
 						<ActionsRow :actions="t.action_types" />
 					</Flex>
@@ -70,13 +71,20 @@ const props = defineProps({
 				<Flex align="center" gap="8">
 					<Text size="12" weight="500" color="tertiary">Block</Text>
 
-					<LinkToEntity :entity="{ title: spaces(t.height), type: 'block', id: t.height}" color="secondary" />
+					<LinkToEntity :entity="{ title: spaces(t.height), type: 'block', id: t.height }" color="secondary" />
 
 					<div :class="$style.dot" />
 
 					<Text size="12" weight="500" color="tertiary">Signer</Text>
 
-					<LinkToEntity :entity="{ title: $getDisplayName('addresses', null, t.signer, true, addr => splitAddress(addr, 4)), type: 'account', id: t.signer.hash}" color="secondary" />
+					<LinkToEntity
+						:entity="{
+							title: $getDisplayName('addresses', null, t.signer, true, (addr) => splitAddress(addr, 4)),
+							type: 'account',
+							id: t.signer.hash,
+						}"
+						color="secondary"
+					/>
 
 					<div :class="$style.dot" />
 
@@ -100,9 +108,10 @@ const props = defineProps({
 }
 
 .loading {
-	flex: 1;
-	border-top: 1px solid var(--op-5);
-	padding: 24px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translateY(-50%) translateX(-50%);
 }
 
 .row {
@@ -122,16 +131,11 @@ const props = defineProps({
 	&:hover {
 		background: var(--op-5);
 	}
-	
+
 	&:first-child {
 		border-top-left-radius: 8px;
 		border-top-right-radius: 8px;
 		border-top: none;
-	}
-
-	&:last-child {
-		border-bottom-left-radius: 8px;
-		border-bottom-right-radius: 8px;
 	}
 
 	&:active {
@@ -186,7 +190,7 @@ const props = defineProps({
 	&:hover {
 		background: var(--op-5);
 	}
-	
+
 	&:last-child {
 		border-bottom-left-radius: 8px;
 		border-bottom-right-radius: 8px;

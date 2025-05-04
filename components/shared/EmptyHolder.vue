@@ -2,7 +2,7 @@
 const props = defineProps({
 	icon: {
 		type: String,
-		default: 'search',
+		default: "search",
 	},
 	title: {
 		type: String,
@@ -11,15 +11,15 @@ const props = defineProps({
 	subtitle: {
 		type: String,
 		required: false,
-	}
+	},
 })
 </script>
 
 <template>
 	<Flex direction="column" align="center" justify="center" gap="12" :class="$style.wrapper">
-		<Icon :name="icon" size="20" color="tertiary"></Icon>
-		<Text size="14" color="secondary"> {{ title }} </Text>
-		<Text v-if="subtitle" size="14" color="tertiary"> {{ subtitle }} </Text>
+		<Icon :name="icon" size="16" color="primary" :class="$style.icon_badge" />
+		<Text size="13" weight="600" color="tertiary"> {{ title }} </Text>
+		<Text v-if="subtitle" size="13" weight="500" color="tertiary"> {{ subtitle }} </Text>
 	</Flex>
 </template>
 
@@ -28,5 +28,13 @@ const props = defineProps({
 	border-radius: 8px;
 
 	padding: 18px 0 18px 0;
+}
+
+.icon_badge {
+	box-sizing: content-box;
+	border-radius: 8px;
+	background: linear-gradient(var(--op-10), var(--op-5));
+
+	padding: 6px;
 }
 </style>

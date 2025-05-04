@@ -79,7 +79,7 @@ const getApps = async () => {
 		offset: (page.value - 1) * limit.value,
 	})
 	apps.value = data.value
-	
+
 	handleNextCondition.value = apps.value.length < limit.value
 
 	isLoading.value = false
@@ -108,39 +108,37 @@ watch(
 </script>
 
 <template>
-	<Flex direction="column" gap="40" wide :class="$style.wrapper">
-		<Flex align="start" justify="between">
-			<Breadcrumbs
-				:items="[
-					{ link: '/', name: 'Explore' },
-					{ link: '/apps', name: 'Applications' },
-				]"
-			/>
-
-			<NuxtLink to="https://forms.gle/dfR6QJJah9kfPe3N6" target="blank" :class="$style.register_app_btn">
-				<Flex align="center" gap="6">
-					<Icon name="app" color="brand" size="12" />
-					<Text size="12">Register your app</Text>
-				</Flex>
-			</NuxtLink>
-		</Flex>
+	<Flex direction="column" gap="16" wide :class="$style.wrapper">
+		<Breadcrumbs
+			:items="[
+				{ link: '/', name: 'Explore' },
+				{ link: '/apps', name: 'Applications' },
+			]"
+		/>
 
 		<Flex direction="column" :class="$style.card">
 			<Flex justify="between" align="start" wide :class="$style.top">
 				<Text size="16" weight="600" color="primary">Applications</Text>
 
-				<Flex align="center" gap="6">
-					<Button @click="handlePrev" size="mini" type="secondary" :disabled="page === 1 || isLoading">
-						<Icon name="chevron" size="14" color="primary" style="transform: rotate(90deg)" />
+				<Flex align="center" gap="16">
+					<Button link="https://forms.gle/dfR6QJJah9kfPe3N6" target="_blank" size="mini" type="primary">
+						<Icon name="plus-circle" size="14" color="primary" />
+						<div :class="$style.register_btn_text">Register Your Application</div>
 					</Button>
-					<Button size="mini" type="secondary">Page {{ page }}</Button>
-					<Button @click="handleNext" size="mini" type="secondary" :disabled="isLoading || handleNextCondition">
-						<Icon name="chevron" size="14" color="primary" style="transform: rotate(-90deg)" />
-					</Button>
+
+					<Flex align="center" gap="6">
+						<Button @click="handlePrev" size="mini" type="secondary" :disabled="page === 1 || isLoading">
+							<Icon name="chevron" size="14" color="primary" style="transform: rotate(90deg)" />
+						</Button>
+						<Button size="mini" type="secondary">Page {{ page }}</Button>
+						<Button @click="handleNext" size="mini" type="secondary" :disabled="isLoading || handleNextCondition">
+							<Icon name="chevron" size="14" color="primary" style="transform: rotate(-90deg)" />
+						</Button>
+					</Flex>
 				</Flex>
 			</Flex>
 
-			<AppsTable :apps="apps" :isLoading="isLoading" />
+			<AppsTable :apps="apps" :isLoading="isLoading" :class="$style.apps_table" />
 		</Flex>
 	</Flex>
 </template>
@@ -156,7 +154,8 @@ watch(
 
 .card {
 	border-radius: 8px;
-	background: var(--op-3);
+	background: var(--card-background);
+	overflow: hidden;
 
 	padding: 16px 0 0 0;
 }
@@ -166,22 +165,17 @@ watch(
 	padding: 0 16px;
 }
 
-.register_app_btn {
-	border-radius: 6px;
-	cursor: pointer;
-	background: var(--op-5);
-	border: 1px solid var(--brand);
-	color: var(--brand);
-
-	padding: 6px 8px;
-
-	transition: all 0.2s ease;
-
+.apps_table {
+	min-height: 900px;
 }
 
 @media (max-width: 500px) {
 	.wrapper {
 		padding: 0 12px;
+	}
+
+	.register_btn_text {
+		display: none;
 	}
 }
 </style>

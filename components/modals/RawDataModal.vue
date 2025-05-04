@@ -59,6 +59,10 @@ watch(
 	},
 )
 
+const handleOpenHexViewer = () => {
+	emit("onClose")
+}
+
 const handleCopy = () => {
 	window.navigator.clipboard.writeText(JSON.stringify(cacheStore.current[cacheStore.current._target]))
 
@@ -78,12 +82,27 @@ const handleCopy = () => {
 		<Flex direction="column" gap="8">
 			<Text size="14" weight="600" color="primary">Raw Data Overview</Text>
 
-			<div ref="editorRef" :class="$style.editor" />
+			<Flex direction="column" gap="24">
+				<div ref="editorRef" :class="$style.editor" />
 
-			<Button @click="handleCopy" type="secondary" size="small" wide>
-				<Icon name="copy" size="12" color="secondary" />
-				Copy
-			</Button>
+				<Flex align="center" gap="12">
+					<Button
+						v-if="cacheStore.current.action?.type === 'rollup_data_submission'"
+						:link="`/hex?action=${cacheStore.current.action?.id}`"
+						@click="handleOpenHexViewer"
+						type="secondary"
+						size="medium"
+						wide
+					>
+						<Icon name="hex" size="16" color="secondary" />
+						Open with Hex Viewer
+					</Button>
+					<Button @click="handleCopy" type="secondary" size="medium" wide>
+						<Icon name="copy" size="12" color="secondary" />
+						Copy
+					</Button>
+				</Flex>
+			</Flex>
 		</Flex>
 	</Modal>
 </template>
@@ -138,6 +157,10 @@ const handleCopy = () => {
 .editor {
 	max-height: 500px;
 	overflow: auto;
+
+	& * {
+		transition: none;
+	}
 }
 
 @media (max-width: 550px) {

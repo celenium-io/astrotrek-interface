@@ -19,7 +19,7 @@ const props = defineProps({
 		<LoadingHolder v-if="isLoading" title="Loading actions.." />
 
 		<ActionsTable v-if="actions.length > 0" :actions="actions" />
-		
+
 		<EmptyHolder v-else-if="!isLoading" title="This transaction doesn't contain any action" />
 	</Flex>
 </template>
@@ -28,9 +28,7 @@ const props = defineProps({
 .wrapper {
 	position: relative;
 	border-radius: 8px;
-	box-shadow: inset 0 0 0 1px var(--op-5);
+	box-shadow: 0 0 0 1px var(--op-10);
 	background: var(--op-3);
-
-	/* padding: 8px 0 8px 0; */
 }
 </style>

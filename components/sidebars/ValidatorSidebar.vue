@@ -92,7 +92,7 @@ watch(
 					<Flex align="center" gap="8">
 						<LinkToEntity
 							@click="emit('onClose')"
-							:entity="{ title: midHash(validator.address), type: 'validator', id: validator.id}"
+							:entity="{ title: midHash(validator.address), type: 'validator', id: validator.id }"
 							mode="sidebar"
 							color="primary"
 							size="16"
@@ -126,7 +126,7 @@ watch(
 				<Flex direction="column" gap="16">
 					<Flex align="center" justify="between">
 						<Text size="13" weight="600" color="primary">Validator uptime</Text>
-	
+
 						<Text size="13" weight="600" color="primary">{{ uptime.uptime * 100 }}%</Text>
 					</Flex>
 
@@ -135,7 +135,9 @@ watch(
 				</Flex>
 			</Flex>
 
-			<Button @click="emit('onClose')" :link="`/validator/${validator.id}`" type="secondary" size="medium">Open Validator</Button>
+			<Button @click="emit('onClose')" :link="`/validator/${validator.id}`" prefetch="interaction" type="secondary" size="medium"
+				>Open Validator</Button
+			>
 		</Flex>
 	</Sidebar>
 </template>

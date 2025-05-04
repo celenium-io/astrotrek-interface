@@ -1,7 +1,7 @@
 <script setup>
 /** Components */
 import LinkToEntity from "@/components/shared/LinkToEntity.vue"
-import Tooltip from "@/components/ui/Tooltip.vue";
+import Tooltip from "@/components/ui/Tooltip.vue"
 
 /** Services */
 import { midHash, spaces } from "@/services/utils"
@@ -23,7 +23,7 @@ const totalPower = computed(() => {
 	let res = 0
 
 	if (props.validators) {
-		props.validators.forEach(v => {
+		props.validators.forEach((v) => {
 			res += parseFloat(v.power)
 		})
 	}
@@ -34,7 +34,7 @@ const totalPower = computed(() => {
 const getSharePower = (validator, int = true) => {
 	let share = 0
 	if (totalPower.value && validator.power > 0) {
-		share = parseFloat(validator.power) / totalPower.value * 100
+		share = (parseFloat(validator.power) / totalPower.value) * 100
 		share = int ? Math.max(parseInt(share), 1) : Math.round(share * 100) / 100
 	}
 
@@ -44,21 +44,17 @@ const getSharePower = (validator, int = true) => {
 
 <template>
 	<Flex direction="column" :class="$style.wrapper">
-		<ClientOnly>
-			<Transition name="fade">
-				<Flex v-if="isLoading" direction="column" align="center" gap="16" :class="$style.loading">
-					<Spinner size="16" />
+		<Flex v-if="isLoading" direction="column" align="center" gap="16" :class="$style.loading">
+			<Spinner size="16" />
 
-					<Flex direction="column" align="center" gap="8">
-						<Text size="14" weight="500" color="primary">Fetching validators...</Text>
-						<Text size="13" weight="500" color="tertiary">It's almost done</Text>
-					</Flex>
-				</Flex>
-			</Transition>
-		</ClientOnly>
+			<Flex direction="column" align="center" gap="8">
+				<Text size="14" weight="500" color="primary">Fetching validators...</Text>
+				<Text size="13" weight="500" color="tertiary">It's almost done</Text>
+			</Flex>
+		</Flex>
 
 		<Flex
-			v-if="validators"
+			v-else-if="validators.length"
 			v-for="v in validators"
 			@click="sidebarsStore.open('validator', v)"
 			justify="between"
@@ -69,7 +65,7 @@ const getSharePower = (validator, int = true) => {
 				<Flex align="center" gap="6">
 					<Icon name="validator" size="16" color="secondary" />
 
-					<LinkToEntity :entity="{ title: midHash(v.address), type: 'validator', id: v.id}" color="primary" />
+					<LinkToEntity :entity="{ title: midHash(v.address), type: 'validator', id: v.id }" color="primary" />
 
 					<Text v-if="v.power === '0'" size="12" weight="500" color="red">Inactive</Text>
 				</Flex>
@@ -95,7 +91,7 @@ const getSharePower = (validator, int = true) => {
 				</Flex>
 
 				<template #content>
-					<Flex direction="column" gap="8" :style="{width: '150px'}">
+					<Flex direction="column" gap="8" :style="{ width: '150px' }">
 						<Flex align="center" justify="between">
 							<Text size="12" weight="500" color="tertiary"> Voting Power </Text>
 
@@ -149,12 +145,6 @@ const getSharePower = (validator, int = true) => {
 		background: var(--op-5);
 	}
 
-	&:last-child {
-		border-bottom-left-radius: 8px;
-		border-bottom-right-radius: 8px;
-		border-bottom: 1px solid var(--op-5);
-	}
-
 	&:active {
 		background: var(--op-10);
 	}
@@ -185,5 +175,4 @@ const getSharePower = (validator, int = true) => {
 		height: 4px;
 	}
 }
-
 </style>

@@ -30,8 +30,7 @@ useHead({
 	meta: [
 		{
 			name: "description",
-			content:
-				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
+			content: "Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
 		},
 		{
 			property: "og:title",
@@ -39,8 +38,7 @@ useHead({
 		},
 		{
 			property: "og:description",
-			content:
-				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
+			content: "Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
 		},
 		{
 			property: "og:url",
@@ -56,8 +54,7 @@ useHead({
 		},
 		{
 			name: "twitter:description",
-			content:
-				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
+			content: "Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
 		},
 		{
 			name: "twitter:card",
@@ -76,12 +73,12 @@ const router = useRouter()
 const transactions = ref([])
 const actionTypes = computed(() => enumStore.enums?.actionTypes)
 const actionTypesFilterred = computed(() => {
-	const filteredActionTypes = filters.value?.find(f => f.name === "Action Types")?.values || {}
+	const filteredActionTypes = filters.value?.find((f) => f.name === "Action Types")?.values || {}
 
 	const actions = Object.keys(filteredActionTypes)
-		.filter((actType => filteredActionTypes[actType]))
+		.filter((actType) => filteredActionTypes[actType])
 		.join(",")
-	
+
 	return actions
 })
 const isLoading = ref(false)
@@ -123,14 +120,14 @@ async function initFilters() {
 			name: "Action Types",
 			values: {},
 			displayName: capitalizeAndReplaceUnderscore,
-			type: "multiselect"
-		}
+			type: "multiselect",
+		},
 	]
 
-	const priorityOrder = ["rollup_data_submission", "bridge_lock", "ibc_relay", "ics20_withdrawal"];
+	const priorityOrder = ["rollup_data_submission", "bridge_lock", "ibc_relay", "ics20_withdrawal"]
 	const sortedTypes = actionTypes.value.sort((a, b) => {
-		const aIndex = priorityOrder.indexOf(a);
-		const bIndex = priorityOrder.indexOf(b);
+		const aIndex = priorityOrder.indexOf(a)
+		const bIndex = priorityOrder.indexOf(b)
 
 		if (aIndex !== -1 && bIndex !== -1) {
 			return aIndex - bIndex
@@ -142,7 +139,7 @@ async function initFilters() {
 
 		return a.localeCompare(b)
 	})
-	sortedTypes.forEach(type => {
+	sortedTypes.forEach((type) => {
 		res[0].values[type] = false
 	})
 
@@ -153,11 +150,10 @@ const clearFilters = async () => {
 
 	page.value = 1
 
-	let filteredActionTypes = filters.value.find(f => f.name === "Action Types")?.values
-	Object.keys(filteredActionTypes)
-		.forEach((actType => {
-			filteredActionTypes[actType] = false
-		}))
+	let filteredActionTypes = filters.value.find((f) => f.name === "Action Types")?.values
+	Object.keys(filteredActionTypes).forEach((actType) => {
+		filteredActionTypes[actType] = false
+	})
 
 	await getTransactions()
 
@@ -185,7 +181,7 @@ watch(
 	() => actionTypes.value,
 	() => {
 		initFilters()
-	}
+	},
 )
 watch(
 	() => page.value,
@@ -198,14 +194,14 @@ watch(
 	},
 )
 
-onMounted( async () => {
+onMounted(async () => {
 	await initFilters()
 	router.replace({ query: { page: page.value } })
 })
 </script>
 
 <template>
-	<Flex direction="column" gap="40" wide :class="$style.wrapper">
+	<Flex direction="column" gap="16" wide :class="$style.wrapper">
 		<Breadcrumbs
 			:items="[
 				{ link: '/', name: 'Explore' },
@@ -232,16 +228,14 @@ onMounted( async () => {
 				</Flex>
 			</Flex>
 
-			<TransactionsTable v-if="transactions?.length || isLoading" :txs="transactions" :isLoading="isLoading" generalTxsList />
-			<Flex
-				v-else-if="!!actionTypesFilterred"
-				align="center"
-				justify="center"
-				direction="column"
-				gap="20"
-				wide
-				:class="$style.empty"
-			>
+			<TransactionsTable
+				v-if="transactions?.length || isLoading"
+				:txs="transactions"
+				:isLoading="isLoading"
+				generalTxsList
+				:class="$style.txs_table"
+			/>
+			<Flex v-else-if="!!actionTypesFilterred" align="center" justify="center" direction="column" gap="20" wide :class="$style.empty">
 				<Icon name="search" size="24" color="support" />
 
 				<Flex direction="column" gap="8">
@@ -274,7 +268,8 @@ onMounted( async () => {
 
 .card {
 	border-radius: 8px;
-	background: var(--op-3);
+	background: var(--card-background);
+	overflow: hidden;
 
 	padding: 16px 0 0 0;
 }
@@ -289,6 +284,10 @@ onMounted( async () => {
 	flex: 1;
 	padding: 16px 0;
 	border-top: 1px solid var(--op-5);
+}
+
+.txs_table {
+	min-height: 900px;
 }
 
 @media (max-width: 500px) {

@@ -37,7 +37,7 @@ const showMore = ref(false)
 			<Flex v-if="block.proposer" align="center" gap="8" :class="$style.value">
 				<CopyButton :text="block.proposer.address" />
 
-				<NuxtLink :to="`/validator/${block.proposer.id}`" :style="{width: '100%'}">
+				<NuxtLink :to="`/validator/${block.proposer.id}`" :style="{ width: '100%' }">
 					<Flex align="center" gap="4">
 						<Text size="13" weight="600" color="primary" mono :class="$style.overflow">
 							{{ block.proposer.name }}
@@ -86,12 +86,6 @@ const showMore = ref(false)
 				{{ block.stats.tx_count }}
 			</Text>
 		</Flex>
-
-		<!-- <Flex align="center" :class="$style.item">
-			<Text size="13" weight="600" color="secondary" :class="$style.key">Fee</Text>
-
-			<Text size="13" weight="600" color="primary" mono :class="$style.value"> {{ block.stats.fee }} NRIA </Text>
-		</Flex> -->
 
 		<Flex align="center" :class="$style.item">
 			<Text size="13" weight="600" color="secondary" :class="$style.key">Block Time</Text>
@@ -198,23 +192,36 @@ const showMore = ref(false)
 		</template>
 	</Flex>
 
-	<Flex v-if="block.height > 0" @click="showMore = !showMore" align="center" justify="end" gap="4" :class="$style.show_more">
+	<Button v-if="block.height > 0" @click="showMore = !showMore" type="secondary" size="mini">
 		<Icon size="12" name="chevron-double" color="brand" :rotate="showMore ? 180 : 0" />
-		<Text size="12" weight="600" color="brand">Show {{ showMore ? 'Less' : 'More' }}</Text>
-	</Flex>
+		<Text weight="600" color="brand">Show {{ showMore ? "Less" : "More" }}</Text>
+	</Button>
 </template>
 
 <style module>
 .wrapper {
 	border-radius: 8px;
-	box-shadow: inset 0 0 0 1px var(--op-5);
+	box-shadow: 0 0 0 1px var(--op-10);
 	background: var(--op-3);
 }
 
 .item {
 	height: 36px;
 
+	border-bottom: 1px solid var(--op-10);
+
 	padding: 0 12px;
+
+	&.link {
+		display: flex;
+		align-items: center;
+
+		transition: all 0.2s ease;
+
+		&:hover {
+			background: var(--op-5);
+		}
+	}
 
 	&:last-child {
 		border-bottom: none;

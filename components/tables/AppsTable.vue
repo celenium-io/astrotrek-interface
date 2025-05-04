@@ -31,7 +31,7 @@ const tagNames = ref(["category", "vm", "stack", "type", "provider"])
 function getTagDisplayName(tagName) {
 	switch (tagName) {
 		case "vm":
-			return "VM" 
+			return "VM"
 		default:
 			return capitalize(tagName)
 	}
@@ -51,16 +51,14 @@ function getTagValueDisplayName(tagName, tagValue) {
 
 function fillTags() {
 	preparedApps.value = [...props.apps]
-	preparedApps.value.forEach(app => {
+	preparedApps.value.forEach((app) => {
 		let res = []
-		tagNames.value.forEach(tag => {
+		tagNames.value.forEach((tag) => {
 			if (app[tag]) {
-				res.push(
-					{
-						name: getTagDisplayName(tag),
-						value: getTagValueDisplayName(tag, app[tag]),
-					}
-				)
+				res.push({
+					name: getTagDisplayName(tag),
+					value: getTagValueDisplayName(tag, app[tag]),
+				})
 			}
 		})
 
@@ -74,44 +72,35 @@ watch(
 		if (props.apps.length) {
 			fillTags()
 		}
-	}
+	},
 )
 </script>
 
 <template>
 	<Flex direction="column" :class="$style.wrapper">
-		<ClientOnly>
-			<Transition name="fade">
-				<Flex v-if="isLoading" direction="column" align="center" gap="16" :class="$style.loading">
-					<Spinner size="16" />
+		<Flex v-if="isLoading" direction="column" align="center" gap="16" :class="$style.loading">
+			<Spinner size="16" />
 
-					<Flex direction="column" align="center" gap="8">
-						<Text size="14" color="primary">Fetching applications...</Text>
-						<Text size="13" color="tertiary">It's almost done</Text>
-					</Flex>
-				</Flex>
-			</Transition>
-		</ClientOnly>
+			<Flex direction="column" align="center" gap="8">
+				<Text size="14" color="primary">Fetching applications...</Text>
+				<Text size="13" color="tertiary">It's almost done</Text>
+			</Flex>
+		</Flex>
 
-		<Flex v-if="preparedApps.length > 0" v-for="app in preparedApps" align="center" :class="[$style.row, isLoading && $style.disabled]">
-			<NuxtLink :to="`/app/${app.slug}`" :style="{width: '100%'}">
+		<Flex
+			v-else-if="preparedApps.length > 0"
+			v-for="app in preparedApps"
+			align="center"
+			:class="[$style.row, isLoading && $style.disabled]"
+		>
+			<NuxtLink :to="`/app/${app.slug}`" :style="{ width: '100%' }">
 				<Flex align="center" justify="between" wide>
 					<Flex align="center" gap="12">
 						<Flex v-if="app.logo" align="center" justify="center" :class="$style.avatar_container">
 							<img :src="app.logo" :class="$style.avatar_image" />
 						</Flex>
 						<Flex direction="column" gap="8">
-							<Flex align="center" gap="6">
-								<Text size="12" color="primary"> {{ app.name }} </Text>
-
-								<!-- <div :class="$style.dot" />
-								<Text size="12" color="secondary"> Bridge </Text>
-								<LinkToEntity :entity="{ title: midHash(app.native_bridge), type: 'account', id: app.native_bridge}" color="primary" />
-
-								<div :class="$style.dot" />
-								<Text size="12" color="secondary"> Rollup </Text>
-								<LinkToEntity :entity="{ title: midHash(app.rollup), type: 'rollup', id: getRollupHashSafeURL(app.rollup)}" color="primary" /> -->
-							</Flex>
+							<Text size="12" color="primary"> {{ app.name }} </Text>
 
 							<Flex v-if="!isMobile()" align="center" gap="8">
 								<Flex v-for="tag in app.tags" align="center" gap="8">
@@ -134,7 +123,7 @@ watch(
 					<Tooltip>
 						<Flex align="center" gap="4">
 							<Text size="13" weight="600" color="primary"> {{ spaces(app.actions_count) }} </Text>
-							
+
 							<Icon name="action" size="13" color="tertiary" />
 						</Flex>
 
@@ -176,11 +165,6 @@ watch(
 
 	&:hover {
 		background: var(--op-5);
-	}
-	
-	&:last-child {
-		border-bottom-left-radius: 8px;
-		border-bottom-right-radius: 8px;
 	}
 
 	&:active {

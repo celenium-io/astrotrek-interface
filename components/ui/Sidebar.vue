@@ -64,6 +64,7 @@ watch(
 	top: 16px;
 	right: 16px;
 	bottom: 16px;
+	z-index: 1000;
 
 	border-radius: 12px;
 	background: var(--card-background);
@@ -96,5 +97,4 @@ watch(
 		left: 16px;
 	}
 }
-
 </style>

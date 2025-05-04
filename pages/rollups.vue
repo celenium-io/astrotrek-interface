@@ -27,8 +27,7 @@ useHead({
 	meta: [
 		{
 			name: "description",
-			content:
-				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
+			content: "Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
 		},
 		{
 			property: "og:title",
@@ -36,8 +35,7 @@ useHead({
 		},
 		{
 			property: "og:description",
-			content:
-				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
+			content: "Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
 		},
 		{
 			property: "og:url",
@@ -53,8 +51,7 @@ useHead({
 		},
 		{
 			name: "twitter:description",
-			content:
-				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
+			content: "Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
 		},
 		{
 			name: "twitter:card",
@@ -86,7 +83,7 @@ const getRollups = async () => {
 
 /** Pagination */
 const page = ref(1)
-const handleNextCondition = computed(() => lastHead.value.total_rollups - (limit.value * page.value) <= 0)
+const handleNextCondition = computed(() => lastHead.value.total_rollups - limit.value * page.value <= 0)
 
 const handleNext = () => {
 	page.value += 1
@@ -107,7 +104,7 @@ watch(
 </script>
 
 <template>
-	<Flex direction="column" gap="40" wide :class="$style.wrapper">
+	<Flex direction="column" gap="16" wide :class="$style.wrapper">
 		<Breadcrumbs
 			:items="[
 				{ link: '/', name: 'Explore' },
@@ -130,7 +127,7 @@ watch(
 				</Flex>
 			</Flex>
 
-			<RollupsTable :rollups="rollups" :isLoading="isLoading" generalRollupsList />
+			<RollupsTable :rollups="rollups" :isLoading="isLoading" generalRollupsList :class="$style.rollups_table" />
 		</Flex>
 	</Flex>
 </template>
@@ -146,7 +143,8 @@ watch(
 
 .card {
 	border-radius: 8px;
-	background: var(--op-3);
+	background: var(--card-background);
+	overflow: hidden;
 
 	padding: 16px 0 0 0;
 }
@@ -154,6 +152,10 @@ watch(
 .top {
 	margin-bottom: 20px;
 	padding: 0 16px;
+}
+
+.rollups_table {
+	min-height: 900px;
 }
 
 @media (max-width: 500px) {

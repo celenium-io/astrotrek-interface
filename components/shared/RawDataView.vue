@@ -1,4 +1,7 @@
 <script setup>
+/** UI */
+import Button from "~/components/ui/Button.vue"
+
 /** Store */
 import { useCacheStore } from "@/store/cache"
 import { useModalsStore } from "@/store/modals"
@@ -16,8 +19,8 @@ const props = defineProps({
 	},
 	size: {
 		type: [Number, String],
-		default: 18,
-	}
+		default: 16,
+	},
 })
 
 cacheStore.current[props.name] = props.entity
@@ -26,26 +29,11 @@ const handleViewRawData = () => {
 	cacheStore.current._target = props.name
 	modalsStore.open("rawData")
 }
-
 </script>
 
 <template>
-	<Flex align="center" justify="center" :class="$style.wrapper">
-		<Icon @click="handleViewRawData" name="code-brackets" :size="size" color="brand" />
-	</Flex>
+	<Button @click="handleViewRawData" type="secondary" size="mini">
+		<Icon name="code-brackets" :size="size" color="brand" />
+		View Raw JSON
+	</Button>
 </template>
-
-<style module>
-.wrapper {
-	cursor: pointer;
-}
-
-.wrapper:hover {
-	transform: scale(1.2);
-}
-
-.wrapper:active {
-	transform: scale(1.3);
-	transition: all 0.2s ease;
-}
-</style>

@@ -70,7 +70,7 @@ watch(
 					<Flex align="center" gap="8">
 						<LinkToEntity
 							@click="emit('onClose')"
-							:entity="{ title: spaces(block.height), type: 'block', id: block.height}"
+							:entity="{ title: spaces(block.height), type: 'block', id: block.height }"
 							mode="sidebar"
 							color="primary"
 							size="16"
@@ -97,7 +97,7 @@ watch(
 							<Text size="13" weight="600" color="primary"> {{ block.proposer?.name }}</Text>
 							<Text size="12" weight="600" color="tertiary">{{ block.proposer?.address }}</Text>
 						</Flex>
-						
+
 						<Icon name="arrow-narrow-up-right" size="12" color="secondary" />
 					</Flex>
 				</NuxtLink>
@@ -215,7 +215,9 @@ watch(
 				</Flex>
 			</Flex>
 
-			<Button @click="emit('onClose')" :link="`/block/${block.height}`" type="secondary" size="medium">Open Block</Button>
+			<Button @click="emit('onClose')" :link="`/block/${block.height}`" prefetch="interaction" type="secondary" size="medium">
+				Open Block
+			</Button>
 		</Flex>
 	</Sidebar>
 </template>

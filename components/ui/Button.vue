@@ -29,6 +29,10 @@ const props = defineProps({
 		type: String,
 		required: false,
 	},
+	prefetch: {
+		type: String,
+		default: null,
+	},
 	target: {
 		type: String,
 		required: false,
@@ -54,7 +58,7 @@ const getStyles = () => {
 <template>
 	<component
 		:is="link ? NuxtLink : 'button'"
-		v-bind="{ to: link ? link : null }"
+		v-bind="{ to: link ? link : null, prefetch: prefetch ? true : null, prefetchOn: prefetch }"
 		:target="target"
 		:class="[...getStyles(), loading && $style.loading]"
 	>
@@ -171,11 +175,10 @@ const getStyles = () => {
 }
 
 .wrapper.primary {
-	background: var(--blue);
+	background: var(--brand);
 	fill: var(--txt-primary);
 }
 .wrapper.primary:hover {
-	background: var(--btn-primary-bg-hover);
 	box-shadow: 0 0 0 0 transparent;
 }
 

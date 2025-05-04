@@ -12,6 +12,8 @@ export const useAppStore = defineStore("app", () => {
 
 	const theme = ref("")
 
+	const showNavigation = ref(false)
+
 	const confirmation = ref(null)
 	const createConfirmation = (metadata) => {
 		confirmation.value = metadata
@@ -19,5 +21,5 @@ export const useAppStore = defineStore("app", () => {
 		modalsStore.open("confirmation")
 	}
 
-	return { head, latestBlocks, lastHead, isPaused, isLatestBlocksLoaded, theme, confirmation, createConfirmation }
+	return { head, latestBlocks, lastHead, isPaused, isLatestBlocksLoaded, theme, showNavigation, confirmation, createConfirmation }
 })

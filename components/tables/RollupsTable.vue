@@ -30,21 +30,17 @@ const props = defineProps({
 
 <template>
 	<Flex direction="column" :class="$style.wrapper">
-		<ClientOnly>
-			<Transition name="fade">
-				<Flex v-if="isLoading" direction="column" align="center" gap="16" :class="$style.loading">
-					<Spinner size="16" />
+		<Flex v-if="isLoading" direction="column" align="center" gap="16" :class="$style.loading">
+			<Spinner size="16" />
 
-					<Flex direction="column" align="center" gap="8">
-						<Text size="14" weight="500" color="primary">Fetching rollups...</Text>
-						<Text size="13" weight="500" color="tertiary">It's almost done</Text>
-					</Flex>
-				</Flex>
-			</Transition>
-		</ClientOnly>
+			<Flex direction="column" align="center" gap="8">
+				<Text size="14" weight="500" color="primary">Fetching rollups...</Text>
+				<Text size="13" weight="500" color="tertiary">It's almost done</Text>
+			</Flex>
+		</Flex>
 
 		<Flex
-			v-if="rollups.length > 0"
+			v-else-if="rollups.length"
 			v-for="rollup in rollups"
 			@click="sidebarsStore.open('rollup', rollup)"
 			justify="between"
@@ -55,14 +51,12 @@ const props = defineProps({
 				<Flex align="center" gap="6">
 					<Icon name="rollup" size="16" color="secondary" />
 
-					<LinkToEntity :entity="{ title: rollup.hash, type: 'rollup', id: getRollupHashSafeURL(rollup.hash)}" color="primary" />
+					<LinkToEntity :entity="{ title: rollup.hash, type: 'rollup', id: getRollupHashSafeURL(rollup.hash) }" color="primary" />
 
 					<Tooltip v-if="rollup.bridge_count">
 						<Icon name="bridge" size="18" color="brand" />
 
-						<template #content>
-							Associated with bridge account
-						</template>
+						<template #content> Associated with bridge account </template>
 					</Tooltip>
 				</Flex>
 
@@ -76,14 +70,17 @@ const props = defineProps({
 
 					<Text size="12" weight="500" color="tertiary">First Height&nbsp;</Text>
 
-					<LinkToEntity :entity="{ title: spaces(rollup.first_height), type: 'block', id: rollup.first_height}" color="secondary" />
+					<LinkToEntity
+						:entity="{ title: spaces(rollup.first_height), type: 'block', id: rollup.first_height }"
+						color="secondary"
+					/>
 				</Flex>
 			</Flex>
 
 			<Tooltip>
 				<Flex align="center" gap="4">
 					<Text size="13" weight="600" color="primary"> {{ spaces(rollup.actions_count) }} </Text>
-					
+
 					<Icon name="action" size="13" color="tertiary" />
 				</Flex>
 
@@ -161,11 +158,6 @@ const props = defineProps({
 
 	&:hover {
 		background: var(--op-5);
-	}
-	
-	&:last-child {
-		border-bottom-left-radius: 8px;
-		border-bottom-right-radius: 8px;
 	}
 
 	&:active {

@@ -1,11 +1,4 @@
 <script setup>
-/** Vendor */
-import { DateTime } from "luxon"
-
-/** UI */
-import Button from "~/components/ui/Button.vue"
-import { Dropdown, DropdownItem } from "@/components/ui/Dropdown"
-
 /** Components */
 import StatsBarChart from "@/components/ui/Charts/StatsBarChart.vue"
 import HighlightCard from "@/components/ui/Charts/HighlightCard.vue"
@@ -26,8 +19,7 @@ useHead({
 	meta: [
 		{
 			name: "description",
-			content:
-				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
+			content: "Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
 		},
 		{
 			property: "og:title",
@@ -35,8 +27,7 @@ useHead({
 		},
 		{
 			property: "og:description",
-			content:
-				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
+			content: "Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
 		},
 		{
 			property: "og:url",
@@ -52,8 +43,7 @@ useHead({
 		},
 		{
 			name: "twitter:description",
-			content:
-				"Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
+			content: "Astrotrek allows you to explore and search the Astria blockchain for transactions, addresses, blocks and rollups.",
 		},
 		{
 			name: "twitter:card",
@@ -68,57 +58,57 @@ useHead({
 
 const series = ref([
 	{
-		name: 'bps',
-		title: 'Bytes/sec',
+		name: "bps",
+		title: "Bytes/sec",
 		data: [],
-		units: 'bytes',
-		tooltip: 'Bytes',
+		units: "bytes",
+		tooltip: "Bytes",
 	},
 	{
-		name: 'tps',
-		title: 'Txs/hour',
+		name: "tps",
+		title: "Txs/hour",
 		data: [],
-		tooltip: 'Txs',
+		tooltip: "Txs",
 	},
 	{
-		name: 'tx_count',
-		title: 'Txs Count',
+		name: "tx_count",
+		title: "Txs Count",
 		data: [],
-		tooltip: 'Txs',
+		tooltip: "Txs",
 	},
 	{
-		name: 'bytes_in_block',
-		title: 'Bytes In Block',
+		name: "bytes_in_block",
+		title: "Bytes In Block",
 		data: [],
-		units: 'bytes',
-		tooltip: 'Bytes',
+		units: "bytes",
+		tooltip: "Bytes",
 	},
 	{
-		name: 'data_size',
-		title: 'Data Usage',
+		name: "data_size",
+		title: "Data Usage",
 		data: [],
-		units: 'bytes',
-		tooltip: 'Usage',
+		units: "bytes",
+		tooltip: "Usage",
 	},
 ])
 
 const selectedChart = ref(series.value[0])
 
 const periods = ref([
-{
-		title: '31d',
+	{
+		title: "31d",
 		value: 31,
-		timeframe: 'day',
+		timeframe: "day",
 	},
 	{
-		title: '7d',
+		title: "7d",
 		value: 7,
-		timeframe: 'day',
+		timeframe: "day",
 	},
 	{
-		title: '24h',
+		title: "24h",
 		value: 24,
-		timeframe: 'hour',
+		timeframe: "hour",
 	},
 ])
 
@@ -128,14 +118,15 @@ const selectedHighlightPeriod = computed(() => periods.value[selectedHighlightPe
 const selectedChartPeriodIdx = ref(2)
 const selectedChartPeriod = computed(() => periods.value[selectedChartPeriodIdx.value])
 
-const chartViews = ref(['line-chart', 'bar-chart'])
+const chartViews = ref(["line-chart", "bar-chart"])
 const selectedChartView = ref(chartViews.value[1])
 </script>
 
 <template>
 	<Flex direction="column" gap="12" wide :class="$style.wrapper">
 		<Flex align="center" gap="8">
-			<Text v-for="(p, idx) in periods"
+			<Text
+				v-for="(p, idx) in periods"
 				@click="selectedHighlightPeriodIdx = idx"
 				size="13"
 				color="tertiary"
@@ -146,7 +137,8 @@ const selectedChartView = ref(chartViews.value[1])
 		</Flex>
 
 		<Flex align="center" gap="10" :class="$style.small_charts_wrapper">
-			<HighlightCard v-for="s in series"
+			<HighlightCard
+				v-for="s in series"
 				@click="selectedChart = s"
 				:active="s.name === selectedChart.name"
 				:series="s"
@@ -159,7 +151,8 @@ const selectedChartView = ref(chartViews.value[1])
 
 			<Flex align="center" gap="16">
 				<Flex align="center" gap="8">
-					<Icon v-for="v in chartViews"
+					<Icon
+						v-for="v in chartViews"
 						@click="selectedChartView = v"
 						:name="v"
 						size="16"
@@ -169,7 +162,8 @@ const selectedChartView = ref(chartViews.value[1])
 				</Flex>
 
 				<Flex align="center" gap="8">
-					<Text v-for="(p, idx) in periods"
+					<Text
+						v-for="(p, idx) in periods"
 						@click="selectedChartPeriodIdx = idx"
 						size="13"
 						color="tertiary"
@@ -182,17 +176,19 @@ const selectedChartView = ref(chartViews.value[1])
 		</Flex>
 
 		<Flex align="center" :class="$style.selected_chart">
-			<StatsLineChart v-if="selectedChartView === 'line-chart'"
+			<StatsLineChart
+				v-if="selectedChartView === 'line-chart'"
 				:series="selectedChart"
 				:period="selectedChartPeriod"
-				:height=380
+				:height="380"
 				:class="$style.selected_chart"
 			/>
 
-			<StatsBarChart v-else-if="selectedChartView === 'bar-chart'"
+			<StatsBarChart
+				v-else-if="selectedChartView === 'bar-chart'"
 				:series="selectedChart"
 				:period="selectedChartPeriod"
-				:height=380
+				:height="380"
 				:class="$style.selected_chart"
 			/>
 		</Flex>
@@ -223,7 +219,7 @@ const selectedChartView = ref(chartViews.value[1])
 }
 
 ::-webkit-scrollbar {
-    height: 2px;
+	height: 2px;
 }
 
 .small_chart {

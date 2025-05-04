@@ -2,6 +2,7 @@
 	<Flex direction="column">
 		<Flex direction="column" align="center" :class="$style.wrapper">
 			<TheHeader />
+			<Navigation />
 			<Feed />
 
 			<slot />
@@ -13,6 +14,6 @@
 
 <style module>
 .wrapper {
-	min-height: calc(100vh - 116px);
+	min-height: calc(100vh - 272px);
 }
 </style>

@@ -140,13 +140,13 @@ useHead({
 
 const tabs = ref([
 	{
-		name: "transactions"
+		name: "transactions",
 	},
 	{
-		name: "actions"
+		name: "actions",
 	},
 	{
-		name: "quotes_updates"
+		name: "quotes_updates",
 	},
 ])
 const activeTab = ref(route.query.tab && tabs.value.map((tab) => tab.name).includes(route.query.tab) ? route.query.tab : tabs.value[0].name)
@@ -202,7 +202,7 @@ watch(
 
 <template>
 	<Flex v-if="block" direction="column" gap="24" :class="$style.wrapper">
-		<Flex direction="column" gap="40">
+		<Flex direction="column" gap="16">
 			<Breadcrumbs
 				:items="[
 					{ link: '/', name: 'Explore' },
@@ -211,7 +211,7 @@ watch(
 				]"
 			/>
 
-			<Flex align="center" justify="between" wide>
+			<Flex align="center" justify="between" wide :class="$style.top">
 				<Flex align="center" gap="16">
 					<Flex align="center" gap="8">
 						<Icon name="block" size="14" color="primary" />
@@ -224,14 +224,19 @@ watch(
 					</Flex>
 
 					<Flex align="center" gap="8">
-						<Button @click="router.push(`/block/${block?.height - 1}`)" type="tertiary" size="mini" :disabled="block?.height === 1">
+						<Button
+							@click="router.push(`/block/${block?.height - 1}`)"
+							type="secondary"
+							size="mini"
+							:disabled="block?.height === 1"
+						>
 							<Icon name="arrow-redo-right" size="16" color="secondary" :style="{ transform: 'scaleX(-1)' }" />
 							Prev
 						</Button>
 
 						<Button
 							@click="router.push(`/block/${block?.height + 1}`)"
-							type="tertiary"
+							type="secondary"
 							size="mini"
 							:disabled="block?.height === lastBlock?.height"
 						>
@@ -243,9 +248,9 @@ watch(
 
 				<RawDataView :entity="block" name="block" />
 			</Flex>
-		</Flex>
 
-		<BlockMetadata :block="block" />
+			<BlockMetadata :block="block" />
+		</Flex>
 
 		<Flex direction="column" gap="12">
 			<Flex align="center" justify="between">
@@ -275,7 +280,12 @@ watch(
 
 			<BlockTransactions v-if="activeTab === 'transactions'" :txs="txs" :isLoading="isLoading" />
 			<BlockActions v-if="activeTab === 'actions'" :actions="actions" :isLoading="isLoading" />
-			<BlockQuotesUpdates v-if="activeTab === 'quotes_updates'" :quotesUpdates="quotesUpdates" :height="block.height" :isLoading="isLoading" />
+			<BlockQuotesUpdates
+				v-if="activeTab === 'quotes_updates'"
+				:quotesUpdates="quotesUpdates"
+				:height="block.height"
+				:isLoading="isLoading"
+			/>
 		</Flex>
 	</Flex>
 </template>
@@ -312,5 +322,13 @@ watch(
 
 .pagination {
 	padding-bottom: 6px;
+}
+
+@media (max-width: 500px) {
+	.top {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 12px;
+	}
 }
 </style>
