@@ -13,6 +13,7 @@
 	},
 	"dependencies": {
 		"@codemirror/lang-json": "^6.0.1",
+		"@ethereumjs/tx": "^10.0.0",
 		"@pinia/nuxt": "^0.11.0",
 		"@vueuse/core": "^13.1.0",
 		"buffer": "^6.0.3",

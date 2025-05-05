@@ -73,7 +73,7 @@ const decode = (bytes) => {
 		<Flex direction="column" gap="16">
 			<Flex @click="showDebugger = !showDebugger" align="center" gap="6" class="clickable">
 				<Text size="12" weight="600" color="primary" mono>Debugger</Text>
-				<Icon name="chevron" size="12" color="secondary" :style="{ transform: !showDebugger ? 'rotate(180deg)' : null }" />
+				<Icon name="chevron" size="12" color="secondary" :style="{ transform: showDebugger ? 'rotate(180deg)' : null }" />
 			</Flex>
 
 			<template v-if="showDebugger">
@@ -175,7 +175,7 @@ const decode = (bytes) => {
 		<Flex direction="column" gap="16">
 			<Flex @click="showActionMetadata = !showActionMetadata" align="center" gap="6" class="clickable">
 				<Text size="12" weight="600" color="primary" mono>Action</Text>
-				<Icon name="chevron" size="12" color="secondary" :style="{ transform: !showActionMetadata ? 'rotate(180deg)' : null }" />
+				<Icon name="chevron" size="12" color="secondary" :style="{ transform: showActionMetadata ? 'rotate(180deg)' : null }" />
 			</Flex>
 
 			<template v-if="showActionMetadata">

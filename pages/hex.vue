@@ -4,6 +4,7 @@ import { Buffer } from "buffer"
 
 /** Components: Hex Viewer */
 import HexViewer from "@/components/modules/hex/HexViewer.vue"
+import DecodeViewer from "~/components/modules/hex/DecodeViewer/DecodeViewer.vue"
 import DataInspector from "@/components/modules/hex/DataInspector.vue"
 
 /** API */
@@ -14,7 +15,6 @@ import { useCacheStore } from "@/store/cache"
 const cacheStore = useCacheStore()
 
 const route = useRoute()
-const router = useRouter()
 
 useSeoMeta({
 	title: "Astrotrek Hex Viewer",
@@ -72,7 +72,10 @@ onMounted(() => {
 <template>
 	<Flex wide :class="$style.wrapper">
 		<ClientOnly>
-			<HexViewer :hex :bytes :cursor :range :size @onSelect="handleBytesSelect" @onCursorSelect="handleSelectCursor" />
+			<Flex direction="column" gap="24" :class="$style.content">
+				<HexViewer :hex :bytes :cursor :range :size @onSelect="handleBytesSelect" @onCursorSelect="handleSelectCursor" />
+				<DecodeViewer :data />
+			</Flex>
 
 			<Flex direction="column" gap="24" :class="$style.sidebar">
 				<DataInspector :bytes="bytes" :range="range" :cursor="cursor" :action="cacheStore.current.action" />
@@ -90,8 +93,13 @@ onMounted(() => {
 	padding: 0 24px;
 }
 
+.content {
+	width: 660px;
+	min-width: 660px;
+}
+
 .sidebar {
-	margin-left: 16px;
+	margin-left: 24px;
 }
 
 @media (max-width: 900px) {
@@ -102,6 +110,13 @@ onMounted(() => {
 
 	.sidebar {
 		margin: 0;
+	}
+}
+
+@media (max-width: 720px) {
+	.content {
+		width: initial;
+		min-width: initial;
 	}
 }
 

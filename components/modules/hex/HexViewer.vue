@@ -228,6 +228,15 @@ const clearThumbDraging = () => {
 
 <template>
 	<Flex direction="column" :class="$style.wrapper">
+		<Flex align="center" justify="between" :class="$style.top">
+			<Flex align="center" gap="8">
+				<Icon name="hex" size="16" color="brand" />
+				<Text size="12" weight="700" color="primary" mono>Hex Viewer</Text>
+			</Flex>
+
+			<Text size="12" color="tertiary" mono>Cursor: {{ cursor }}</Text>
+		</Flex>
+
 		<Flex
 			ref="viewerEl"
 			@mouseenter="onMouseEnter"
@@ -313,22 +322,28 @@ const clearThumbDraging = () => {
 
 		<Flex align="center" justify="between" :class="$style.bottom">
 			<Text size="12" color="tertiary" mono>{{ formatBytes(size) }}</Text>
-			<Text size="12" color="tertiary" mono>Cursor: {{ cursor }}</Text>
 		</Flex>
 	</Flex>
 </template>
 
 <style module>
 .wrapper {
-	width: 660px;
-	min-width: 660px;
 	height: fit-content;
-	border-radius: 4px;
+	border-radius: 8px;
 	background: var(--card-background);
-	box-shadow: 0 0 0 2px var(--op-10);
+	box-shadow: 0 0 0 1px var(--op-10);
 	overflow: hidden;
 
 	user-select: none;
+}
+
+.top {
+	height: 32px;
+
+	background: var(--app-background);
+	border-radius: 8px;
+
+	padding: 0 8px;
 }
 
 .viewer {
@@ -516,11 +531,6 @@ const clearThumbDraging = () => {
 }
 
 @media (max-width: 720px) {
-	.wrapper {
-		width: initial;
-		min-width: initial;
-	}
-
 	.label {
 		font-size: 10px;
 	}
