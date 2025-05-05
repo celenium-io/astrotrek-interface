@@ -75,7 +75,12 @@ const handleClearResult = () => {
 
 		<template v-if="!collapsed">
 			<Flex direction="column" gap="20">
-				<Flex @click.stop justify="between" :class="$style.content">
+				<Flex
+					@click.stop
+					justify="between"
+					:class="$style.content"
+					:style="{ minHeight: typeof value === 'function' ? '42px' : null }"
+				>
 					<Text as="pre" size="12" height="140" :color="value !== undefined ? 'secondary' : 'tertiary'" mono>
 						{{ value !== undefined ? value : "Empty" }}
 					</Text>
