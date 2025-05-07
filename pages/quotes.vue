@@ -94,7 +94,7 @@ onMounted(async () => {
 
 		<LoadingHolder v-if="isLoading" title="Loading quotes.." />
 
-		<Flex v-if="quotes.length" align="center" justify="between">
+		<Flex v-if="quotes.length" align="center" justify="between" gap="12" wide :class="$style.quotes_wrapper">
 			<QuoteCard v-for="q in quotes"
 				:quote="q"
 			/>
@@ -113,57 +113,9 @@ onMounted(async () => {
 	margin-bottom: 120px;
 }
 
-.selected_chart {
-	min-width: 100%;
-
-	position: relative;
-	border-radius: 8px 8px 8px 8px;
-	background: rgba(255, 255, 255, 1%);
-}
-
-.small_charts_wrapper {
-	width: 100%;
-
-	overflow-x: auto;
-}
-
-::-webkit-scrollbar {
-    height: 2px;
-}
-
-.small_chart {
-	min-width: 250px;
-
-	background: rgba(255, 255, 255, 1%);
-	border-radius: 8px 8px 8px 8px;
-
-	cursor: pointer;
-
-	&:hover {
-		background: rgba(255, 255, 255, 2%);
-	}
-
-	&:active {
-		transform: scale(101%);
-		transition: all 0.3s ease;
-	}
-}
-
-.small_chart_selected {
-	box-shadow: inset 0 0 0 1px var(--op-5);
-	background: rgba(255, 255, 255, 2%);
-}
-
-.period {
-	cursor: pointer;
-
-	padding-bottom: 2px;
-}
-.active_period {
-	color: var(--txt-primary);
-	fill: var(--txt-primary);
-
-	border-bottom: 1px solid var(--txt-primary);
+.quotes_wrapper {
+	max-width: 100%;
+	flex-wrap: wrap;
 }
 
 @media (max-width: 500px) {

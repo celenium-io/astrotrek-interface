@@ -62,7 +62,8 @@ const getQuoteSeries = async () => {
 
 	if (data.length) {
 		quotesSeries.value = data.reverse()
-		diff.value = ((+quotesSeries.value.splice(-1)[0].close - +quotesSeries.value[0].close) / +quotesSeries.value.splice(-1)[0].close * 100).toFixed(2)
+		const lastEl = quotesSeries.value[quotesSeries.value.length - 1]
+		diff.value = ((+lastEl.close - +quotesSeries.value[0].close) / +lastEl.close * 100).toFixed(2)
 	}
 }
 const buildChart = (chart, data) => {
@@ -110,8 +111,8 @@ const buildChart = (chart, data) => {
 		// Recover coordinate we need
 		const idx = bisect(data, x.invert(d3.pointer(event)[0]))
 		const selectedCData = data[idx]
-		const xPosition = chartView.value === "line" ? x(DateTime.fromISO(selectedCData.time).toJSDate()) : xBand(DateTime.fromISO(selectedCData.time).toJSDate())
-		const yPosition = y(selectedCData.close)
+		const xPosition = chartView.value === "line" ? x(DateTime.fromISO(selectedCData?.time).toJSDate()) : xBand(DateTime.fromISO(selectedCData?.time).toJSDate())
+		const yPosition = y(selectedCData?.close)
 
 		if (chartView.value === "line") {
 			focus.style("opacity", 1)
@@ -119,7 +120,7 @@ const buildChart = (chart, data) => {
 			focusLineV.style("opacity", 1)
 			focus
 				.attr("cx", xPosition)
-				.attr("cy", y(selectedCData.close))
+				.attr("cy", y(selectedCData?.close))
 			focusLineV
 				.attr("x1", xPosition)
 				.attr("y1", 0)
@@ -151,10 +152,10 @@ const buildChart = (chart, data) => {
 		let tooltipWidth = tooltipEl.value?.wrapper ? tooltipEl.value?.wrapper?.getBoundingClientRect()?.width : 100
 		let tooltipHeight = tooltipEl.value?.wrapper ? tooltipEl.value?.wrapper?.getBoundingClientRect()?.height : 14
 		tooltip.value.x = (xPosition + tooltipWidth) > width + 30 ? xPosition - tooltipWidth - 5 : xPosition + 5
-		tooltip.value.y = y(selectedCData.close) - tooltipHeight
+		tooltip.value.y = y(selectedCData?.close) - tooltipHeight
 		
 		tooltip.value.data = selectedCData
-		tooltip.value.date = DateTime.fromISO(selectedCData.time).setLocale("en").toFormat("HH:mm, LLL dd")
+		tooltip.value.date = DateTime.fromISO(selectedCData?.time).setLocale("en").toFormat("HH:mm, LLL dd")
 	}
 
 	function onPointerleft() {
@@ -553,14 +554,16 @@ watch(
 						<Flex direction="column" gap="12">
 							<Text size="13" color="secondary" weight="600"> Providers </Text>
 
-							<Flex v-for="p in quote.providers" direction="column" gap="8" :class="$style.provider">
-								<Flex align="center" justify="between">
-									<Text size="12" color="tertiary"> Name </Text>
-									<Text size="12" color="primary"> {{ p.provider }} </Text>
-								</Flex>
-								<Flex align="center" justify="between">
-									<Text size="12" color="tertiary"> Off-chain ticker </Text>
-									<Text size="12" color="primary"> {{ p.off_chain_ticker }} </Text>
+							<Flex direction="column" gap="12" :class="$style.providers">
+								<Flex v-for="p in quote.providers" direction="column" gap="8" :class="$style.provider">
+									<Flex align="center" justify="between">
+										<Text size="12" color="tertiary"> Name </Text>
+										<Text size="12" color="primary"> {{ p.provider }} </Text>
+									</Flex>
+									<Flex align="center" justify="between">
+										<Text size="12" color="tertiary"> Off-chain ticker </Text>
+										<Text size="12" color="primary"> {{ p.off_chain_ticker }} </Text>
+									</Flex>
 								</Flex>
 							</Flex>
 						</Flex>
@@ -661,10 +664,20 @@ watch(
 	height: 2px;
 }
 
+.providers {
+	max-height: 350px;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+}
+
 .provider {
 	padding: 8px;
 	box-shadow: inset 0 0 0 1px var(--op-10), 0 14px 34px rgba(0, 0, 0, 15%), 0 4px 14px rgba(0, 0, 0, 5%);
 	border-radius: 6px;
+}
+
+::-webkit-scrollbar {
+    width: 3px;
 }
 
 @media (max-height: 900px) {
