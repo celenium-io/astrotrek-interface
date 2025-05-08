@@ -264,6 +264,7 @@ onBeforeUnmount(() => {
 	margin-bottom: 16px;
 
 	background: var(--op-3);
+	border-radius: 12px;
 }
 
 .card {
