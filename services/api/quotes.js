@@ -25,7 +25,7 @@ export const fetchQuote = async ({ pair }) => {
 
 export const fetchQuotesSeries = async ({ pair, timeframe, from, to }) => {
 	try {
-		const url = new URL(`${useServerURL()}/price/${pair}/${timeframe}`)
+		const url = new URL(`${useServerURL()}/price/${pair}/series/${timeframe}`)
 
 		if (from) url.searchParams.append("from", from)
 		if (to) url.searchParams.append("to", to)
