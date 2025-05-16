@@ -1,11 +1,19 @@
 <script setup>
-/** Servies */
+/** API */
 import { fetchQuotes } from "@/services/api/quotes"
+
+/** Servies */
+import { getNetworkName } from "@/services/utils/general"
 
 /** Components */
 import EmptyHolder from "~/components/shared/EmptyHolder.vue"
 import LoadingHolder from "~/components/shared/LoadingHolder.vue"
 import QuoteCard from "@/components/ui/Charts/QuoteCard.vue"
+
+const router = useRouter()
+if (getNetworkName() !== "Dusk") {
+	router.push("/")
+}
 
 definePageMeta({
 	layout: "default",
