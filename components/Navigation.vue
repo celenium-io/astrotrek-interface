@@ -1,7 +1,4 @@
 <script setup>
-/** UI */
-import { Dropdown, DropdownItem } from "@/components/ui/Dropdown"
-
 /** Store */
 import { useAppStore } from "@/store/app"
 const appStore = useAppStore()
@@ -71,29 +68,6 @@ const links = [
 					</Flex>
 				</NuxtLink>
 			</Flex>
-
-			<!-- <Dropdown :class="$style.tools_dropdown">
-				<Flex align="center" gap="6" :class="$style.link">
-					<Text size="13" weight="600" color="secondary">Tools</Text>
-					<Icon name="chevron" size="14" color="primary" />
-				</Flex>
-
-				<template #popup>
-					<NuxtLink to="/hex">
-						<DropdownItem>Hex Viewer </DropdownItem>
-					</NuxtLink>
-				</template>
-			</Dropdown>
-			<Flex wide direction="column" gap="8" style="display: none" :class="$style.tools_list">
-				<Text size="12" weight="600" color="tertiary" style="padding: 0 8px">Tools</Text>
-
-				<NuxtLink to="/hex" :class="$style.link" :active-class="$style.activeLink">
-					<Flex align="center" gap="6">
-						<Icon name="hex" size="14" />
-						<Text size="13" weight="600">Hex Viewer</Text>
-					</Flex>
-				</NuxtLink>
-			</Flex> -->
 		</Flex>
 	</Flex>
 </template>
