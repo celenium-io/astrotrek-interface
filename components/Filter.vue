@@ -5,7 +5,6 @@ import { cloneDeep } from "lodash"
 /** Components */
 import Button from "@/components/ui/Button.vue"
 import Checkbox from "@/components/ui/Checkbox.vue"
-import { Dropdown, DropdownItem } from "@/components/ui/Dropdown"
 import Popover from "@/components/ui/Popover.vue"
 import Toggle from "@/components/ui/Toggle.vue"
 
@@ -72,22 +71,33 @@ const handleClose = (filter) => {
 const handleApply = () => {
 	isOpen.value = false
 
-	emit('onUpdate', selectedFilters.value)
+	emit("onUpdate", selectedFilters.value)
 }
 
 const handleClear = () => {
 	isOpen.value = false
 
-	emit('onUpdate', [])
+	emit("onUpdate", [])
 }
 </script>
 
 <template>
 	<Popover :open="isOpen" :blockOutside="blockMainPopover" @on-close="handleClose()" :width="width" :height="height" position="start">
-		<Button @click="handleOpen()" type="secondary" size="mini" :disabled="!filters.length">
-			<Icon name="filter" size="14" :color="isActive ? 'brand' : 'tertiary'" />
-		</Button>
-
+		<Flex align="center" gap="2">
+			<Button
+				@click="handleOpen()"
+				type="secondary"
+				size="mini"
+				:disabled="!filters.length"
+				:style="isActive ? 'border-radius: 6px 2px 2px 6px' : ''"
+			>
+				<Icon name="filter" size="14" :color="isActive ? 'brand' : 'primary'" />
+				{{ isActive ? "Applied" : "" }} Filters
+			</Button>
+			<Button v-if="isActive" @click="handleClear()" type="secondary" size="mini" style="border-radius: 2px 6px 6px 2px">
+				Reset
+			</Button>
+		</Flex>
 
 		<template #content>
 			<Flex align="center" direction="column" justify="between" gap="12" wide>
@@ -97,7 +107,7 @@ const handleClear = () => {
 							<Text size="12" color="secondary"> {{ getDisplayName(f.name, index) }} </Text>
 							<Toggle v-model="f.value" color="var(--brand)" />
 						</Flex>
-						
+
 						<Flex v-if="f.type === 'multiselect'" align="center" wide>
 							<Popover :open="f.open" @on-close="handleClose(f)" width="200" side="right" :class="$style.multiselect">
 								<Flex
@@ -120,7 +130,9 @@ const handleClear = () => {
 											justify="between"
 											:class="$style.item"
 										>
-											<Text size="12" :color="f.values[v] ? 'primary' : 'secondary'"> {{ getDisplayName(v, index) }} </Text>
+											<Text size="12" :color="f.values[v] ? 'primary' : 'secondary'">
+												{{ getDisplayName(v, index) }}
+											</Text>
 
 											<Checkbox :checked="f.values[v]" :class="$style.value" />
 										</Flex>
@@ -130,9 +142,16 @@ const handleClear = () => {
 						</Flex>
 					</template>
 				</Flex>
-				
+
 				<template v-else>
-					<Flex v-if="selectedFilters[0].type = 'multiselect'" direction="column" align="center" gap="16" wide :class="$style.multiselect">
+					<Flex
+						v-if="(selectedFilters[0].type = 'multiselect')"
+						direction="column"
+						align="center"
+						gap="16"
+						wide
+						:class="$style.multiselect"
+					>
 						<Flex align="center" justify="center">
 							<Text size="12" color="tertiary"> {{ selectedFilters[0].name }} </Text>
 						</Flex>
@@ -146,7 +165,9 @@ const handleClear = () => {
 								wide
 								:class="$style.item"
 							>
-								<Text size="12" :color="selectedFilters[0].values[v] ? 'primary' : 'secondary'"> {{ getDisplayName(v, 0) }} </Text>
+								<Text size="12" :color="selectedFilters[0].values[v] ? 'primary' : 'secondary'">
+									{{ getDisplayName(v, 0) }}
+								</Text>
 
 								<Checkbox :checked="selectedFilters[0].values[v]" :class="$style.value" />
 							</Flex>
@@ -179,7 +200,6 @@ const handleClear = () => {
 	cursor: pointer;
 
 	& .title {
-		
 	}
 
 	& .content {

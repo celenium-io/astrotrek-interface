@@ -20,31 +20,23 @@ const emit = defineEmits(["onSort"])
 const handleSort = (by) => {
 	emit("onSort", {
 		by: by,
-		dir: props.sort?.by === by
-			? props.sort?.dir === 'asc'
-				? 'desc'
-				: 'asc'
-			: 'asc'
+		dir: props.sort?.by === by ? (props.sort?.dir === "asc" ? "desc" : "asc") : "asc",
 	})
 }
 </script>
 
 <template>
 	<Flex direction="column" :class="$style.wrapper">
-		<ClientOnly>
-			<Transition name="fade">
-				<Flex v-if="isLoading" direction="column" align="center" gap="16" :class="$style.loading">
-					<Spinner size="16" />
+		<Flex v-if="isLoading" direction="column" align="center" gap="16" :class="$style.loading">
+			<Spinner size="16" />
 
-					<Flex direction="column" align="center" gap="8">
-						<Text size="14" weight="500" color="primary">Fetching assets...</Text>
-						<Text size="13" weight="500" color="tertiary">It's almost done</Text>
-					</Flex>
-				</Flex>
-			</Transition>
-		</ClientOnly>
+			<Flex direction="column" align="center" gap="8">
+				<Text size="14" weight="500" color="primary">Fetching assets...</Text>
+				<Text size="13" weight="500" color="tertiary">It's almost done</Text>
+			</Flex>
+		</Flex>
 
-		<table v-if="!isLoading" :class="$style.table">
+		<table v-else-if="assets.length" :class="$style.table">
 			<thead>
 				<tr>
 					<th><Text size="13" weight="600" color="tertiary">Asset Name</Text></th>
@@ -169,26 +161,15 @@ const handleSort = (by) => {
 
 	border-spacing: 0px;
 	& tbody {
-		
 		& tr {
 			transition: all 0.05s ease;
 
 			&:hover {
 				background: var(--op-5);
 			}
-
-			&:last-child {
-
-				& td:first-child {
-					border-bottom-left-radius: 8px;
-				}
-				& td:last-child {
-					border-bottom-right-radius: 8px;
-				}
-			}
 		}
 	}
-	
+
 	& tr th {
 		text-align: left;
 		padding: 0;

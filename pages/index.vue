@@ -112,8 +112,7 @@ const handleHide = () => {
 	max-width: calc(var(--base-width) + 48px);
 
 	padding: 0 24px;
-	margin-top: 60px;
-	margin-bottom: 120px;
+	margin-top: 24px;
 }
 
 .divider {

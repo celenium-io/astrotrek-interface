@@ -1,23 +1,23 @@
 <script setup>
 /** Modules */
-import AccountTransactions from "~/components/modules/account/AccountTransactions.vue"
-import AppMetadata from "~/components/modules/app/AppMetadata.vue"
-import RollupActions from "~/components/modules/rollup/RollupActions.vue"
-import RollupCharts from "~/components/modules/rollup/RollupCharts.vue"
+import AccountTransactions from "@/components/modules/account/AccountTransactions.vue"
+import AppMetadata from "@/components/modules/app/AppMetadata.vue"
+import RollupActions from "@/components/modules/rollup/RollupActions.vue"
+import RollupCharts from "@/components/modules/rollup/RollupCharts.vue"
 
 /** UI */
-import Button from "~/components/ui/Button.vue"
+import Button from "@/components/ui/Button.vue"
 import { Dropdown, DropdownItem } from "@/components/ui/Dropdown"
-import Tooltip from "~/components/ui/Tooltip.vue"
+import Tooltip from "@/components/ui/Tooltip.vue"
 
 /** Services */
-import { arraysAreEqual, capitalizeAndReplaceUnderscore } from "~/services/utils"
-import { getRollupHashSafeURL } from "~/services/utils/rollups"
+import { arraysAreEqual, capitalizeAndReplaceUnderscore } from "@/services/utils"
+import { getRollupHashSafeURL } from "@/services/utils/rollups"
 
 /** API */
-import { fetchAccountTransactions } from "~/services/api/account.js"
-import { fetchAppBySlug } from "~/services/api/app.js"
-import { fetchRollupActions, fetchRollupByHash } from "~/services/api/rollup"
+import { fetchAccountTransactions } from "@/services/api/account.js"
+import { fetchAppBySlug } from "@/services/api/app.js"
+import { fetchRollupActions, fetchRollupByHash } from "@/services/api/rollup"
 
 definePageMeta({
 	layout: "default",
@@ -68,8 +68,8 @@ if (!data.value) {
 } else {
 	app.value = data.value
 
-	appContactLinks.value.forEach(link => link.tooltip = app.value[link.name])
-	appContactLinks.value = appContactLinks.value.filter(link => link.tooltip)
+	appContactLinks.value.forEach((link) => (link.tooltip = app.value[link.name]))
+	appContactLinks.value = appContactLinks.value.filter((link) => link.tooltip)
 }
 
 const limit = ref(15)
@@ -81,10 +81,10 @@ const fetchAppBridgeTxs = async () => {
 		limit: limit.value,
 		offset: (page.value - 1) * limit.value,
 	})
-	
+
 	bridgeTxs.value = data.value
 	handleNextCondition.value = bridgeTxs.value?.length < limit.value
-	
+
 	isLoading.value = false
 }
 
@@ -138,14 +138,14 @@ async function initFilters() {
 			name: "bridge_actions",
 			value: true,
 			displayName: "Bridge Actions",
-			type: "toggle"
+			type: "toggle",
 		},
 		{
 			name: "rollup_actions",
 			value: true,
 			displayName: "Rollup Actions",
-			type: "toggle"
-		}
+			type: "toggle",
+		},
 	]
 
 	if (arraysAreEqual(filters.value, res)) {
@@ -165,9 +165,9 @@ const handleFilterUpdate = async (event) => {
 	if (arraysAreEqual(filters.value, event)) return
 
 	filters.value = event
-	loadBridgeActions.value = filters.value.find(f => f.name === "bridge_actions")?.value
-	loadRollupActions.value = filters.value.find(f => f.name === "rollup_actions")?.value
-	
+	loadBridgeActions.value = filters.value.find((f) => f.name === "bridge_actions")?.value
+	loadRollupActions.value = filters.value.find((f) => f.name === "rollup_actions")?.value
+
 	await fetchData()
 }
 
@@ -234,7 +234,7 @@ const tabs = ref([
 	{
 		name: "analytics",
 		display: true,
-	}
+	},
 ])
 const activeTab = ref(route.query.tab && tabs.value.map((tab) => tab.name).includes(route.query.tab) ? route.query.tab : tabs.value[0].name)
 
@@ -295,7 +295,7 @@ watch(
 
 <template>
 	<Flex v-if="app" direction="column" gap="24" :class="$style.wrapper">
-		<Flex direction="column" gap="40">
+		<Flex direction="column" gap="16">
 			<Flex align="start" justify="between" :class="$style.navigation">
 				<Breadcrumbs
 					:items="[
@@ -326,12 +326,7 @@ watch(
 				<Flex align="center" gap="16">
 					<Tooltip v-for="link in appContactLinks">
 						<NuxtLink :to="link.tooltip" target="blank">
-							<Icon
-								:name="link.icon"
-								:size="size"
-								color="secondary"
-								:class="$style.contact_icon"
-							/>
+							<Icon :name="link.icon" :size="size" color="secondary" :class="$style.contact_icon" />
 						</NuxtLink>
 
 						<template #content>
@@ -340,15 +335,15 @@ watch(
 					</Tooltip>
 				</Flex>
 			</Flex>
-		</Flex>
 
-		<AppMetadata :app="app" />
+			<AppMetadata :app="app" />
+		</Flex>
 
 		<Flex direction="column" gap="12">
 			<Flex align="center" justify="between" :class="$style.navigation">
 				<Flex align="center" gap="8" :class="$style.tabs">
 					<Text
-						v-for="tab in tabs.filter(tab => tab.display)"
+						v-for="tab in tabs.filter((tab) => tab.display)"
 						@click="activeTab = tab.name"
 						size="13"
 						weight="600"
@@ -360,7 +355,13 @@ watch(
 				</Flex>
 
 				<Flex v-if="activeTab !== 'analytics'" align="center" gap="6" :class="$style.pagination">
-					<Filter v-if="activeTab === 'rollup_actions'" @onUpdate="handleFilterUpdate" :filters="filters" :showClear="false" width="170" />
+					<Filter
+						v-if="activeTab === 'rollup_actions'"
+						@onUpdate="handleFilterUpdate"
+						:filters="filters"
+						:showClear="false"
+						width="170"
+					/>
 
 					<Flex align="center" gap="6">
 						<Button @click="handlePrev" size="mini" type="secondary" :disabled="page === 1 || isLoading">
@@ -372,7 +373,7 @@ watch(
 						</Button>
 					</Flex>
 				</Flex>
-				
+
 				<Flex v-else align="center" gap="6" :class="$style.pagination">
 					<Dropdown>
 						<Button size="mini" type="secondary">
@@ -468,7 +469,6 @@ watch(
 	padding: 6px 8px;
 
 	transition: all 0.2s ease;
-
 }
 
 @media (max-width: 650px) {
@@ -488,7 +488,7 @@ watch(
 		flex-direction: column-reverse;
 		gap: 12px;
 	}
-	
+
 	.register_app_btn {
 		align-self: end;
 	}

@@ -79,20 +79,17 @@ watch(
 						<Tooltip v-if="account?.is_bridge">
 							<Icon name="bridge" size="16" color="brand" />
 
-							<template #content>
-								Bridge account
-							</template>
+							<template #content> Bridge account </template>
 						</Tooltip>
 
 						<Tooltip v-if="account?.is_sudo || account?.is_ibc_sudo">
 							<Icon name="role" size="14" color="brand" />
 
 							<template #content>
-								{{ `Has
-									${account?.is_sudo ? ' Sudo' : ''}
-									${account?.is_ibc_sudo
-										? account?.is_sudo ? ' and IBC Sudo roles' : ' IBC Sudo role'
-										: 'role'}`
+								{{
+									`Has
+									${account?.is_sudo ? " Sudo" : ""}
+									${account?.is_ibc_sudo ? (account?.is_sudo ? " and IBC Sudo roles" : " IBC Sudo role") : "role"}`
 								}}
 							</template>
 						</Tooltip>
@@ -100,16 +97,14 @@ watch(
 						<Tooltip v-if="account?.is_ibc_relayer">
 							<Icon name="relayer" size="18" color="brand" />
 
-							<template #content>
-								IBC Relayer
-							</template>
+							<template #content> IBC Relayer </template>
 						</Tooltip>
 					</Flex>
 
 					<Flex align="center" gap="8">
 						<LinkToEntity
 							@click="emit('onClose')"
-							:entity="{ title: $getDisplayName('addresses', null, account), type: 'account', id: account.hash}"
+							:entity="{ title: $getDisplayName('addresses', null, account), type: 'account', id: account.hash }"
 							mode="sidebar"
 							color="primary"
 							size="16"
@@ -179,7 +174,9 @@ watch(
 
 							<NuxtLink :to="`/account/${account.bridge?.sudo.hash}`" target="_blank">
 								<Flex align="center" gap="4">
-									<Text size="13" weight="600" color="primary">{{ $getDisplayName('addresses', null, account.bridge?.sudo) }}</Text>
+									<Text size="13" weight="600" color="primary">{{
+										$getDisplayName("addresses", null, account.bridge?.sudo)
+									}}</Text>
 
 									<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
 								</Flex>
@@ -195,7 +192,9 @@ watch(
 
 							<NuxtLink :to="`/account/${account.bridge?.withdrawer.hash}`" target="_blank">
 								<Flex align="center" gap="4">
-									<Text size="13" weight="600" color="primary">{{ $getDisplayName('addresses', null, account.bridge?.withdrawer) }}</Text>
+									<Text size="13" weight="600" color="primary">{{
+										$getDisplayName("addresses", null, account.bridge?.withdrawer)
+									}}</Text>
 
 									<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
 								</Flex>
@@ -224,7 +223,9 @@ watch(
 					<Flex align="center" justify="between">
 						<Text size="13" weight="600" color="tertiary">Balance</Text>
 
-						<Text size="13" weight="600" color="primary" tabular> {{ `${spaces(account.balances[0].value)} ${account.balances[0].currency.toUpperCase()}` }} </Text>
+						<Text size="13" weight="600" color="primary" tabular>
+							{{ `${spaces(account.balances[0].value)} ${account.balances[0].currency.toUpperCase()}` }}
+						</Text>
 					</Flex>
 
 					<Flex align="center" justify="between">
@@ -240,8 +241,10 @@ watch(
 					</Flex>
 				</Flex>
 			</Flex>
-						
-			<Button @click="emit('onClose')" :link="`/account/${account.hash}`" type="secondary" size="medium">Open Account</Button>
+
+			<Button @click="emit('onClose')" :link="`/account/${account.hash}`" prefetch="interaction" type="secondary" size="medium"
+				>Open Account</Button
+			>
 		</Flex>
 	</Sidebar>
 </template>

@@ -7,10 +7,7 @@ export default defineNuxtConfig({
 				lang: "en",
 			},
 			meta: [
-				{
-					name: "viewport",
-					content: "width=device-width, initial-scale=1, maximum-scale=1"
-				},
+				{ name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1" },
 				{
 					name: "lang",
 					content: "en",
@@ -34,7 +31,7 @@ export default defineNuxtConfig({
 				{
 					rel: "preload",
 					as: "style",
-					href: "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap",
+					href: "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap",
 					onload: "this.onload=null;this.rel='stylesheet'",
 				},
 			],

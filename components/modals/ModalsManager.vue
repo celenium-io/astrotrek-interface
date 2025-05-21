@@ -11,7 +11,7 @@ const modalsStore = useModalsStore()
 </script>
 
 <template>
-    <ChartModal :show="modalsStore.modals.chart" @onClose="modalsStore.close('chart')" />
-    <ConstantsModal :show="modalsStore.modals.constants" @onClose="modalsStore.close('constants')" />
-    <RawDataModal :show="modalsStore.modals.rawData" @onClose="modalsStore.close('rawData')" />
+	<ChartModal :show="modalsStore.modals.chart" @onClose="modalsStore.close('chart')" />
+	<ConstantsModal :show="modalsStore.modals.constants" @onClose="modalsStore.close('constants')" />
+	<RawDataModal :show="modalsStore.modals.rawData" @onClose="modalsStore.close('rawData')" />
 </template>

@@ -189,9 +189,7 @@ const handleOpenTx = async (action) => {
 							:class="$style.link"
 						/>
 
-						<Text size="13" weight="500" color="secondary">
-							to
-						</Text>
+						<Text size="13" weight="500" color="secondary"> to </Text>
 
 						<LinkToEntity
 							:entity="{ title: midHash(act.data.to), type: 'account', id: act.data.to }"
@@ -219,54 +217,42 @@ const handleOpenTx = async (action) => {
 							:entity="{ title: shortHash(act.data.bridge), type: 'account', id: act.data.bridge }"
 							color="secondary"
 							size="13"
-							:style="{minWidth: '50px'}"
+							:style="{ minWidth: '50px' }"
 							:class="$style.link"
 						/>
 
-						<Text size="13" weight="500" color="secondary">
-							bridge settings were changed:
-						</Text>
+						<Text size="13" weight="500" color="secondary"> bridge settings were changed: </Text>
 
 						<Flex v-if="act.data.sudo" gap="4" :class="$style.description_el">
-							<Text size="13" weight="500" color="secondary">
-								Sudo ->
-							</Text>
+							<Text size="13" weight="500" color="secondary"> Sudo -> </Text>
 
 							<LinkToEntity
 								:entity="{ title: shortHash(act.data.sudo), type: 'account', id: act.data.sudo }"
 								color="secondary"
 								size="13"
-								:style="{minWidth: '50px'}"
+								:style="{ minWidth: '50px' }"
 								:class="$style.link"
 							/>
 
-							<Text v-if="act.data.withdrawer || act.data.fee_asset" size="13" weight="500" color="secondary">
-								|
-							</Text>
+							<Text v-if="act.data.withdrawer || act.data.fee_asset" size="13" weight="500" color="secondary"> | </Text>
 						</Flex>
 
 						<Flex v-if="act.data.withdrawer" gap="4" :class="$style.description_el">
-							<Text size="13" weight="500" color="secondary">
-								Withdrawer ->
-							</Text>
+							<Text size="13" weight="500" color="secondary"> Withdrawer -> </Text>
 
 							<LinkToEntity
 								:entity="{ title: shortHash(act.data.withdrawer), type: 'account', id: act.data.withdrawer }"
 								color="secondary"
 								size="13"
-								:style="{minWidth: '50px'}"
+								:style="{ minWidth: '50px' }"
 								:class="$style.link"
 							/>
 
-							<Text v-if="act.data.fee_asset" size="13" weight="500" color="secondary">
-								|
-							</Text>
+							<Text v-if="act.data.fee_asset" size="13" weight="500" color="secondary"> | </Text>
 						</Flex>
 
 						<Flex v-if="act.data.fee_asset" gap="4" :class="$style.description_el">
-							<Text size="13" weight="500" color="secondary">
-								Fee ->
-							</Text>
+							<Text size="13" weight="500" color="secondary"> Fee -> </Text>
 
 							<Text size="13" weight="500" color="secondary">
 								{{ getAssetName(act.data.fee_asset) }}
@@ -303,7 +289,7 @@ const handleOpenTx = async (action) => {
 							<Text size="13" weight="500" color="secondary">was removed for fee payments</Text>
 						</Flex>
 					</Flex>
-					
+
 					<Flex v-else>
 						<Text size="13" weight="500" color="secondary" :class="$style.description">
 							{{ getActionDescription(act) }}
@@ -314,7 +300,11 @@ const handleOpenTx = async (action) => {
 				<Flex align="center" gap="8">
 					<Text size="12" color="tertiary">Block</Text>
 
-					<LinkToEntity :entity="{ title: spaces(act.height), type: 'block', id: act.height }" color="secondary" :class="$style.link" />
+					<LinkToEntity
+						:entity="{ title: spaces(act.height), type: 'block', id: act.height }"
+						color="secondary"
+						:class="$style.link"
+					/>
 
 					<div :class="[$style.dot, $style.hide_mobile]" />
 
@@ -326,8 +316,9 @@ const handleOpenTx = async (action) => {
 						<div :class="[$style.dot, $style.hide_mobile]" />
 					</Flex>
 
-					<Text size="12" color="tertiary" :class="$style.hide_mobile"> {{ DateTime.fromISO(act.time).setLocale("en").toFormat("tt, LLL d, y") }} </Text>
-					
+					<Text size="12" color="tertiary" :class="$style.hide_mobile">
+						{{ DateTime.fromISO(act.time).setLocale("en").toFormat("tt, LLL d, y") }}
+					</Text>
 				</Flex>
 			</Flex>
 
@@ -349,7 +340,7 @@ const handleOpenTx = async (action) => {
 	height: 60px;
 
 	border-top: 1px solid var(--op-5);
-	
+
 	cursor: pointer;
 
 	padding: 0 16px;
@@ -386,7 +377,6 @@ const handleOpenTx = async (action) => {
 }
 
 .action_title {
-
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -395,7 +385,7 @@ const handleOpenTx = async (action) => {
 .description {
 	max-width: 700px;
 	padding-left: 8px;
-	
+
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;

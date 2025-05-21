@@ -8,28 +8,26 @@ import { comma, formatBytes, abbreviate } from "@/services/utils"
 /** UI */
 import Tooltip from "@/components/ui/Tooltip.vue"
 
-/** API */
-// import { fetchPriceSeries } from "@/services/api/stats"
-
 /** Store */
 import { useAppStore } from "@/store/app"
 const appStore = useAppStore()
 
 const head = computed(() => appStore.lastHead)
-
 </script>
 
 <template>
 	<Flex tag="section" justify="center" wide :class="$style.wrapper">
 		<Flex align="center" justify="center" gap="24" wide :class="$style.container">
-			<Flex align="center" gap="20" :class="$style.stats">
+			<Flex wide align="center" gap="20" :class="$style.stats">
 				<Tooltip>
 					<Flex align="center" gap="6" :class="$style.stat">
-						<Icon name="tx" size="12" color="secondary" :class="$style.icon" />
+						<Icon name="tx" size="12" color="tertiary" :class="$style.icon" />
 						<Flex align="center" gap="4">
 							<Text size="12" weight="500" color="tertiary" noWrap :class="$style.key">Total Txs:</Text>
 
-							<Text v-if="head.total_tx" size="12" weight="600" noWrap :class="$style.value">{{ abbreviate(head.total_tx) }}</Text>
+							<Text v-if="head.total_tx" size="12" weight="600" noWrap :class="$style.value">{{
+								abbreviate(head.total_tx)
+							}}</Text>
 							<Skeleton v-else w="20" h="12" />
 						</Flex>
 					</Flex>
@@ -43,7 +41,7 @@ const head = computed(() => appStore.lastHead)
 
 				<Tooltip disabled>
 					<Flex align="center" gap="6" :class="$style.stat">
-						<Icon name="account" size="12" color="secondary" :class="$style.icon" />
+						<Icon name="account" size="12" color="tertiary" :class="$style.icon" />
 						<Flex align="center" gap="4">
 							<Text size="12" weight="500" color="tertiary" noWrap :class="$style.key">Total Accounts:</Text>
 
@@ -61,7 +59,7 @@ const head = computed(() => appStore.lastHead)
 
 				<Tooltip disabled>
 					<Flex align="center" gap="6" :class="$style.stat">
-						<Icon name="rollup" size="12" color="secondary" :class="$style.icon" />
+						<Icon name="rollup" size="12" color="tertiary" :class="$style.icon" />
 						<Flex align="center" gap="4">
 							<Text size="12" weight="500" color="tertiary" noWrap :class="$style.key">Total Rollups:</Text>
 
@@ -79,7 +77,7 @@ const head = computed(() => appStore.lastHead)
 
 				<Tooltip disabled>
 					<Flex align="center" gap="6" :class="$style.stat">
-						<Icon name="bridge" size="12" color="secondary" :class="$style.icon" />
+						<Icon name="bridge" size="12" color="tertiary" :class="$style.icon" />
 						<Flex align="center" gap="4">
 							<Text size="12" weight="500" color="tertiary" noWrap :class="$style.key">Total Bridges:</Text>
 
@@ -97,7 +95,7 @@ const head = computed(() => appStore.lastHead)
 
 				<Tooltip>
 					<Flex align="center" gap="6" :class="$style.stat">
-						<Icon name="folder" size="12" color="secondary" :class="$style.icon" />
+						<Icon name="folder" size="12" color="tertiary" :class="$style.icon" />
 						<Flex align="center" gap="4">
 							<Text size="12" weight="500" color="tertiary" noWrap :class="$style.key">Total Bytes Pushed:</Text>
 
