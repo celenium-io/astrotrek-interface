@@ -54,6 +54,7 @@ onMounted(() => {
 
 		collapsedItems.value = [...txMethods.value]
 	} catch (error) {
+		console.log(error)
 		isParsed.value = false
 	}
 })
