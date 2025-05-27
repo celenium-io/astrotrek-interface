@@ -1,10 +1,11 @@
 <script setup>
 /** Vendor */
 import { Buffer } from "buffer"
-import { createTxFromRLP } from "@ethereumjs/tx"
+import { Transaction } from "ethers"
 
 /** UI */
 import Button from "@/components/ui/Button.vue"
+import Checkbox from "@/components/ui/Checkbox.vue"
 
 /** Components */
 import KeyValue from "./KeyValue.vue"
@@ -15,7 +16,36 @@ const props = defineProps({
 
 const isParsed = ref(true)
 const tx = ref({})
-const txMethods = computed(() => Object.getOwnPropertyNames(tx.value.__proto__).filter((m) => !["constructor"].includes(m)))
+const methods = ref({})
+
+const supportedFields = [
+	"accessList",
+	"authorizationList",
+	"auths",
+	"blobVersionHashes",
+	"blobs",
+	"chainId",
+	"data",
+	"from",
+	"fromPublicKey",
+	"gasLimit",
+	"gasPrice",
+	"hash",
+	"kzg",
+	"maxFeePerBlobGas",
+	"maxFeePerGas",
+	"maxPriorityFeePerGas",
+	"nonce",
+	"serialized",
+	"sig",
+	"to",
+	"type",
+	"typeName",
+	"unsignedHash",
+	"unsignedSerialized",
+	"value",
+]
+const supportedFunctions = ["inferType", "inferTypes", "isBerlin", "isCancun", "isLegacy", "isLondon", "isSigned"]
 
 const showContent = ref(true)
 
@@ -44,15 +74,28 @@ const onCollapse = (target) => {
 	}
 }
 const handleCollapseAll = () => {
-	collapsedItems.value = [...Object.keys(tx.value), ...txMethods.value]
+	collapsedItems.value = [...Object.keys(tx.value), ...Object.keys(methods.value)]
+}
+
+const showEmptyFields = useCookie("showEmptyFields", { default: () => true })
+const handleShowEmptyFields = () => {
+	showEmptyFields.value = !showEmptyFields.value
 }
 
 onMounted(() => {
 	try {
 		const buffer = Buffer.from(props.data, "base64")
-		tx.value = createTxFromRLP(buffer)
+		const rawTransaction = Transaction.from(`0x${buffer.toString("hex")}`)
 
-		collapsedItems.value = [...txMethods.value]
+		supportedFields.forEach((field) => {
+			if (field in rawTransaction) tx.value[field] = rawTransaction[field]
+		})
+
+		supportedFunctions.forEach((func) => {
+			if (func in rawTransaction) methods.value[func] = rawTransaction[func]
+		})
+
+		collapsedItems.value = [...Object.keys(methods.value)]
 	} catch (error) {
 		console.log(error)
 		isParsed.value = false
@@ -119,33 +162,52 @@ onMounted(() => {
 					</Button>
 				</Flex>
 
-				<Flex v-if="activeSelector === 'props'" direction="column" gap="8">
-					<KeyValue
-						v-for="[key, value] in Object.entries(tx)"
-						:tx
-						:k="key"
-						:value
-						:collapsed="collapsedItems.includes(key)"
-						@onCollapse="onCollapse"
-					/>
+				<Flex v-if="activeSelector === 'props'" @click="handleShowEmptyFields" align="center" gap="6" :class="$style.checkbox">
+					<Checkbox :checked="showEmptyFields" />
+					<Text size="13" weight="600" color="secondary">Show empty fields</Text>
 				</Flex>
 
-				<Flex v-if="activeSelector === 'funcs'" direction="column" gap="8">
-					<KeyValue
-						v-for="method in txMethods"
-						:tx
-						:k="method"
-						:value="tx[method]"
-						:collapsed="collapsedItems.includes(method)"
-						@onCollapse="onCollapse"
-					/>
+				<Flex v-if="activeSelector === 'props'" direction="column" gap="8">
+					<template v-for="[key, value] in Object.entries(tx)">
+						<KeyValue
+							v-if="value !== null || (showEmptyFields && value === null)"
+							:tx
+							:k="key"
+							:value
+							:collapsed="collapsedItems.includes(key)"
+							@onCollapse="onCollapse"
+						/>
+					</template>
+				</Flex>
+
+				<Flex v-if="activeSelector === 'funcs'" direction="column" gap="16">
+					<Text size="12" weight="500" color="tertiary">
+						These are built-in methods from the
+						<a href="https://docs.ethers.org/v5/api/utils/transactions/" target="_blank"
+							><Text color="brand" mono style="text-decoration: underline">ethers@6.14.3</Text></a
+						>
+						library. Execution is currently disabled.
+					</Text>
+
+					<Flex direction="column" gap="8">
+						<KeyValue
+							v-for="(method, key) in methods"
+							:methods
+							:k="key"
+							:value="method"
+							:collapsed="collapsedItems.includes(method)"
+							@onCollapse="onCollapse"
+						/>
+					</Flex>
 				</Flex>
 			</template>
 
 			<!-- Raw JSON -->
 			<template v-if="activeTab === 1">
 				<div :class="$style.raw_content">
-					<Text as="pre" size="12" height="140" color="secondary" mono>{{ tx }}</Text>
+					<Text as="pre" size="12" height="140" color="secondary" mono>
+						{{ JSON.stringify(tx, (k, v) => (typeof v === "bigint" ? v.toString() : v), 2) }}
+					</Text>
 				</div>
 			</template>
 
@@ -294,6 +356,14 @@ onMounted(() => {
 		& svg {
 			fill: var(--brand);
 		}
+	}
+}
+
+.checkbox {
+	cursor: pointer;
+
+	&:hover [class*="checkbox"] {
+		border-color: var(--brand);
 	}
 }
 </style>

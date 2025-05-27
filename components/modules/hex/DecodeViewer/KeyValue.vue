@@ -8,6 +8,7 @@ import Button from "@/components/ui/Button.vue"
 const emit = defineEmits(["onCollapse"])
 const props = defineProps({
 	tx: Object,
+	methods: Object,
 	k: String,
 	value: {
 		type: [Object, String, Number, BigInt, Function],
@@ -22,10 +23,11 @@ const executionResultType = ref()
 const formattedResult = ref()
 const isUint8Array = ref(false)
 const execute = () => {
+	return
 	if (hasExecutionResult.value) return
 
 	try {
-		const result = props.tx[props.k]()
+		const result = props.methods[props.k]()
 
 		executionResultType.value = typeof result
 
@@ -62,7 +64,7 @@ const handleClearResult = () => {
 	<Flex @click="emit('onCollapse', k)" direction="column" gap="8" :class="$style.wrapper">
 		<Flex align="center" gap="8" justify="between">
 			<Flex align="center" gap="8">
-				<Text size="12" weight="700" color="secondary" mono>
+				<Text size="12" weight="700" :color="value === null ? 'tertiary' : 'secondary'" mono>
 					{{ k }}
 				</Text>
 				<Text v-if="value !== undefined" size="12" weight="500" color="tertiary" mono>
@@ -81,11 +83,11 @@ const handleClearResult = () => {
 					:class="$style.content"
 					:style="{ minHeight: typeof value === 'function' ? '42px' : null }"
 				>
-					<Text as="pre" size="12" height="140" :color="value !== undefined ? 'secondary' : 'tertiary'" mono>
-						{{ value !== undefined ? value : "Empty" }}
+					<Text as="pre" size="12" height="140" :color="value !== null ? 'secondary' : 'tertiary'" mono>
+						{{ value !== null ? value : "Empty" }}
 					</Text>
 
-					<Button
+					<!-- <Button
 						v-if="typeof value === 'function'"
 						@click="execute"
 						type="secondary"
@@ -95,7 +97,7 @@ const handleClearResult = () => {
 					>
 						<Icon name="function" size="16" color="brand" />
 						Execute
-					</Button>
+					</Button> -->
 				</Flex>
 
 				<Flex v-if="hasExecutionResult" direction="column" gap="8">

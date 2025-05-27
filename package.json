@@ -13,12 +13,12 @@
 	},
 	"dependencies": {
 		"@codemirror/lang-json": "^6.0.1",
-		"@ethereumjs/tx": "^10.0.0",
 		"@pinia/nuxt": "^0.11.0",
 		"@vueuse/core": "^13.1.0",
 		"buffer": "^6.0.3",
 		"codemirror": "^6.0.1",
 		"d3": "^7.8.5",
+		"ethers": "^6.14.3",
 		"focus-trap": "^7.5.4",
 		"lodash": "^4.17.21",
 		"luxon": "^3.4.4",

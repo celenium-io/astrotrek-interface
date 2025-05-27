@@ -21,6 +21,8 @@ const props = defineProps({
 })
 const emit = defineEmits(["onSelect", "onCursorSelect"])
 
+const showContent = useCookie("showHexContent", { default: () => true })
+
 const viewerEl = ref()
 const scrollbarEl = useTemplateRef("scrollbarEl")
 
@@ -228,16 +230,20 @@ const clearThumbDraging = () => {
 
 <template>
 	<Flex direction="column" :class="$style.wrapper">
-		<Flex align="center" justify="between" :class="$style.top">
+		<Flex @click="showContent = !showContent" align="center" justify="between" :class="[$style.top, 'clickable']">
 			<Flex align="center" gap="8">
 				<Icon name="hex" size="16" color="brand" />
 				<Text size="12" weight="700" color="primary" mono>Hex Viewer</Text>
 			</Flex>
 
-			<Text size="12" color="tertiary" mono>Cursor: {{ cursor }}</Text>
+			<Flex align="center" gap="16">
+				<Text size="12" color="tertiary" mono>Cursor: {{ cursor }}</Text>
+				<Icon name="chevron" size="12" color="secondary" :style="{ transform: showContent ? 'rotate(180deg)' : null }" />
+			</Flex>
 		</Flex>
 
 		<Flex
+			v-if="showContent"
 			ref="viewerEl"
 			@mouseenter="onMouseEnter"
 			@mouseleave="onMouseLeave"
@@ -320,7 +326,7 @@ const clearThumbDraging = () => {
 			</Flex>
 		</Flex>
 
-		<Flex align="center" justify="between" :class="$style.bottom">
+		<Flex v-if="showContent" align="center" justify="between" :class="$style.bottom">
 			<Text size="12" color="tertiary" mono>{{ formatBytes(size) }}</Text>
 		</Flex>
 	</Flex>
