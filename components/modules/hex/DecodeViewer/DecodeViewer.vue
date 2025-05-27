@@ -15,6 +15,7 @@ const props = defineProps({
 })
 
 const isParsed = ref(true)
+let rawTx = null
 const tx = ref({})
 const methods = ref({})
 
@@ -85,14 +86,14 @@ const handleShowEmptyFields = () => {
 onMounted(() => {
 	try {
 		const buffer = Buffer.from(props.data, "base64")
-		const rawTransaction = Transaction.from(`0x${buffer.toString("hex")}`)
+		rawTx = Transaction.from(`0x${buffer.toString("hex")}`)
 
 		supportedFields.forEach((field) => {
-			if (field in rawTransaction) tx.value[field] = rawTransaction[field]
+			if (field in rawTx) tx.value[field] = rawTx[field]
 		})
 
 		supportedFunctions.forEach((func) => {
-			if (func in rawTransaction) methods.value[func] = rawTransaction[func]
+			if (func in rawTx) methods.value[func] = rawTx[func]
 		})
 
 		collapsedItems.value = [...Object.keys(methods.value)]
@@ -186,12 +187,13 @@ onMounted(() => {
 						<a href="https://docs.ethers.org/v5/api/utils/transactions/" target="_blank"
 							><Text color="brand" mono style="text-decoration: underline">ethers@6.14.3</Text></a
 						>
-						library. Execution is currently disabled.
+						library.
 					</Text>
 
 					<Flex direction="column" gap="8">
 						<KeyValue
 							v-for="(method, key) in methods"
+							:rawTx
 							:methods
 							:k="key"
 							:value="method"

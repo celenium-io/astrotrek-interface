@@ -7,6 +7,7 @@ import Button from "@/components/ui/Button.vue"
 
 const emit = defineEmits(["onCollapse"])
 const props = defineProps({
+	rawTx: Object,
 	tx: Object,
 	methods: Object,
 	k: String,
@@ -23,11 +24,10 @@ const executionResultType = ref()
 const formattedResult = ref()
 const isUint8Array = ref(false)
 const execute = () => {
-	return
 	if (hasExecutionResult.value) return
 
 	try {
-		const result = props.methods[props.k]()
+		const result = props.rawTx[props.k]()
 
 		executionResultType.value = typeof result
 
@@ -87,7 +87,7 @@ const handleClearResult = () => {
 						{{ value !== null ? value : "Empty" }}
 					</Text>
 
-					<!-- <Button
+					<Button
 						v-if="typeof value === 'function'"
 						@click="execute"
 						type="secondary"
@@ -97,7 +97,7 @@ const handleClearResult = () => {
 					>
 						<Icon name="function" size="16" color="brand" />
 						Execute
-					</Button> -->
+					</Button>
 				</Flex>
 
 				<Flex v-if="hasExecutionResult" direction="column" gap="8">
