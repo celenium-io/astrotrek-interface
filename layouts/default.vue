@@ -15,5 +15,7 @@
 <style module>
 .wrapper {
 	min-height: calc(100vh - 272px);
+
+	z-index: 1;
 }
 </style>
