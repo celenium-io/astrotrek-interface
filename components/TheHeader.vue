@@ -33,6 +33,7 @@ const networks = ref([
 	{
 		name: "Dusk",
 		url: "https://dusk.astrotrek.io",
+		disabled: true,
 	},
 	{
 		name: "Dawn",
@@ -86,7 +87,7 @@ const networks = ref([
 
 					<DropdownDivider />
 
-					<DropdownItem v-for="n in networks.filter((el) => el.name !== selectedNetworkName)" @click="handleNavigate(n.url)">
+					<DropdownItem v-for="n in networks.filter((el) => el.name !== selectedNetworkName)" @click="handleNavigate(n.url)" :disabled="n.disabled">
 						{{ n.name }}
 					</DropdownItem>
 				</template>

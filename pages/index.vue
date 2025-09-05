@@ -89,6 +89,14 @@ const handleHide = () => {
 			<Divider :class="$style.divider" />
 		</template>
 
+		<Flex align="center" justify="center" gap="12" wide :class="$style.notification">
+			<Icon name="alert" size="36" color="yellow" />
+
+			<Text size="16" color="yellow" weight="600">
+				The Astrotrek service for the Astria Dusk Devnet has been discontinued due to the decommissioning of the network.
+			</Text>
+		</Flex>
+
 		<Flex align="center" :class="$style.widgets">
 			<Flex align="center" :class="$style.first_widgets">
 				<BlockWidget :class="$style.block_widget" />
@@ -113,6 +121,14 @@ const handleHide = () => {
 
 	padding: 0 24px;
 	margin-top: 24px;
+}
+
+.notification {
+	padding: 24px;
+	margin-bottom: 24px;
+
+	border: 2px var(--yellow) solid;
+	border-radius: 6px;
 }
 
 .divider {
