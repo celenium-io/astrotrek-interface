@@ -36,6 +36,5 @@ const network = computed(() => getNetworkName())
 
 .notification {
 	padding: 12px;
-	margin-bottom: 12px;
 }
 </style>
