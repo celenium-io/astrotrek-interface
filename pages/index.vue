@@ -12,6 +12,9 @@ import RecentBlocksTable from "~/components/tables/RecentBlocksTable.vue"
 /** API */
 import { fetchLatestBlocks } from "@/services/api/block"
 
+/** Utils */
+import { getNetworkName } from "@/services/utils/general"
+
 /** Store */
 import { useAppStore } from "@/store/app"
 const appStore = useAppStore()
@@ -69,6 +72,7 @@ useHead({
 })
 
 const hideHeroSection = useCookie("hideHeroSection", { default: () => false })
+const network = computed(() => getNetworkName())
 
 onMounted(async () => {
 	const data = await fetchLatestBlocks()
@@ -89,7 +93,7 @@ const handleHide = () => {
 			<Divider :class="$style.divider" />
 		</template>
 
-		<Flex align="center" justify="center" gap="12" wide :class="$style.notification">
+		<Flex v-if="network === 'Dusk'" align="center" justify="center" gap="12" wide :class="$style.notification">
 			<Icon name="alert" size="36" color="yellow" />
 
 			<Text size="16" color="yellow" weight="600">

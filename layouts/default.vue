@@ -1,9 +1,15 @@
+<script setup>
+import { getNetworkName } from "@/services/utils/general"
+
+const network = computed(() => getNetworkName())
+</script>
+
 <template>
 	<Flex direction="column">
 		<Flex direction="column" align="center" :class="$style.wrapper">
 			<TheHeader />
 			
-			<Flex align="center" justify="center" gap="12" wide :class="$style.notification">
+			<Flex v-if="network === 'Dusk'" align="center" justify="center" gap="12" wide :class="$style.notification">
 				<Icon name="alert" size="36" color="yellow" />
 
 				<Text size="16" color="yellow" weight="600">
