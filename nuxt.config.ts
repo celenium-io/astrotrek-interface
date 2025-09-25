@@ -13,6 +13,13 @@ export default defineNuxtConfig({
 					content: "en",
 				},
 			],
+			script: [
+				{
+					src: "https://analytics.ahrefs.com/analytics.js",
+					"data-key": "+elFbKRVhrF1UOivXkb4JQ",
+					async: true,
+				},
+			],
 			link: [
 				{
 					id: "favicon",
