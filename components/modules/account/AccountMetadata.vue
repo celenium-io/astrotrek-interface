@@ -19,13 +19,21 @@ const balances = computed(() => {
 			res = props.account?.balances.slice(0, 1)
 		}
 
-		res.forEach((b) => (b.currency = getAssetName(b.currency)))
+		res.forEach((b) => {
+			b.currency = getAssetName(b.currency)
+			if (+b.value < 0) {
+				b.value = 0
+			}
+		})
 	} else {
 		res = props.account?.balances
 		if (nativeAsset.value !== res[0].currency && +res[0].value === 0) {
 			res[0].currency = getAssetName(nativeAsset)
 		} else {
 			res[0].currency = getAssetName(res[0].currency)
+		}
+		if (+res[0].value < 0) {
+			res[0].value = 0
 		}
 	}
 

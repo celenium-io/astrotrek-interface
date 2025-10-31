@@ -34,9 +34,16 @@ const prepareTxsSeries = async () => {
 	prevDaySeries.value = data.slice(0, 24).map((s) => ({ date: DateTime.fromISO(s.time).toJSDate(), value: parseFloat(s.value) }))
 	series.value = data.slice(24, data.length).map((s) => ({ date: DateTime.fromISO(s.time).toJSDate(), value: parseFloat(s.value) }))
 	
+	if (!series.value.length) {
+		series.value = Array.from({ length: 24 }).map((_, i) => ({
+			date: DateTime.now().set({ minutes: 0, seconds: 0, milliseconds: 0 }).minus({ hours: 23 - i }).toJSDate(),
+			value: 0,
+		}))
+	}
+	
 	while (series.value.length < 24) {
 		series.value.push({
-			date: DateTime.fromJSDate(series.value[series.value.length - 1].date)
+			date: DateTime.fromJSDate(series.value[series.value.length - 1]?.date)
 				.plus({ hours: 1 })
 				.toJSDate(),
 			value: 0,
@@ -56,7 +63,7 @@ const buildChart = (chart, data, color, onEnter, onLeave) => {
 	const marginBottom = 32
 	const marginLeft = 0
 
-	const lastPoint = series.value[series.value.findLastIndex((s) => s.value !== null)]
+	const lastPoint = series.value?.at(-1)
 
 	const MAX_VALUE = Math.max(Math.max(...prevDaySeries.value.map((s) => s.value)), Math.max(...series.value.map((s) => s.value)))
 
@@ -65,7 +72,7 @@ const buildChart = (chart, data, color, onEnter, onLeave) => {
 		d3.extent(data, (d) => d.date),
 		[marginLeft, width - marginRight],
 	)
-	const y = d3.scaleLinear([0, MAX_VALUE], [height - marginBottom - 6, marginTop])
+	const y = d3.scaleLinear([0, MAX_VALUE || 1], [height - marginBottom - 6, marginTop])
 	const line = d3
 		.line()
 		.x((d) => x(d.date))
@@ -86,7 +93,7 @@ const buildChart = (chart, data, color, onEnter, onLeave) => {
 		tooltip.value.x = x(data[idx].date)
 		tooltip.value.y = y(data[idx].value)
 		tooltip.value.currentValue = series.value[idx].value || 0
-		tooltip.value.prevValue = prevDaySeries.value[idx].value || 0
+		tooltip.value.prevValue = prevDaySeries.value[idx]?.value || 0
 		tooltip.value.currentDate = DateTime.fromJSDate(data[idx].date).toFormat("hh:mm a")
 		
 	}
@@ -141,6 +148,8 @@ onMounted(async () => {
 		() => (tooltip.value.show = false),
 	)
 
+	if (!prevDaySeries.value.length) return
+
 	buildChart(
 		test.value.wrapper,
 		prevDaySeries.value,
@@ -185,7 +194,7 @@ const todayTxs = computed(() => {
 						:style="{ transform: `translate(${tooltip.x - 2}px, ${tooltip.y - 2}px)` }"
 						:class="$style.dot"
 					/>
-					<div :style="{ transform: `translateX(${tooltip.x - 2}px)` }" :class="$style.line" />
+					<div :style="{ transform: `translateX(${tooltip.x - 1}px)` }" :class="$style.line" />
 				</div>
 			</Transition>
 

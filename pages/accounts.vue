@@ -84,7 +84,13 @@ const getAccounts = async () => {
 		limit: limit.value,
 		offset: (page.value - 1) * limit.value,
 	})
-	accounts.value = data.value
+	accounts.value = data.value?.map(acc => ({
+		...acc,
+		balances: acc.balances.map(bal => ({
+			...bal,
+			value: Number(bal.value) < 0 ? 0 : bal.value,
+		})),
+	}))
 
 	isLoading.value = false
 }

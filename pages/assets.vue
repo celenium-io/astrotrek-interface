@@ -79,7 +79,10 @@ const getAssets = async () => {
 		sort_by: sort.value.by,
 		sort: sort.value.dir,
 	})
-	assets.value = data
+	assets.value = data.map(d => ({
+		...d,
+		supply: Number(d.supply) < 0 ? 0 : d.supply,
+	}))
 	handleNextCondition.value = assets.value?.length < limit.value
 
 	isLoading.value = false

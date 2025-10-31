@@ -224,7 +224,7 @@ watch(
 						<Text size="13" weight="600" color="tertiary">Balance</Text>
 
 						<Text size="13" weight="600" color="primary" tabular>
-							{{ `${spaces(account.balances[0].value)} ${account.balances[0].currency.toUpperCase()}` }}
+							{{ `${spaces(account.balances[0].value < 0 ? 0 : account.balances[0].value)} ${account.balances[0].currency.toUpperCase()}` }}
 						</Text>
 					</Flex>
 
