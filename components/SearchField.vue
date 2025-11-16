@@ -83,8 +83,10 @@ const debouncedSearch = useDebounceFn(async (e) => {
 
 			return newItem
 		})
+		notFound.value = false
 	} else {
 		notFound.value = true
+		results.value = []
 	}
 
 	isLoading.value = false
@@ -133,7 +135,7 @@ const getResultPath = (result) => {
 		case "validator":
 			return `/${result.type}/${result.body.id}`
 		case "bridge":
-			return `/account/${result.body.address}`
+			return `/account/${result.body.address?.hash}`
 		case "rollup":
 			return `/${result.type}/${getRollupHashSafeURL(result.body.hash)}`
 		case "app":
@@ -150,6 +152,8 @@ const getDisplayName = (item) => {
 	switch (item.type) {
 		case "app":
 			return item.body.name
+		case "bridge":
+			return shortHash(item.body.address?.hash)
 
 		default:
 			return shortHash(item.body.hash)
@@ -190,6 +194,7 @@ watch(
 			activeTab.value = tabs.value[0].name
 
 			searchTerm.value = null
+			results.value = []
 			notFound.value = false
 
 			window.removeEventListener("keydown", onKeydown)

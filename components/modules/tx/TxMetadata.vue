@@ -3,7 +3,7 @@
 import { DateTime } from "luxon"
 
 /** Services */
-import { formatBytes, space, comma, spaces } from "@/services/utils"
+import { space, spaces } from "@/services/utils"
 import { getAssetName } from "@/services/utils/actions.js"
 
 /** UI */
@@ -73,7 +73,9 @@ const showMore = ref(false)
 
 			<Flex align="center" gap="8" :class="$style.value">
 				<CopyButton :text="tx.signer" />
-				<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{ tx.signer.hash }}</Text>
+				<Text size="13" weight="600" color="primary" mono :class="$style.overflow">
+					{{ $getDisplayName("addresses", null, tx.signer, false) }}
+				</Text>
 				<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
 			</Flex>
 		</NuxtLink>
@@ -83,11 +85,10 @@ const showMore = ref(false)
 				<Text size="13" weight="600" color="secondary" :class="$style.key">Signature</Text>
 
 				<Flex align="center" gap="8" :class="$style.value">
-					<CopyButton :text="tx.signer.hash" />
-					<Text size="13" weight="600" color="primary" mono :class="$style.overflow">{{
-						$getDisplayName("addresses", null, tx.signer, false)
-					}}</Text>
-					<Icon name="arrow-narrow-up-right" size="10" color="secondary"></Icon>
+					<CopyButton :text="tx.signature" />
+					<Text size="13" weight="600" color="primary" mono :class="$style.overflow">
+						{{ tx.signature }}
+					</Text>
 				</Flex>
 			</Flex>
 
