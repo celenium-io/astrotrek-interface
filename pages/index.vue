@@ -93,11 +93,11 @@ const handleHide = () => {
 			<Divider :class="$style.divider" />
 		</template>
 
-		<Flex v-if="network === 'Dusk'" align="center" justify="center" gap="12" wide :class="$style.notification">
+		<Flex v-if="network !== 'Mainnet'" align="center" justify="center" gap="12" wide :class="$style.notification">
 			<Icon name="alert" size="36" color="yellow" />
 
 			<Text size="16" color="yellow" weight="600">
-				The Astrotrek service for the Astria Dusk Devnet has been discontinued due to the decommissioning of the network.
+				The Astrotrek service for the Astria {{ network === 'Dusk' ? 'Dusk Devnet' : 'Dawn Network' }} has been discontinued due to the decommissioning of the network.
 			</Text>
 		</Flex>
 
