@@ -78,7 +78,7 @@ const networks = ref([
 
 					<DropdownDivider />
 
-					<DropdownItem v-for="n in networks.filter((el) => el.name !== selectedNetworkName)" @click="handleNavigate(n.url)">
+					<DropdownItem v-for="n in networks" @click="handleNavigate(n.url)">
 						{{ n.name }}
 					</DropdownItem>
 				</template>
