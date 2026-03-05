@@ -30,14 +30,6 @@ const networks = ref([
 		name: "Mainnet",
 		url: "https://astrotrek.io",
 	},
-	{
-		name: "Dusk",
-		url: "https://dusk.astrotrek.io",
-	},
-	{
-		name: "Dawn",
-		url: "https://dawn.astrotrek.io",
-	},
 ])
 </script>
 

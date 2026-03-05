@@ -64,17 +64,7 @@ const network = computed(() => getNetworkName())
 				</Flex>
 			</NuxtLink>
 
-			<NuxtLink v-if="network === 'Dusk'" to="/quotes">
-				<Flex gap="12" :class="$style.item">
-					<Icon name="quotes" color="primary" size="20" :class="$style.item_icon" />
-
-					<Flex direction="column" gap="6">
-						<Text size="14" weight="600" color="primary">Quotes</Text>
-						<Text size="13" weight="500" color="tertiary">On-chain oracle data</Text>
-					</Flex>
-				</Flex>
-			</NuxtLink>
-			<NuxtLink v-else to="/stats">
+			<NuxtLink to="/stats">
 				<Flex gap="12" :class="$style.item">
 					<Icon name="bar-chart" color="primary" size="20" :class="$style.item_icon" />
 
@@ -105,17 +95,6 @@ const network = computed(() => getNetworkName())
 					<Flex direction="column" gap="6">
 						<Text size="14" weight="600" color="primary">Validators</Text>
 						<Text size="13" weight="500" color="tertiary">Validators that produce blocks</Text>
-					</Flex>
-				</Flex>
-			</NuxtLink>
-
-			<NuxtLink v-if="network === 'Dusk'" to="/stats">
-				<Flex gap="12" :class="$style.item">
-					<Icon name="bar-chart" color="primary" size="20" :class="$style.item_icon" />
-
-					<Flex direction="column" gap="6">
-						<Text size="14" weight="600" color="primary">Statistics</Text>
-						<Text size="13" weight="500" color="tertiary">Key blockchain metrics</Text>
 					</Flex>
 				</Flex>
 			</NuxtLink>
